@@ -1,0 +1,188 @@
+/**
+
+	v-center  垂直居中, 需要设定容器的position
+	h-center  水平居中, 需要设定容器的position
+	c-center  全部居中, 需要设定容器的position
+	w5~w100   百分比样式
+	can-not-select 文本不能选中样式
+	mg  外边框单样式
+	pd  内边框单样式
+	bd  边框样式
+	ft  字体大小单样式
+	ta  文本对齐单样式
+	fr/fl 浮动样式
+	pa  layout样式
+	dl  行内元素基样式
+	clearfix 清除浮动样式
+	text-ellipsis 文本省略号
+	box-shadow-none 去除阴影样式
+*/
+
+.v-center {
+	display: block;
+	position: absolute;
+	top: 0;
+	bottom: 0;
+	margin: auto;
+}
+
+.h-center {
+	display: block;
+	position: relative;
+	margin: 0 auto;
+}
+
+.c-center {
+	display: block;
+	position: absolute;
+	top: 0;
+	bottom: 0;
+	left: 0;
+	right: 0;
+	margin: auto;
+}
+.a100 { width: 100%; height: 100% }
+.w5 {  width: 5%;  }
+.w10 {  width: 10%;  }
+.w15 {  width: 15%;  }
+.w20 {  width: 20%;  }
+.w25 {  width: 25%;  }
+.w30 {  width: 30%;  }
+.w35 {  width: 35%;  }
+.w40 {  width: 40%;  }
+.w45 {  width: 45%;  }
+.w50 {  width: 50%;  }
+.w55 {  width: 55%;  }
+.w60 {  width: 60%;  }
+.w65 {  width: 65%;  }
+.w70 {  width: 70%;  }
+.w75 {  width: 75%;  }
+.w80 {  width: 80%;  }
+.w85 {  width: 85%;  }
+.w90 {  width: 90%;  }
+.w95 {  width: 95%;  }
+.w100 {  width: 100%  }
+.h100 {  height: 100%;  }
+
+.can-not-select {
+	-webkit-touch-callout: none;
+	-webkit-user-select: none;
+	-khtml-user-select: none;
+	-moz-user-select: none;
+	-ms-user-select: none;
+	user-select: none;
+}
+/*margin 5px*/
+.mg5 {margin: 5px;}
+.mgt5 {margin-top: 5px;}
+.mgr5 {margin-right: 5px;}
+.mgb5 {margin-bottom: 5px;}
+.mgl5 {margin-left: 5px;}
+/*margin 15px*/
+.mg10 {margin: 10px;}
+.mgt10 {margin-top: 10px;}
+.mgr10 {margin-right: 10px;}
+.mgb10 {margin-bottom: 10px;}
+.mgl10 {margin-left: 10px;}
+/*margin 15px*/
+.mg15 {margin: 15px;}
+.mgt15 {margin-top: 15px;}
+.mgr15 {margin-right: 15px;}
+.mgb15 {margin-bottom: 15px;}
+.mgl15 {margin-left: 15px;}
+/*padding 5px*/
+.pd5 {padding: 5px;}
+.pdt5 {padding-top: 5px;}
+.pdr5 {padding-right: 5px;}
+.pdb5 {padding-bottom: 5px;}
+.pdl5 {padding-left: 5px;}
+/*padding 10xp*/
+.pd10 {padding: 10px;}
+.pdt10 {padding-top: 10px;}
+.pdr10 {padding-right: 10px;}
+.pdb10 {padding-bottom: 10px;}
+.pdl10 {padding-left: 10px;}
+/*padding 15px*/
+.pd15 {padding: 15px;}
+.pdt15 {padding-top: 15px;}
+.pdr15 {padding-right: 15px;}
+.pdb15 {padding-bottom: 15px;}
+.pdl15 {padding-left: 15px;}
+/*padding 45px*/
+.pd45 {padding: 45px;}
+.pdt45 {padding-top: 45px;}
+.pdr45 {padding-right: 45px;}
+.pdb45 {padding-bottom: 45px;}
+.pdl45 {padding-left: 45px;}
+/*边框样式*/
+.no-bdr{border: 0 !important;}
+.bdr{border: 1px solid;}
+.bdrt{border-top: 1px solid;}
+.bdrr{border-right: 1px solid;}
+.bdrb{border-bottom: 1px solid;}
+.bdrl{border-left: 1px solid;}
+.bdr-r3{-webkit-border-radius:3px;-moz-border-radius:3px;border-radius:3px;}
+.bdr-r5{-webkit-border-radius:5px;-moz-border-radius:5px;border-radius:5px;}
+.bdr-r10{-webkit-border-radius:10px;-moz-border-radius:10px;border-radius:10px;}
+.bdr-ra{-webkit-border-radius:100%;-moz-border-radius:100%;border-radius:100%;}
+/*字体样式*/
+.ft12{font-size: 12px;}
+.ft13{font-size: 13px;}
+.ft14{font-size: 14px;}
+.ft16{font-size: 16px;}
+.ft18{font-size: 18px;}
+.ft20{font-size: 20px;}
+.ft22{font-size: 22px;}
+.fb{font-weight: bold;}
+.fn{font-weight: normal;}
+/*文本对齐*/
+.ta-c{text-align: center !important;}
+.ta-l{text-align: left;}
+.ta-r{text-align: right;}
+/*浮动*/
+.fl{float:left;}
+.fr{float:right;}
+/*位置*/
+.pr{position: relative;}
+.pa{position: absolute;}
+.ps{position: static;}
+.pf{position: fixed;}
+/*行内元素*/
+.d-inline-block {display: inline-block;}
+.v-m {vertical-align: middle;}
+.v-t {vertical-align: top;}
+/*鼠标手势*/
+.cursor-pointer {cursor: pointer;}
+.cursor-move {cursor: move;}
+/*去除阴影*/
+.box-shadow-none {box-shadow: none;-webkit-box-shadow: none;}
+/*初始化overflow*/
+.overflow-normal {overflow: visible;}
+.resize-none{resize: none;}
+.hide{display: none;}
+.show{display: block;}
+/** 经典清除浮动**/
+.clearfix() {
+	&:before,
+	&:after {
+		content: " ";
+		display: table;
+	}
+	&:after {
+		clear: both;
+	}
+}
+.clearfix {
+	.clearfix();
+}
+
+/** 文本省略号 **/
+.text-ellipsis{
+	overflow: hidden;
+	white-space: nowrap;
+	text-overflow: ellipsis;
+}
+
+input:-webkit-autofill {
+    -webkit-box-shadow: 0 0 0px 1000px white inset;
+}

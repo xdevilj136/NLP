@@ -2,7 +2,7 @@
 ## 项目运行（nodejs 6.0+）
 
 # 进入文件夹
-cd natural-language
+cd NLP_front
 
 # 安装依赖
 npm install

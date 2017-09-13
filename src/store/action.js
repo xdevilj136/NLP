@@ -14,6 +14,10 @@ export default {
 	getInfoConfig({commit, state}, data) {
 		data = service.configData()
 		commit('INFO_CONFIG', data)
+	},
+	getTaskManageData({commit, state}, data) {
+		data = service.taskManageData()
+		commit('TASK_MANAGE', data)
 	}
 }
 

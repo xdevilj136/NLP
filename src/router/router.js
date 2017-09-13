@@ -17,6 +17,9 @@ export default [{
             path: 'task-manage/create',
             component : r => require.ensure([], () => r(require('../page/main/task-manage/create')), 'task-manage-create')
         },{
+            path: 'task-manage/detail',
+            component : r => require.ensure([], () => r(require('../page/main/task-manage/detail')), 'task-manage-detail')
+        },{
             path: 'data-config',
             component : r => require.ensure([], () => r(require('../page/main/data-config/index')), 'data-config')
         },{

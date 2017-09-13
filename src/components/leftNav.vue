@@ -52,7 +52,7 @@ export default {
         }
       }
     },
-    computed: mapState(['infoConfig']),
+    computed: mapState(['configList']),
     created(){
       this.init()
     },
@@ -62,7 +62,7 @@ export default {
   		]),
       init () {
         this.getInfoConfig()
-        this.data.list[2].children = this.infoConfig
+        this.data.list[2].children = this.configList
         this.chooseSection()
       },
       handleNodeClick(data) {

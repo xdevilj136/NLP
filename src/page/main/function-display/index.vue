@@ -22,13 +22,11 @@ export default {
     },
     watch: {
       '$route' (newVal, oldVal) {
-          console.log(newVal)
           let location = newVal.path.split('/')
           this.title = this.titleList[location[location.length - 1]]
       }
     },
     created(){
-        console.log(this.location)
         let location = this.$route.path.split('/')
         this.title = this.titleList[location[location.length - 1]]
     },

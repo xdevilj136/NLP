@@ -1,5 +1,5 @@
 <template>
-<div class="a100 right-content">
+<div class="right-content">
     <div class="title-show-box">
       <span>功能展示 / </span>
       <span class="hightLight">{{title ? title : ''}}</span>
@@ -40,6 +40,7 @@ export default {
 <style lang="less">
 .right-content {
   padding: 40px;
+  overflow: auto;
   .title-show-box {
       padding: 10px;
       border-bottom: 1px solid #E8E8E8;

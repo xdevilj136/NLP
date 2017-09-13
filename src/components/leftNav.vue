@@ -1,6 +1,7 @@
 <template>
 <div class="left-nav-box">
     <el-tree :data="data.list" 
+    node-key="value"
     :props="data.defaultProps" 
     :current-node-key="data.defaultNode"
     :default-expanded-keys="data.defaultExpanded"
@@ -62,17 +63,28 @@ export default {
       init () {
         this.getInfoConfig()
         this.data.list[2].children = this.infoConfig
-        console.log(this.$route)
-      },
-      testVue () {
-        console.log('begin vuex')
+        this.chooseSection()
       },
       handleNodeClick(data) {
         this.changeTest(data)
         this.$router.push('/main/' + data.value)
       },
       chooseSection () {
-        
+        // 左边导航栏做了url对应处理，有时间可以想想优化
+        let path = this.$route.path.split('/')
+        for (let i = 0; i < this.data.list.length; i++) {
+          if (this.data.list[i].value === path[2]) {
+            this.data.defaultNode = path[2]
+            if (this.data.list[i].children) {
+              for (let j = 0; j < this.data.list[i].children.length; j++) {
+                if (this.data.list[i].children[j].value === (path[2] + '/' +path[3])) {
+                  this.data.defaultNode = path[2] + '/' +path[3]
+                  this.data.defaultExpanded.push(path[2])
+                }
+              }
+            }
+          }
+        }
       }
     }
 }

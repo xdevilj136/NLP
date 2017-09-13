@@ -19,6 +19,9 @@ export default [{
         },{
             path: 'data-config',
             component : r => require.ensure([], () => r(require('../page/main/data-config/index')), 'data-config')
+        },{
+            path: 'authority-manage',
+            component : r => require.ensure([], () => r(require('../page/main/authority-manage/index')), 'authority-manage')
         }, {
             path: 'function-display',
             component : r => require.ensure([], () => r(require('../page/main/function-display/index')), 'function-display'),

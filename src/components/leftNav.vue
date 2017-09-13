@@ -40,7 +40,7 @@ export default {
             }]
           },{
             label: '用户与权限管理',
-            value: 'test'
+            value: 'authority-manage'
           }],
           defaultProps: {
             children: 'children',

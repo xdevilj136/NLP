@@ -20,6 +20,19 @@ export default [{
             path: 'data-config',
             component : r => require.ensure([], () => r(require('../page/main/data-config/index')), 'data-config')
         }, {
+            path: 'function-display',
+            component : r => require.ensure([], () => r(require('../page/main/function-display/index')), 'function-display'),
+            children: [{
+                path: 'machanism-ident',
+                component : r => require.ensure([], () => r(require('../page/main/function-display/machanism-ident')), 'machanism-ident'),
+            }, {
+                path: 'analysis',
+                component : r => require.ensure([], () => r(require('../page/main/function-display/analysis')), 'analysis'),
+            }, {
+                path: 'info-get',
+                component : r => require.ensure([], () => r(require('../page/main/function-display/info-get')), 'info-get'),
+            }]
+        }, {
             path: '*',
             redirect: 'test'
         }]

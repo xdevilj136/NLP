@@ -1,14 +1,38 @@
 <template>
 <div class="right-content">
-  <el-select v-model="value" placeholder="请选择">
-    <el-option
-      v-for="item in options"
-      :key="item.value"
-      :label="item.label"
-      :value="item.value">
-    </el-option>
-  </el-select>
-  <el-button class="fr" type="primary" @click="createTask">新增任务</el-button>
+  <div>
+    <span>任务类型：</span>
+    <el-select v-model="value" placeholder="请选择">
+      <el-option
+        v-for="item in options"
+        :key="item.value"
+        :label="item.label"
+        :value="item.value">
+      </el-option>
+    </el-select>
+    <span>建立日期：</span>
+    <el-select v-model="value" placeholder="请选择">
+      <el-option
+        v-for="item in options"
+        :key="item.value"
+        :label="item.label"
+        :value="item.value">
+      </el-option>
+    </el-select>
+    <span>任务状态：</span>
+    <el-select v-model="value" placeholder="请选择">
+      <el-option
+        v-for="item in options"
+        :key="item.value"
+        :label="item.label"
+        :value="item.value">
+      </el-option>
+    </el-select>
+    <el-button type="primary" @click="createTask">查询</el-button>
+  </div>
+  <div>
+    <el-button class="fr" type="primary" @click="createTask">新增任务</el-button>
+  </div>
   <el-table :data="tableData" border class="task-manage-task">
     <el-table-column prop="name" label="任务名称"></el-table-column>
     <el-table-column prop="type" label="类型"></el-table-column>

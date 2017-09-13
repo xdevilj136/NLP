@@ -8,7 +8,8 @@ import ajax from '../config/ajax'
 Vue.use(Vuex)
 
 const state = {
-	test: '测试vuex数据流程'
+	test: '测试vuex数据流程',
+	infoConfig: []
 }
 
 export default new Vuex.Store({

@@ -8,6 +8,10 @@ export default {
 		let data = service.configData()
 		commit('INFO_CONFIG', data)
 	},
+	getTaskManageData({commit, state}, data) {
+		data = service.taskManageData()
+		commit('TASK_MANAGE', data)
+	},
 	infoGetAction({commit, state}) {
 		let data = service.infoGet()
 		commit('INFO_GET', data)

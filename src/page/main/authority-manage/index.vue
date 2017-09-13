@@ -1,7 +1,6 @@
 <template>
   <div class="right-content">
-    <h3>用户与权限管理</h3>
-    <hr>
+    <div class="title-show-box">用户与权限管理</div>
     <el-table :data="tableData" border class="authority-manage-task">
       <el-table-column prop="username" label="用户名">
       </el-table-column>
@@ -111,12 +110,12 @@ export default {
       if (this.dialogType == "deleteDialog") {
         this.tableData.splice(this.operateRowIndex, 1);
       }
-      else if(this.dialogType=="editDialog"){
-        let operateRow=this.tableData[this.operateRowIndex];
-        let authority=this.editForm.authorityRadio=="admin"?"管理员":"普通用户";
-        let status=this.editForm.statusRadio=="active"?"已激活":"未激活";
-        operateRow.authority=authority;
-        operateRow.status=status;
+      else if (this.dialogType == "editDialog") {
+        let operateRow = this.tableData[this.operateRowIndex];
+        let authority = this.editForm.authorityRadio == "admin" ? "管理员" : "普通用户";
+        let status = this.editForm.statusRadio == "active" ? "已激活" : "未激活";
+        operateRow.authority = authority;
+        operateRow.status = status;
       }
       this.dialogVisible = false;
     }
@@ -125,17 +124,8 @@ export default {
 </script>
 
 <style lang="less">
-.clearfix {
-  &:before,
-  &:after {
-    content: " ";
-    display: block;
-    overflow: hidden;
-  }
-
-  &:after {
-    clear: both;
-  }
+.title {
+  border-bottom: 1px solid #E8E8E8;
 }
 
 .right-content {
@@ -143,11 +133,18 @@ export default {
   .authority-manage-task {
     margin-top: 16px;
   }
+  .title-show-box {
+    border-bottom: 1px solid #E8E8E8;
+    font-size: 16px;
+    margin-bottom: 10px;
+    .hightLight {
+      color: #333
+    }
+  }
   .block {
     text-align: right;
     margin-top: 30px
   }
-  .clearfix
 }
 </style>
 

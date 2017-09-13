@@ -24,7 +24,7 @@ export default {
 
 <style lang="less">
 .header-box {
-  z-index: 100;
+  z-index: 99;
   position: absolute;
   height: 64px;
   width: 100%;

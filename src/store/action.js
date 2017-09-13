@@ -1,4 +1,4 @@
-import ajax from '../config/ajax'
+import service from './service'
 
 export default {
 	addNum({ commit, state }, id) {
@@ -10,5 +10,10 @@ export default {
 	},
 	changeTest({commit, state}, text) {
 		commit('TEST_ACTION', text)
+	},
+	getInfoConfig({commit, state}, data) {
+		data = service.configData()
+		commit('INFO_CONFIG', data)
 	}
 }
+

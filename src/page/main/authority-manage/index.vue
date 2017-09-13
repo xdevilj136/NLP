@@ -1,7 +1,6 @@
 <template>
   <div class="right-content">
-    <h3>用户与权限管理</h3>
-    <hr>
+    <h3 class="title">用户与权限管理</h3>
     <el-table :data="tableData" border class="authority-manage-task">
       <el-table-column prop="username" label="用户名">
       </el-table-column>
@@ -125,19 +124,9 @@ export default {
 </script>
 
 <style lang="less">
-.clearfix {
-  &:before,
-  &:after {
-    content: " ";
-    display: block;
-    overflow: hidden;
-  }
-
-  &:after {
-    clear: both;
-  }
+.title{
+  border-bottom: 1px solid #E8E8E8;
 }
-
 .right-content {
   padding: 40px;
   .authority-manage-task {
@@ -147,7 +136,6 @@ export default {
     text-align: right;
     margin-top: 30px
   }
-  .clearfix
 }
 </style>
 

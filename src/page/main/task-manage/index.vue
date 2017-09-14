@@ -4,7 +4,7 @@
       <span>任务管理</span>
     </div>
     <div>
-      <el-form :inline="true" :model="searchForm">
+      <el-form :inline="true" :model="searchForm" class="searchBar">
         <el-form-item label="任务类型：">
           <el-select v-model="searchForm.taskType" placeholder="请选择" size="small">
             <el-option v-for="item in taskTypeOptions" :key="item.value" :label="item.label" :value="item.value">
@@ -30,64 +30,36 @@
     </div>
     <div style="overflow:hidden;">
       <span class="lightFont">共搜索到{{taskManageData.length?taskManageData.length:0}}条数据</span>
-      <el-button class="fr" type="primary" @click="createTask" size="small">新增任务</el-button>
+      <div class="fr">
+        <el-button @click="refreshTable" size="small">刷新</el-button>
+        <el-button type="primary" @click="createTask" size="small">新增任务</el-button>
+      </div>
     </div>
-    <el-table :data="taskManageData" border class="task-manage-task" 
-    :default-sort = "{prop: 'time', order: 'descending'}">
-      <el-table-column prop="name" label="任务名称" >
-              <template scope="scope">
-        <a style="color:#20a0ff;" href="javascript:void(0);" @click="showTaskDetail">{{scope.row.name}}</a>
-      </template>
-      </el-table-column>
-      <el-table-column prop="type" label="类型" ></el-table-column>
-      <el-table-column prop="time" label="建立日期" :sortable="true"></el-table-column>
-      <el-table-column prop="status" label="状态" :sortable="true"></el-table-column>
-      <el-table-column label="操作">
+    <el-table :data="taskManageData" border class="task-manage-task" :default-sort="{prop: 'time', order: 'descending'}">
+      <el-table-column prop="name" label="任务名称" min-width="230px">
         <template scope="scope">
-          <div v-if="hasCompleted(scope.row.status)">
-            <el-button @click="handleClick" type="text" size="small">查看日志</el-button>
-            <el-dropdown style="margin-left:10px;" @command="moreMenuCommand" trigger="click" menu-align="start">
-              <el-button type="text" size="small">
-                更多
-                <i class="el-icon-caret-bottom"></i>
-              </el-button>
-              <el-dropdown-menu slot="dropdown">
-                <el-dropdown-item command="edit">编辑</el-dropdown-item>
-                <el-dropdown-item command="copy">复制</el-dropdown-item>
-                <el-dropdown-item command="delete">删除</el-dropdown-item>
-              </el-dropdown-menu>
-            </el-dropdown>
+          <a style="color:#20a0ff;" href="javascript:void(0);" @click="showTaskDetail(scope.row.id)">{{scope.row.name}}</a>
+        </template>
+      </el-table-column>
+      <el-table-column prop="type" label="类型" min-width="150px"></el-table-column>
+      <el-table-column prop="time" label="建立日期" :sortable="true"min-width="150px"></el-table-column>
+      <el-table-column prop="status" label="状态" :sortable="true" min-width="150px"></el-table-column>
+      <el-table-column label="操作" min-width="230px">
+        <template scope="scope">
+          <div class="toolbar">
+            <el-button v-if="canStart(scope.row.status)" :disabled="startDisabled(scope.row.status)" type="text" @click="startTask">开始</el-button>
+            <el-button v-if="canStop(scope.row.status)" type="text" @click="stopTask">终止</el-button>
+            <el-button type="text" :disabled="editDisabled(scope.row.status)" @click="editTask">编辑</el-button>
+            <el-button type="text" @click="deleteTask(scope.row)">删除</el-button>
+            <el-button type="text" :disabled="showLogDisabled(scope.row.status)" @click="showTaskLog(scope.row)">查看日志</el-button>
           </div>
-          <div v-else-if="notStart(scope.row.status)">
-            <el-button @click="handleClick" type="text" size="small">开始</el-button>
-            <el-button @click="handleClick" type="text" size="small">刷新</el-button>
-            <el-dropdown style="margin-left:10px;" @command="moreMenuCommand" trigger="click" menu-align="start">
-              <el-button type="text" size="small">
-                更多
-                <i class="el-icon-caret-bottom"></i>
-              </el-button>
-              <el-dropdown-menu slot="dropdown">
-                <el-dropdown-item command="edit">编辑</el-dropdown-item>
-                <el-dropdown-item command="copy">复制</el-dropdown-item>
-                <el-dropdown-item command="delete">删除</el-dropdown-item>
-              </el-dropdown-menu>
-            </el-dropdown>
-          </div>
-          <div v-else-if="hasStarted(scope.row.status)">
-            <el-button @click="handleClick" type="text" size="small">终止</el-button>
-            <el-button @click="handleClick" type="text" size="small">刷新</el-button>
-            <el-dropdown style="margin-left:10px;" @command="moreMenuCommand" trigger="click" menu-align="start">
-              <el-button type="text" size="small">
-                更多
-                <i class="el-icon-caret-bottom"></i>
-              </el-button>
-              <el-dropdown-menu slot="dropdown">
-                <el-dropdown-item command="edit">编辑</el-dropdown-item>
-                <el-dropdown-item command="copy">复制</el-dropdown-item>
-                <el-dropdown-item command="delete">删除</el-dropdown-item>
-              </el-dropdown-menu>
-            </el-dropdown>
-          </div>
+          <el-dialog :title="dialogTitle" :visible.sync="dialogVisible" size="tiny" :modal="true" :modal-append-to-body="false">
+            <span>删除后，该任务将无法正常执行。</span>
+            <span slot="footer" class="dialog-footer">
+              <el-button @click="dialogVisible = false">取 消</el-button>
+              <el-button type="primary" @click.native.prevent="deleteDialogConfirm(scope.row)">确 定</el-button>
+            </span>
+          </el-dialog>
         </template>
       </el-table-column>
     </el-table>
@@ -156,7 +128,9 @@ export default {
         taskType: '',
         taskStatus: '',
         time: ''
-      }
+      },
+      dialogTitle: '',
+      dialogVisible: false
     }
   },
   watch: {
@@ -170,24 +144,62 @@ export default {
     ...mapActions([
       'getTaskManageData'
     ]),
+    //判断每行任务状态
     hasCompleted(status) {
-      return status.indexOf('结束') !== -1;
+      return status=='已结束';
+    },
+    errorCompleted(status){
+      return status == '非正常结束';
     },
     notStart(status) {
       return status == '未开始';
     },
-    hasStarted(status) {
-      return status == '正在执行' || status == '等待开始';
+    readyToStart(status){
+      return status == '等待开始';
     },
-    //表格‘更多’菜单指令
-    moreMenuCommand(command) {
-      this.$message('click on item ' + command);
+    isRunning(status) {
+      return status == '正在执行';
     },
-    showTaskDetail(){
-      this.$router.push('/main/task-manage/detail')
+    //根据任务状态置灰对应操作
+    canStart(status){
+      return this.notStart(status)||this.hasCompleted(status)||this.errorCompleted(status);
     },
-    handleClick(data) {
-      console.log(data)
+    canStop(status){
+      return this.readyToStart(status)||this.isRunning(status);
+    },
+    startDisabled(status){
+      return this.hasCompleted(status)||this.errorCompleted(status);
+    },
+    editDisabled(status){
+      return this.isRunning(status)||this.readyToStart(status)||this.hasCompleted(status);
+    },
+    showLogDisabled(status){
+      return this.notStart(status)||this.readyToStart(status);
+    },
+    showTaskDetail(id) {
+      this.$router.push('/main/task-manage/detail/' + id)
+    },
+    refreshTable() {
+
+    },
+    startTask() {
+
+    },
+    stopTask() {
+
+    },
+    editTask() {
+    },
+    deleteTask(row) {
+      this.dialogVisible = true;
+      this.dialogTitle = "确认删除 " + row.name + " ?"
+    },
+    showTaskLog(row) {
+      this.$router.push('/main/task-manage/log/' + row.id)
+    },
+    deleteDialogConfirm(row) {
+      console.log(row);
+      this.dialogVisible = false;
     },
     createTask() {
       this.$router.push('/main/task-manage/create')
@@ -209,7 +221,13 @@ export default {
 
 .right-content {
   padding: 40px;
+  .searchBar {
+    & .el-select {
+      width: 150px;
+    }
+  }
   .task-manage-task {
+    width: 100%;
     margin-top: 16px;
   }
   .title-show-box {
@@ -220,6 +238,18 @@ export default {
   .block {
     text-align: right;
     margin-top: 30px
+  }
+  .toolbar {
+    button {
+      margin: 0;
+      &:after {
+        content: " |";
+        display: inline;
+      }
+      &:last-child:after {
+        display: none;
+      }
+    }
   }
 }
 </style>

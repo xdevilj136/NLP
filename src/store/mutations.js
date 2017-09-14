@@ -11,7 +11,7 @@ export default {
 	},
 	// 获取信息抽取配置
 	[INFO_CONFIG](state, data) {
-		state.infoConfig = data
+		state.configList = data
 	},
 	//获取任务管理数据
 	[TASK_MANAGE](state, data) {

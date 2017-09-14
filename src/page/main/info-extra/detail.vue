@@ -2,12 +2,12 @@
 <div>
     <div class="no-config" v-if="data.length == 0">
         <img src="../../../images/natural-language/nullimg.png" />
-        <p class="title">您还没添加任何规则</p>
+        <p class="no-config-title">您还没添加任何规则</p>
         <p>添加规则后才可以配置任务</p>
         <el-button type="primary" @click="addConfig()">立即添加</el-button>
     </div>
     <div v-if="data.length > 0">
-    <div class="submit-box">
+    <div class="info-submit-box">
       <el-button
       @click="addConfig()"
       type="primary">添加</el-button>
@@ -72,11 +72,11 @@ export default {
     p {
         padding-bottom: 10px;
     }
-    .title {
+    .no-config-title {
         font-size: 18px;
     }
 }
-.submit-box {
+.info-submit-box {
   text-align: right
 }
 .desc {

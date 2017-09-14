@@ -45,6 +45,7 @@ export default {
 .info-extra-card-box {
   border: 1px solid #F7F7F7;
   width: 100%;
+  margin-bottom: 20px;
   border-radius: 4px;
   .info-extra-card-head {
     background: #F7F7F7;

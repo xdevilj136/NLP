@@ -11,6 +11,8 @@ const state = {
 	test: '测试vuex数据流程',
 	infoConfig: [],
 	taskManageData:[],
+	taskManageDetail:{},
+	taskLog:{},
 	configList: [], // 配置list
 	infoGet: {}, // 信息抽取
 	analysiData: {} // 词法分析数据

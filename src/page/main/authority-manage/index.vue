@@ -106,6 +106,7 @@ export default {
     handleCurrentChange(page) {
       console.log(page)
     },
+    //编辑对话框确认
     dialogConfirm() {
       if (this.dialogType == "deleteDialog") {
         this.tableData.splice(this.operateRowIndex, 1);

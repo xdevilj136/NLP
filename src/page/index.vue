@@ -11,8 +11,8 @@
 </template>
 
 <script>
-import headerNav from '../components/header';
-import leftNav from '../components/leftNav'
+import headerNav from 'components/header'
+import leftNav from 'components/leftNav'
 
 export default {
 	name: 'main',

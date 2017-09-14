@@ -1,33 +1,77 @@
 <template>
-<div class="a100">
-    jdsakddsajfdsalkfdmksla
+<div>
+  <div class="content-ident-box">
+    <p class="content-title">机构名标准化</p>
+    <el-input class="content-input" v-model="data.name" placeholder="请输入机构名"></el-input>
+    <el-button class="content-submit" @click="submitTxt('one')" type="primary">提交</el-button>
+  </div>
+  <div class="content-ident-box" v-if="submit.one">
+    <p class="content-title">全称</p>
+    <el-input class="content-input" :disabled="true"
+    v-model="data.nameInit" placeholder="请输入机构名"></el-input>
+  </div>
+  <div class="content-ident-box" v-if="submit.one">
+    <p class="content-title">机构名分析</p>
+    <el-input class="content-input" v-model="data.nameAll" placeholder="请输入机构名"></el-input>
+    <el-button class="content-submit" @click="submitTxt('two')" type="primary">提交</el-button>
+  </div>
+  <analysisResult v-if="submit.two && analysiData['ner_list']" type="ner_list"
+  headTitle="分析结果" :data="analysiData['ner_list']" />
 </div>
 </template>
 <script>
+import { mapActions, mapState } from 'vuex'
+import analysisResult from 'components/analysisResult';
 export default {
 	name: 'machanism-ident',
     data () {
       return {
+        data: {
+          name: '',
+          nameAll: '',
+          nameInit: ''
+        },
+        submit: {
+          one: false,
+          two: false
+        }
       }
     },
     watch: {
     },
+    components: {
+   		analysisResult
+  	},
+    computed: mapState(['analysiData']),
     created(){
     },
     methods: {
+      ...mapActions([
+        'analysisGet'
+  		]),
+      submitTxt (type) {
+        this.submit[type] = true
+        if (type === 'one') {
+          this.submit['two'] = false
+          this.data.nameInit = this.data.name
+        } else {
+          this.analysisGet({type: ['ner_list']})
+        }
+      }
     }
 }
 </script>
 
 <style lang="less">
-.right-content {
-  padding: 40px;
-  .task-manage-task {
-    margin-top: 16px;
+.content-ident-box {
+  margin-top: 15px;
+  .content-title {
+    padding: 10px 0;
+    color: #333;
   }
-  .block {
-    text-align: right;
-    margin-top: 30px
+  .content-input {
+    width: 400px;
+    margin-right: 20px
   }
 }
 </style>

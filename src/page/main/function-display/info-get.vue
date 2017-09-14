@@ -19,7 +19,7 @@
     @click="submitTxt()"
     type="primary">提交文本</el-button>
   </div>
-  <el-table v-if="Object.keys(infoGet).length > 0" class="mgt10 mgb10"
+  <el-table v-if="submit && Object.keys(infoGet).length > 0" class="mgt10 mgb10"
     :data="infoGet.children">
     <el-table-column
       prop="name"
@@ -41,7 +41,8 @@ export default {
         data: {
           type: '',
           value: ''
-        }
+        },
+        submit: false
       }
     },
     watch: {
@@ -54,6 +55,7 @@ export default {
         'infoGetAction'
   		]),
       submitTxt () {
+        this.submit = true
         this.infoGetAction()
       }
     }

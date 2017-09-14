@@ -25,7 +25,7 @@ export default {
             value: 'data-config'
           },{
             label: '信息抽取配置',
-            value: '信息抽取配置',
+            value: 'info-extra',
             children: []
           },{
             label: '功能展示',
@@ -71,7 +71,7 @@ export default {
         })
         this.chooseSection()
       },
-      handleNodeClick(data) {
+      handleNodeClick(data, node) {
         let self = this
         if (data.value === 'add') {
           this.$prompt('请输入新增的抽取配置', '提示', {
@@ -82,10 +82,16 @@ export default {
           }).then(({ value }) => {
             let array = self.data.list[2].children
             array.splice(array.length - 1 , 0, {value: value, label: value})
+          }).catch(() => {
+
           })
         } else {
           this.changeTest(data)
-          this.$router.push('/main/' + data.value)
+          let route = '/main/' + data.value
+          if (node.parent.data.value === 'info-extra') {
+            route = '/main/' + node.parent.data.value + '/' + data.value + '/detail'
+          }
+          this.$router.push(route)
         }
       },
       renderContent(h, { node, data, store }) {
@@ -107,6 +113,9 @@ export default {
               for (let j = 0; j < this.data.list[i].children.length; j++) {
                 if (this.data.list[i].children[j].value === (path[2] + '/' +path[3])) {
                   this.data.defaultNode = path[2] + '/' +path[3]
+                  this.data.defaultExpanded.push(path[2])
+                } else if (this.data.list[i].children[j].value === (path[3])) {
+                  this.data.defaultNode = path[3]
                   this.data.defaultExpanded.push(path[2])
                 }
               }

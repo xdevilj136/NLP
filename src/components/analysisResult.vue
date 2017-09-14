@@ -33,7 +33,6 @@ export default {
   },
   props:['headTitle', 'data', 'type'],
   created(){
-    console.log(this.data)
   }
 }
 </script>

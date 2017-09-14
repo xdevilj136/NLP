@@ -26,6 +26,19 @@ export default [{
             path: 'authority-manage',
             component : r => require.ensure([], () => r(require('../page/main/authority-manage/index')), 'authority-manage')
         }, {
+            path: 'info-extra',
+            component: r => require.ensure([], () => r(require('../page/main/info-extra/index')), 'info-extra'),
+            children: [{
+                path: ':id/detail',
+                component : r => require.ensure([], () => r(require('../page/main/info-extra/detail')), 'info-extra-detail'),
+            }, {
+                path: ':id/add',
+                component : r => require.ensure([], () => r(require('../page/main/info-extra/edit')), 'info-extra-add'),
+            }, {
+                path: ':id/edit',
+                component : r => require.ensure([], () => r(require('../page/main/info-extra/edit')), 'info-extra-edit'),
+            }]
+        }, {
             path: 'function-display',
             component : r => require.ensure([], () => r(require('../page/main/function-display/index')), 'function-display'),
             children: [{

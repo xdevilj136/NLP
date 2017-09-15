@@ -22,7 +22,7 @@ export default {
             value: 'task-manage'
           },{
             label: '数据源配置',
-            value: 'data-config'
+            value: 'data-source-config'
           },{
             label: '信息抽取配置',
             value: 'info-extra'

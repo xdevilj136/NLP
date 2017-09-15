@@ -14,6 +14,8 @@ const state = {
 	taskManageData:[],
 	taskManageDetail:{},
 	taskLog:{},
+	authorityManage:[],
+	dataSource:[],
 	configList: [], // 配置list
 	infoGet: {}, // 信息抽取
 	analysiData: {}, // 词法分析数据

@@ -26,8 +26,8 @@ export default [{
             path: 'task-manage/log/:id',
             component : r => require.ensure([], () => r(require('../page/main/task-manage/log')), 'log')
         },{
-            path: 'data-config',
-            component : r => require.ensure([], () => r(require('../page/main/data-config/index')), 'data-config')
+            path: 'data-source-config',
+            component : r => require.ensure([], () => r(require('../page/main/data-source-config/index')), 'data-source-config')
         },{
             path: 'authority-manage',
             component : r => require.ensure([], () => r(require('../page/main/authority-manage/index')), 'authority-manage')

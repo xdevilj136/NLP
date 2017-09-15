@@ -6,8 +6,6 @@
         :to="{ name: 'info-extra-detail', params: { config: $route.params.config }}">{{title.one}}</router-link>
         <span>  / </span>
         <span class="hightLight">{{title.two}}</span>
-        <el-button class="fr" v-if="title"
-        type="danger">删除</el-button>
     </div>
     <router-view></router-view>
 </div>
@@ -33,29 +31,9 @@ export default {
     computed: mapState(['configList']),
     watch: {
         '$route' (newVal, oldVal) {
-            this.config = this.action[this.$route.name]
-            for (let i = 0; i < this.configList.length; i++) {
-                if (this.configList[i].value === this.$route.params.config && this.config) {
-                    this.title.one = this.configList[i].label
-                    this.title.two = this.action[this.$route.name]
-                } else if (this.configList[i].value === this.$route.params.config && !this.config) {
-                    this.title.two = this.configList[i].label
-                    this.title.one = '信息抽取配置'
-                }
-            }
         }
     },
     created(){
-        this.config = this.action[this.$route.name]
-        for (let i = 0; i < this.configList.length; i++) {
-            if (this.configList[i].value === this.$route.params.config && this.config) {
-                this.title.one = this.configList[i].label
-                this.title.two = this.action[this.$route.name]
-            } else if (this.configList[i].value === this.$route.params.config && !this.config) {
-                this.title.two = this.configList[i].label
-                this.title.one = '信息抽取配置'
-            }
-        }
     },
     methods: {
     }

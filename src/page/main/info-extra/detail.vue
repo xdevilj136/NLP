@@ -7,11 +7,6 @@
         <el-button type="primary" @click="addConfig()">立即添加</el-button>
     </div>
     <div v-if="data.length > 0">
-    <div class="info-submit-box fr">
-      <el-button
-      @click="addConfig()"
-      type="primary">添加</el-button>
-    </div>
       <p class="desc">共搜到{{data.length}}条数据</p>
     </div>
     <infoExtraCard v-for="(item, index) in data" :data="item" />

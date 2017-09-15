@@ -4,16 +4,28 @@ export default {
 	configData() {
 		var data = [{
 			label: '招中标',
-			value: 'a'
+			value: 'a',
+			name: '招中标',
+			admin: 'cjf',
+			time: '2013-09-08'
 		}, {
 			label: '拜访记录',
-			value: 'b'
+			value: 'b',
+			name: '拜访记录',
+			admin: 'cjf',
+			time: '2013-09-08'
 		}, {
 			label: '授信批文解析',
-			value: 'c'
+			value: 'c',
+			name: '授信批文解析',
+			admin: 'cjf',
+			time: '2013-09-08'
 		}, {
 			label: '调查报告解析',
-			value: 'd'
+			value: 'd',
+			name: '调查报告解析',
+			admin: 'cjf',
+			time: '2013-09-08'
 		}];
 		return data
 	},

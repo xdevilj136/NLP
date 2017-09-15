@@ -43,13 +43,9 @@ export default [{
                 component : r => require.ensure([], () => r(require('../page/main/info-extra/detail')), 'info-extra-detail'),
                 name: 'info-extra-detail'
             }, {
-                path: ':config/add',
+                path: 'add',
                 component : r => require.ensure([], () => r(require('../page/main/info-extra/edit')), 'info-extra-add'),
                 name: 'info-extra-add'
-            }, {
-                path: ':config/edit/:id',
-                component : r => require.ensure([], () => r(require('../page/main/info-extra/edit')), 'info-extra-edit'),
-                name: 'info-extra-edit'
             }]
         }, {
             path: 'function-display',

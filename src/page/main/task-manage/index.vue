@@ -64,8 +64,16 @@
       </el-table-column>
     </el-table>
     <div class="block">
-      <el-pagination layout="prev, pager, next" @current-change="handleCurrentChange" :total="1000">
-      </el-pagination>
+      <el-pagination
+      @size-change="pageSizeChange"
+      @current-change="currentPageChange"
+      :current-page="currentPage"
+      :page-sizes="[5, 10,50, 100]"
+      :page-size="10"
+      :total="taskManageData.length"
+      layout=" prev, pager, next, sizes, jumper"
+      >
+    </el-pagination>
     </div>
   </div>
 </template>
@@ -75,6 +83,7 @@ export default {
   name: 'task-manage',
   data() {
     return {
+      //查询条件
       timeRangeOptions: [{
         value: 'oneMonth',
         label: '近一个月'
@@ -124,13 +133,23 @@ export default {
         value: 'end',
         label: '已结束'
       }],
+      //查询条件表单
       searchForm: {
         taskType: '',
         taskStatus: '',
         time: ''
       },
+      //最近查询条件记录
+      latestSearch:{
+        taskType: '',
+        taskStatus: '',
+        time: ''
+      },
+      //对话框
       dialogTitle: '',
-      dialogVisible: false
+      dialogVisible: false,
+      //翻页组件
+      currentPage:1  
     }
   },
   watch: {
@@ -144,6 +163,20 @@ export default {
     ...mapActions([
       'getTaskManageData'
     ]),
+    //查询确认
+    searchSubmit() {
+      this.getTaskManageData();
+      this.latestSearch=this.clone(this.searchForm);
+      console.log(this.searchForm);
+    },
+    //刷新表格
+    refreshTable() {
+      console.log(this.latestSearch);
+    },
+    //新增任务
+    createTask() {
+      this.$router.push('/main/task-manage/create')
+    },
     //判断每行任务状态
     hasCompleted(status) {
       return status=='已结束';
@@ -176,12 +209,12 @@ export default {
     showLogDisabled(status){
       return this.notStart(status)||this.readyToStart(status);
     },
+    //跳转详情
     showTaskDetail(id) {
       this.$router.push('/main/task-manage/detail/' + id)
     },
-    refreshTable() {
 
-    },
+    //操作菜单
     startTask() {
 
     },
@@ -197,19 +230,22 @@ export default {
     showTaskLog(row) {
       this.$router.push('/main/task-manage/log/' + row.id)
     },
+    //对话框确认
     deleteDialogConfirm(row) {
       console.log(row);
       this.dialogVisible = false;
     },
-    createTask() {
-      this.$router.push('/main/task-manage/create')
+    //翻页组件操作
+    currentPageChange(currentPage) {
+      console.log(currentPage)
     },
-    handleCurrentChange(page) {
-      console.log(page)
+    pageSizeChange(pageSize){
+      console.log(pageSize)
     },
-    searchSubmit() {
-      this.getTaskManageData();
+    clone(origin) {
+      return Object.assign({}, origin);
     }
+
   }
 }
 </script>
@@ -220,7 +256,6 @@ export default {
 }
 
 .right-content {
-  padding: 40px;
   .searchBar {
     & .el-select {
       width: 150px;
@@ -230,14 +265,31 @@ export default {
     width: 100%;
     margin-top: 16px;
   }
-  .title-show-box {
-    border-bottom: 1px solid #E8E8E8;
-    font-size: 16px;
-    margin-bottom: 10px;
-  }
+
   .block {
     text-align: right;
-    margin-top: 30px
+    margin-top: 30px;
+  }
+  .el-pagination{
+    button,input{
+      border: 1px solid #d1dbe5;
+      border-radius: 5px;
+    }
+    .el-input{
+      input{
+        border-radius: 5px;
+      }
+    }
+    .btn-next{
+      margin: 0 10px;
+    }
+  .el-pager{
+    li{
+      margin-left: 10px;
+      border: 1px solid #d1dbe5;
+      border-radius: 5px;
+    }
+  }
   }
   .toolbar {
     button {

@@ -1,7 +1,7 @@
 <template>
   <div class="right-content">
     <div class="title-show-box">用户与权限管理</div>
-    <el-table :data="tableData" border class="authority-manage-task">
+    <el-table :data="authorityManage" border>
       <el-table-column prop="username" label="用户名">
       </el-table-column>
       <el-table-column prop="authority" label="权限">
@@ -50,27 +50,13 @@
 </template>
 
 <script>
+import { mapActions, mapState } from 'vuex'
+
 export default {
   name: 'authority-manage',
   data() {
     return {
-      tableData: [{
-        username: '张三',
-        authority: '管理员',
-        status: '已激活'
-      }, {
-        username: '李四',
-        authority: '普通用户',
-        status: '未激活'
-      }, {
-        username: '王五',
-        authority: '管理员',
-        status: '已激活'
-      }, {
-        username: '赵六',
-        authority: '普通用户',
-        status: '未激活'
-      }],
+      authorityManageData: this.getAuthorityManage(),
       dialogVisible: false,
       dialogTitle: "",
       //编辑对话框、删除对话框
@@ -83,12 +69,17 @@ export default {
       operateRowIndex: ""
     }
   },
+  computed: mapState(['authorityManage']),
+
   watch: {
 
   },
   created() {
   },
   methods: {
+        ...mapActions([
+      'getAuthorityManage'
+    ]),
     handleDeleteClick(index, row) {
       this.dialogVisible = true;
       this.dialogTitle = "确认删除用户 " + row.username + " 吗？";
@@ -109,10 +100,10 @@ export default {
     //编辑对话框确认
     dialogConfirm() {
       if (this.dialogType == "deleteDialog") {
-        this.tableData.splice(this.operateRowIndex, 1);
+        this.authorityManage.splice(this.operateRowIndex, 1);
       }
       else if (this.dialogType == "editDialog") {
-        let operateRow = this.tableData[this.operateRowIndex];
+        let operateRow = this.authorityManage[this.operateRowIndex];
         let authority = this.editForm.authorityRadio == "admin" ? "管理员" : "普通用户";
         let status = this.editForm.statusRadio == "active" ? "已激活" : "未激活";
         operateRow.authority = authority;
@@ -131,17 +122,6 @@ export default {
 
 .right-content {
   padding: 40px;
-  .authority-manage-task {
-    margin-top: 16px;
-  }
-  .title-show-box {
-    border-bottom: 1px solid #E8E8E8;
-    font-size: 16px;
-    margin-bottom: 10px;
-    .hightLight {
-      color: #333
-    }
-  }
   .block {
     text-align: right;
     margin-top: 30px

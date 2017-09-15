@@ -26,6 +26,7 @@ export default {
     };
   },
   watch: {
+
   },
   computed: mapState(['taskLog']),
 
@@ -41,16 +42,9 @@ export default {
 
 <style lang="less" scoped>
 .right-content {
-  padding: 40px;
-  position: relative;
   .breadcrumb {
     font-size: 16px;
     line-height: inherit;
-  }
-  .title-show-box {
-    border-bottom: 1px solid #E8E8E8;
-    font-size: 16px;
-    margin-bottom: 10px;
   }
   .detail-left-label {
     height: 36px;

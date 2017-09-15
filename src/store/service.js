@@ -85,6 +85,12 @@ export default {
 			type: '授信审批解析',
 			time: '2017-08-29',
 			status: '等待开始'
+		}, {
+			id: 6,
+			name: '授信审批解析',
+			type: '授信审批解析',
+			time: '2017-08-29',
+			status: '等待开始'
 		}];
 		return data;
 	},
@@ -104,13 +110,51 @@ export default {
 	//获取任务日志
 	taskLog(id) {
 		var data = {
-      id: 1,
-      name:'客户拜访记录',
+			id: 1,
+			name: '客户拜访记录',
 			content: '日志文本文本日志文本文本日志文本文本日志文本文本日志文本文本日志文本文本日志' +
 			'文本文本日志文本文本日志文本文本日志文本文本日志文本文本日志文本文本日志文本文本'
 		};
 		return data;
+	},
+	//获取权限管理数据
+	authorityManage() {
+		var data = [{
+			username: '张三',
+			authority: '管理员',
+			status: '已激活'
+		}, {
+			username: '李四',
+			authority: '普通用户',
+			status: '未激活'
+		}, {
+			username: '王五',
+			authority: '管理员',
+			status: '已激活'
+		}, {
+			username: '赵六',
+			authority: '普通用户',
+			status: '未激活'
+		}];
+		return data;
+	},
+	//获取数据源
+	dataSource() {
+		var data = [
+			{
+				name: 'oracle审批意见表',
+				type: '192.1.1.1',
+				information: '50051'
+			},
+			{
+				name: 'sql审批意见表',
+				type: '192.1.1.1',
+				information: '50051'
+			}
+		]
+		return data;
 	}
+
 }
 // 去重操作
 function unique(data) {

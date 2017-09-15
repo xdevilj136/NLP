@@ -23,6 +23,16 @@ export default {
 		let data = service.taskLog(id)
 		commit('TASK_LOG', data)
 	},
+	//获取权限管理数据
+	getAuthorityManage({ commit, state }) {
+		let data = service.authorityManage()
+		commit('AUTHORITY_MANAGE', data)
+	},
+	//获取数据源
+	getDataSource({ commit, state }) {
+		let data = service.dataSource()
+		commit('DATA_SOURCE', data)
+	},
 	infoGetAction({ commit, state }) {
 		let data = service.infoGet()
 		commit('INFO_GET', data)

@@ -13,15 +13,15 @@
 <script>
 import headerNav from 'components/header'
 import leftNav from 'components/leftNav'
-
+import {mapState} from 'vuex';
 export default {
 	name: 'main',
     components: {
    		headerNav,
         leftNav
   	},
+    computed: mapState(['isLogin']),
     created(){
-        
     }
 }
 </script>
@@ -33,7 +33,7 @@ export default {
   bottom: 0;
   top: 64px;
   min-width: 1024px;
-  z-index: 99;
+  z-index: 89;
   .right-content-box {
     float: left;
     height: 100%;

@@ -1,7 +1,7 @@
 <template>
 <div class="header-box">
   <img class="header-logo" src="../images/natural-language/haizhi-logo.png">
-  <div class="header-right-box fr">
+  <div class="header-right-box fr" v-if="isLogin">
     <div class="fl">
       <img class="header-right-logo" src="../images/natural-language/question.png">
       <span>帮助</span>
@@ -9,15 +9,27 @@
     <div class="header-right-end fl">
       <img class="header-right-logo" src="../images/natural-language/head-logo.png">
       <span>admin</span>
+      <p class="logout" @click="logout">注销</p>
     </div>
   </div>
 </div>
 </template>
 <script>
+import { mapActions, mapState } from 'vuex'
 export default {
   name: 'header',
+  computed: mapState(['isLogin']),
   created(){
     
+  },
+  methods: {
+    ...mapActions([
+      'loginOut'
+    ]),
+    logout () {
+      this.loginOut()
+      this.$router.push('/login')
+    }
   }
 }
 </script>
@@ -48,6 +60,22 @@ export default {
     }
     .header-right-end {
       padding: 0 40px;
+      position: relative;
+      &:hover .logout {
+        display: inline-block
+      }
+      .logout {
+        position: absolute;
+        width: 70px;
+        top: 60px;
+        border: 1px solid rgba(0, 0, 0, .2); 
+        line-height: 30px;
+        text-align: center;
+        background: white;
+        display: none;
+        cursor: pointer;
+        z-index: 100
+      }
     }
   }
 }

@@ -3,8 +3,11 @@ import App from '../App'
 export default [{
     path: '/',
     component: App,
-    redirect: '/main',
+    redirect: '/login',
     children: [{
+        path: '/login',
+        component:  r => require.ensure([], () => r(require('../page/login')), 'login')
+    }, {
         path: '/main',
         component: r => require.ensure([], () => r(require('../page/index')), 'main'),
         children: [{
@@ -32,14 +35,21 @@ export default [{
             path: 'info-extra',
             component: r => require.ensure([], () => r(require('../page/main/info-extra/index')), 'info-extra'),
             children: [{
-                path: ':id/detail',
+                path: '',
+                component : r => require.ensure([], () => r(require('../page/main/info-extra/list')), 'info-extra-list'),
+                name: 'info-extra-detail'
+            }, {
+                path: ':config/detail',
                 component : r => require.ensure([], () => r(require('../page/main/info-extra/detail')), 'info-extra-detail'),
+                name: 'info-extra-detail'
             }, {
-                path: ':id/add',
+                path: ':config/add',
                 component : r => require.ensure([], () => r(require('../page/main/info-extra/edit')), 'info-extra-add'),
+                name: 'info-extra-add'
             }, {
-                path: ':id/edit',
+                path: ':config/edit/:id',
                 component : r => require.ensure([], () => r(require('../page/main/info-extra/edit')), 'info-extra-edit'),
+                name: 'info-extra-edit'
             }]
         }, {
             path: 'function-display',
@@ -60,6 +70,6 @@ export default [{
         }]
     }, {
         path: '*',
-        redirect: 'main'
+        redirect: 'login'
     }]
 }]

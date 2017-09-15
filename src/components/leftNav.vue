@@ -25,8 +25,7 @@ export default {
             value: 'data-config'
           },{
             label: '信息抽取配置',
-            value: 'info-extra',
-            children: []
+            value: 'info-extra'
           },{
             label: '功能展示',
             value: 'function-display',
@@ -64,11 +63,6 @@ export default {
   		]),
       init () {
         this.getInfoConfig()
-        this.data.list[2].children = this.configList
-        this.data.list[2].children.push({
-          label: '+',
-          value: 'add'
-        })
         this.chooseSection()
       },
       handleNodeClick(data, node) {
@@ -88,9 +82,6 @@ export default {
         } else {
           this.changeTest(data)
           let route = '/main/' + data.value
-          if (node.parent.data.value === 'info-extra') {
-            route = '/main/' + node.parent.data.value + '/' + data.value + '/detail'
-          }
           this.$router.push(route)
         }
       },
@@ -113,9 +104,6 @@ export default {
               for (let j = 0; j < this.data.list[i].children.length; j++) {
                 if (this.data.list[i].children[j].value === (path[2] + '/' +path[3])) {
                   this.data.defaultNode = path[2] + '/' +path[3]
-                  this.data.defaultExpanded.push(path[2])
-                } else if (this.data.list[i].children[j].value === (path[3])) {
-                  this.data.defaultNode = path[3]
                   this.data.defaultExpanded.push(path[2])
                 }
               }

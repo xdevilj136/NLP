@@ -4,6 +4,15 @@ export default {
 	changeTest({ commit, state }, text) {
 		commit('TEST_ACTION', text)
 	},
+	// login
+	loginCheck({commit, state}, data) {
+		let check = service.loginCheck(data)
+		commit('LOGIN_CHECK', check)
+	},
+	loginOut({commit, state}, data) {
+		let check = service.loginOut(data)
+		commit('LOGIN_CHECK', check)
+	},
 	getInfoConfig({ commit, state }) {
 		let data = service.configData()
 		commit('INFO_CONFIG', data)
@@ -30,6 +39,15 @@ export default {
 	analysisGet({ commit, state }, json) {
 		let data = service.analysisGet(json)
 		commit('ANALYSIS_GET', data)
+	},
+	// 根据配置config，抽取信息获取list
+	infoExtraGet({ commit, state}, config) {
+		let data = service.infoExtraGet(config)
+		commit('INFO_EXTRA', data)
+	},
+	infoExtraDetailGet({ commit, state}, id) {
+		let data = service.infoExtraDetailGet(id)
+		commit('INFO_EXTRA_DETAIL', data)
 	}
 }
 

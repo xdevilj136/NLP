@@ -7,11 +7,6 @@
         <el-button type="primary" @click="addConfig()">立即添加</el-button>
     </div>
     <div v-if="data.length > 0">
-    <div class="info-submit-box">
-      <el-button
-      @click="addConfig()"
-      type="primary">添加</el-button>
-    </div>
       <p class="desc">共搜到{{data.length}}条数据</p>
     </div>
     <infoExtraCard v-for="(item, index) in data" :data="item" />
@@ -31,35 +26,24 @@ export default {
     components: {
    		infoExtraCard
   	},
-    computed: mapState(['analysiData']),
+    computed: mapState(['infoExtra']),
     watch: {
       '$route' (newVal, oldVal) {
-        if (this.$route.params.id === '招中标') {
-          this.data = [{
-            name: '杜甫悲传',
-            match_rule: '南村群童欺我老无力，公然抱我入竹去',
-            trigger_rule: '唇焦口燥呼不得，归来倚杖自叹息',
-            once: 'true'
-          }]
-        } else {
-          this.data = []
-        }
+        this.infoExtraGet(this.$route.params.config)
+        this.data = this.infoExtra
       }
     },
     created(){
-      if (this.$route.params.id === '招中标') {
-        this.data = [{
-          name: '杜甫悲传',
-          match_rule: '南村群童欺我老无力，公然抱我入竹去',
-          trigger_rule: '唇焦口燥呼不得，归来倚杖自叹息',
-          once: 'true'
-        }]
-      }
+      this.infoExtraGet(this.$route.params.config)
+      this.data = this.infoExtra
     },
     methods: {
-        addConfig () {
-          this.$router.push('add')
-        }
+      ...mapActions([
+        'infoExtraGet'
+      ]),
+      addConfig () {
+        this.$router.push('add')
+      }
     }
 }
 </script>
@@ -77,7 +61,8 @@ export default {
     }
 }
 .info-submit-box {
-  text-align: right
+  text-align: right;
+  padding-bottom: 10px;
 }
 .desc {
   color: #999;

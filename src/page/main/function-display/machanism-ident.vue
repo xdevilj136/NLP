@@ -5,17 +5,17 @@
     <el-input class="content-input" v-model="data.name" placeholder="请输入机构名"></el-input>
     <el-button class="content-submit" @click="submitTxt('one')" type="primary">提交</el-button>
   </div>
-  <div class="content-ident-box" v-if="submit.one">
+  <div class="content-ident-box">
     <p class="content-title">全称</p>
     <el-input class="content-input" :disabled="true"
     v-model="data.nameInit" placeholder="请输入机构名"></el-input>
   </div>
-  <div class="content-ident-box" v-if="submit.one">
+  <div class="content-ident-box">
     <p class="content-title">机构名分析</p>
     <el-input class="content-input" v-model="data.nameAll" placeholder="请输入机构名"></el-input>
     <el-button class="content-submit" @click="submitTxt('two')" type="primary">提交</el-button>
   </div>
-  <analysisResult v-if="submit.two && analysiData['ner_list']" type="ner_list"
+  <analysisResult v-if="analysiData['ner_list']" type="ner_list"
   headTitle="分析结果" :data="analysiData['ner_list']" />
 </div>
 </template>
@@ -30,10 +30,6 @@ export default {
           name: '',
           nameAll: '',
           nameInit: ''
-        },
-        submit: {
-          one: false,
-          two: false
         }
       }
     },
@@ -50,9 +46,7 @@ export default {
         'analysisGet'
   		]),
       submitTxt (type) {
-        this.submit[type] = true
         if (type === 'one') {
-          this.submit['two'] = false
           this.data.nameInit = this.data.name
         } else {
           this.analysisGet({type: ['ner_list']})

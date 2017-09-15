@@ -1,10 +1,11 @@
 <template>
 <div class="right-content">
     <div class="title-show-box clearfix">
-      <span>信息抽取配置 / </span>
-      <span class="hightLight">{{title ? title : ''}}</span>
-      <el-button class="fr" v-if="title"
-      type="danger">删除</el-button>
+        <span v-if="!config">{{title.one}}</span>
+        <router-link v-if="config" class="gobackHead"
+        :to="{ name: 'info-extra-detail', params: { config: $route.params.config }}">{{title.one}}</router-link>
+        <span>  / </span>
+        <span class="hightLight">{{title.two}}</span>
     </div>
     <router-view></router-view>
 </div>
@@ -15,45 +16,24 @@ export default {
 	name: 'function-display',
     data () {
       return {
-          title: ''
+          title: {
+              one: '信息抽取配置',
+              two: ''
+          },
+          config: '',
+          action: {
+              'info-extra-detail': false,
+              'info-extra-edit': '修改配置',
+              'info-extra-add': '添加配置'
+          }
       }
     },
     computed: mapState(['configList']),
     watch: {
         '$route' (newVal, oldVal) {
-            if (newVal.path.split('/')[newVal.path.split('/').length - 1] === 'add') {
-                this.title = '添加配置'
-                return
-            }
-            if (newVal.path.split('/')[newVal.path.split('/').length - 1] === 'edit') {
-                this.title = '修改配置'
-                return
-            }
-            if (newVal.path.split('/')[newVal.path.split('/').length - 1] !== 'detail') {
-                this.title = ''
-                return
-            }
-            for (let i = 0; i < this.configList.length; i++) {
-                if(this.$route.params.id === this.configList[i].value) {
-                    this.title = this.configList[i].label
-                }
-            }
-      }
+        }
     },
     created(){
-        if (this.$route.path.split('/')[this.$route.path.split('/').length - 1] === 'add') {
-            this.title = '添加配置'
-            return
-        }
-        if (this.$route.path.split('/')[this.$route.path.split('/').length - 1] === 'edit') {
-            this.title = '修改配置'
-            return
-        }
-        for (let i = 0; i < this.configList.length; i++) {
-            if(this.$route.params.id === this.configList[i].value) {
-                this.title = this.configList[i].label
-            }
-        }
     },
     methods: {
     }
@@ -65,11 +45,17 @@ export default {
   padding: 40px;
   overflow: auto;
   .title-show-box {
-      padding: 10px;
+      padding: 10px 0 10px 10px;
       border-bottom: 1px solid #E8E8E8;
       font-size: 16px;
       color: #999;
       margin-bottom: 10px;
+      .gobackHead {
+          color: #999;
+          &:hover {
+              color: #20a0ff
+          }
+      }
       .hightLight {
           color: #333
       }

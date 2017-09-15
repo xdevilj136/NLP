@@ -50,7 +50,7 @@ export default {
         title: ''
       }
     },
-    computed: mapState(['analysiData']),
+    computed: mapState(['infoExtraDetail']),
     watch: {
       '$route' (newVal, oldVal) {
       }
@@ -58,6 +58,9 @@ export default {
     created(){
     },
     methods: {
+      ...mapActions([
+        'infoExtraDetailGet'
+      ]),
     }
 }
 </script>

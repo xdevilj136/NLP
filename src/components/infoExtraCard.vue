@@ -35,7 +35,7 @@ export default {
   },
   methods: {
     edit () {
-      this.$router.push('edit')
+      this.$router.push('edit/' + 12)
     }
   }
 }

@@ -51,6 +51,7 @@ if (context.length) {
 //     changeOrigin: true,
 //     secure: false,
 // }))
+server.use('/api', proxyMiddleware({target: 'http://10.10.10.11:8082', changeOrigin: true}));
 
 
 // handle fallback for HTML5 history API

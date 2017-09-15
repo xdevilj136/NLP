@@ -6,11 +6,18 @@ const TASK_MANAGE_DETAIL = 'TASK_MANAGE_DETAIL'
 const AUTHORITY_MANAGE = 'AUTHORITY_MANAGE'
 const INFO_GET = 'INFO_GET'
 const ANALYSIS_GET = 'ANALYSIS_GET'
+const INFO_EXTRA = 'INFO_EXTRA'
+const INFO_EXTRA_DETAIL = 'INFO_EXTRA_DETAIL'
+const LOGIN_CHECK = 'LOGIN_CHECK'
 const DATA_SOURCE = 'DATA_SOURCE'
 
 export default {
 	[TEST_ACTION](state, text) {
 		state.test = text
+	},
+	//login
+	[LOGIN_CHECK](state, data) {
+		state.isLogin = data
 	},
 	// 获取信息抽取配置
 	[INFO_CONFIG](state, data) {
@@ -42,5 +49,12 @@ export default {
 	},
 	[ANALYSIS_GET](state, data) {
 		state.analysiData = data
+	},
+	// 抽取信息配置模块
+	[INFO_EXTRA](state, data) {
+		state.infoExtra = data
+	},
+	[INFO_EXTRA_DETAIL] (state, data) {
+		state.infoExtraDetail = data
 	}
 }

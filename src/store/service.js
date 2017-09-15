@@ -4,17 +4,72 @@ export default {
 	configData() {
 		var data = [{
 			label: '招中标',
-			value: '招中标'
+			value: 'a',
+			name: '招中标',
+			admin: 'cjf',
+			time: '2013-09-08'
 		}, {
 			label: '拜访记录',
-			value: '拜访记录'
+			value: 'b',
+			name: '拜访记录',
+			admin: 'cjf',
+			time: '2013-09-08'
 		}, {
 			label: '授信批文解析',
-			value: '授信批文解析'
+			value: 'c',
+			name: '授信批文解析',
+			admin: 'cjf',
+			time: '2013-09-08'
 		}, {
 			label: '调查报告解析',
-			value: '调查报告解析'
+			value: 'd',
+			name: '调查报告解析',
+			admin: 'cjf',
+			time: '2013-09-08'
 		}];
+		return data
+	},
+	// loginCheck
+	loginCheck (data) {
+		ajaxData()
+		return true
+	},
+	// loginOut
+	loginOut (data) {
+		return false
+	},
+	// 信息抽取list
+	infoExtraGet (config) {
+		let data = [{
+			name: '杜甫悲传',
+			match_rule: '南村群童欺我老无力，公然抱我入竹去',
+			trigger_rule: '唇焦口燥呼不得，归来倚杖自叹息',
+			once: 'true'
+		}]
+		if (config === 'a') {
+			data = []
+		} else if (config === 'b') {
+			data = [{
+				name: '杜甫悲传',
+				match_rule: '南村群童欺我老无力，公然抱我入竹去',
+				trigger_rule: '唇焦口燥呼不得，归来倚杖自叹息',
+				once: 'true'
+			}, {
+				name: '杜甫悲传',
+				match_rule: '南村群童欺我老无力，公然抱我入竹去',
+				trigger_rule: '唇焦口燥呼不得，归来倚杖自叹息',
+				once: 'true'
+			}]
+		}
+		return data
+	},
+	infoExtraDetailGet (id) {
+		let data = {
+			name: '杜甫悲传',
+			match_rule: '南村群童欺我老无力，公然抱我入竹去',
+			trigger_rule: '唇焦口燥呼不得，归来倚杖自叹息',
+			once: 'true'
+		}
 		return data
 	},
 	infoGet() {
@@ -165,4 +220,12 @@ function unique(data) {
 		}
 	}
 	return lastData
+}
+// 所有请求在此处拦截
+function ajaxData(url = '', data = {}, params = {}) {
+	let start = async function () {
+		let data = await ajax('GET','/api/test/hello')
+		console.log(data)
+	}
+	start()
 }

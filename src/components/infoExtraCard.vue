@@ -3,9 +3,7 @@
   <table class="info-extra-card-box">
     <tr class="info-extra-card-head">
       <th>{{data.name}}</th>
-      <th class="action">
-        <span @click="edit">编辑</span>
-        <span>删除</span>
+      <th>
       </th>
     </tr>
     <tr class="info-extra-card-body">
@@ -34,9 +32,6 @@ export default {
   created(){
   },
   methods: {
-    edit () {
-      this.$router.push('edit/' + 12)
-    }
   }
 }
 </script>
@@ -45,7 +40,7 @@ export default {
 .info-extra-card-box {
   border: 1px solid #F7F7F7;
   width: 100%;
-  margin-bottom: 20px;
+  margin-top: 20px;
   border-radius: 4px;
   .info-extra-card-head {
     background: #F7F7F7;
@@ -54,15 +49,6 @@ export default {
     font-size: 12px;
     th {
       font-size: 12px;
-    }
-    .action {
-      text-align: right;
-      padding-right: 20px;
-      color: #999;
-      cursor: pointer;
-      span {
-        padding: 0 10px;
-      }
     }
   }
   .info-extra-card-body td {

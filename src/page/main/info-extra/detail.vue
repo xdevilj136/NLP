@@ -1,72 +1,70 @@
 <template>
-<div>
-    <!-- <div class="no-config" v-if="data.length == 0">
-        <img src="../../../images/natural-language/nullimg.png" />
-        <p class="no-config-title">您还没添加任何规则</p>
-        <p>添加规则后才可以配置任务</p>
-        <el-button type="primary" @click="addConfig()">立即添加</el-button>
-    </div> -->
-    <div v-if="data.length > 0">
-      <p class="desc">共搜到{{data.length}}条数据</p>
+  <div>
+    <el-button @click="editRule(data.id)" class="fr" style="margin-bottom:10px;" type="primary" size="small">编辑</el-button>
+    <div class="background-title">
+      <span>规则说明</span>
     </div>
-    <infoExtraCard v-for="(item, index) in data" :data="item" />
-</div>
+    <div class="desc">
+      <span>规则名称：</span>
+      <span style="margin-right:200px;">{{data.ruleDiscription.ruleName}}</span>
+      <span>设为私密：</span>
+      <span>{{data.ruleDiscription.isPublic=='yes'?'否':'是'}}</span>
+    </div>
+    <div class="background-title">
+      <span>规则属性</span>
+    </div>
+    <infoExtraCard v-for="(item, index) in data.ruleProperty" :data="item" />
+  </div>
 </template>
 <script>
 import { mapActions, mapState } from 'vuex'
 import infoExtraCard from 'components/infoExtraCard'
 export default {
-	name: 'info-extra-detail',
-    data () {
-      return {
-          data: [],
-          title: ''
-      }
-    },
-    components: {
-   		infoExtraCard
-  	},
-    computed: mapState(['infoExtra']),
-    watch: {
-      '$route' (newVal, oldVal) {
-        this.infoExtraGet(this.$route.params.config)
-        this.data = this.infoExtra
-      }
-    },
-    created(){
+  name: 'info-extra-detail',
+  data() {
+    return {
+      data: [],
+      title: ''
+    }
+  },
+  components: {
+    infoExtraCard
+  },
+  computed: mapState(['infoExtra']),
+  watch: {
+    '$route'(newVal, oldVal) {
       this.infoExtraGet(this.$route.params.config)
       this.data = this.infoExtra
-    },
-    methods: {
-      ...mapActions([
-        'infoExtraGet'
-      ]),
-      addConfig () {
-        this.$router.push('add')
-      }
     }
+  },
+  created() {
+    this.infoExtraGet(this.$route.params.config)
+    this.data = this.infoExtra
+  },
+  methods: {
+    ...mapActions([
+      'infoExtraGet'
+    ]),
+    addConfig() {
+      this.$router.push('add')
+    },
+    editRule(id) {
+      this.$router.push('/main/info-extra/edit/' + id);
+    }
+  }
 }
 </script>
 
 <style lang="less">
-.no-config {
-    width: 100%;
-    text-align: center;
-    padding-top: 70px;
-    p {
-        padding-bottom: 10px;
-    }
-    .no-config-title {
-        font-size: 18px;
-    }
-}
-.info-submit-box {
-  text-align: right;
-  padding-bottom: 10px;
-}
-.desc {
-  color: #999;
-  font-size: 12px;
+.background-title {
+  clear: both;
+  background-color: #eef1f6;
   padding: 10px;
+  color: #666;
+}
+
+.desc {
+  margin: 20px;
+  color: #666;
 }
 </style>

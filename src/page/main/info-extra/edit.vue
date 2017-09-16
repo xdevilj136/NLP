@@ -20,24 +20,24 @@
     </div>
     <div v-for="(domain, index) in propertyDomains" :key="domain.key">
       <div class="border-container">
-        <el-form :model="ruleProperty" class="rule-discription-form" label-width="100px">
+        <el-form :model="domain.ruleProperty" class="rule-discription-form" label-width="100px">
           <div class="inline-form">
             <el-form-item label="属性名称：">
-              <el-input v-model="ruleProperty.name" placeholder="请输入" size="small"></el-input>
+              <el-input v-model="domain.ruleProperty.name" placeholder="请输入" size="small"></el-input>
             </el-form-item>
             <el-form-item label="只匹配一次：">
-              <el-radio-group v-model="ruleProperty.matchOnce">
+              <el-radio-group v-model="domain.ruleProperty.matchOnce">
                 <el-radio label="yes">是</el-radio>
                 <el-radio label="no">否</el-radio>
               </el-radio-group>
             </el-form-item>
           </div>
           <el-form-item label="触发规则：">
-            <el-input type="textarea" :autosize="{ minRows: 5, maxRows: 5}" placeholder="请输入内容" v-model="ruleProperty.triggerRule">
+            <el-input type="textarea" :autosize="{ minRows: 5, maxRows: 5}" placeholder="请输入内容" v-model="domain.ruleProperty.triggerRule">
             </el-input>
           </el-form-item>
           <el-form-item label="匹配规则：">
-            <el-input type="textarea" :autosize="{ minRows: 5, maxRows: 5}" placeholder="请输入内容" v-model="ruleProperty.matchRule">
+            <el-input type="textarea" :autosize="{ minRows: 5, maxRows: 5}" placeholder="请输入内容" v-model="domain.ruleProperty.matchRule">
             </el-input>
             <p class="config-content-desc">*匹配规则与触发规则必填一项</p>
           </el-form-item>
@@ -63,14 +63,16 @@ export default {
         ruleName: '',
         isPublic: 'yes'
       },
-      ruleProperty: {
-        matchRule: '',
-        triggerRule: '',
-        matchOnce: 'yes'
-      },
+
       propertyDomains: [
         {
-          key: ''
+          key: '',
+          ruleProperty: {
+            name:'',
+            matchRule: '',
+            triggerRule: '',
+            matchOnce: 'yes'
+          },
         }
       ]
     }
@@ -91,7 +93,14 @@ export default {
     addPropertyDomain() {
       this.propertyDomains.push(
         {
-          key: Date.now()
+          key: Date.now(),
+          ruleProperty: {
+            name:'',
+            matchRule: '',
+            triggerRule: '',
+            matchOnce: 'yes'
+          }
+          
         }
       );
     },
@@ -101,10 +110,10 @@ export default {
         this.propertyDomains.splice(index, 1)
       }
     },
-    createRule(){
+    createRule() {
 
     },
-    saveRule(){
+    saveRule() {
 
     }
   }

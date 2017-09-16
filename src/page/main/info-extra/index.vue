@@ -13,7 +13,7 @@
 <script>
 import { mapActions, mapState } from 'vuex'
 export default {
-	name: 'function-display',
+	name: 'info-extra',
     data () {
       return {
           title: {

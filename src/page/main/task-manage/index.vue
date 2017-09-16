@@ -35,14 +35,15 @@
         <el-button type="primary" @click="createTask" size="small">新增任务</el-button>
       </div>
     </div>
-    <el-table :data="taskManageData" border class="task-manage-task" :default-sort="{prop: 'time', order: 'descending'}">
+    <el-table :data="taskManageData" border class="data-table" :default-sort="{prop: 'time', order: 'descending'}">
       <el-table-column prop="name" label="任务名称" min-width="230px">
         <template scope="scope">
-          <a style="color:#20a0ff;" href="javascript:void(0);" @click="showTaskDetail(scope.row.id)">{{scope.row.name}}</a>
+          <router-link :to="'/main/task-manage/detail/' + scope.row.id">{{ scope.row.name }}</router-link>
+
         </template>
       </el-table-column>
       <el-table-column prop="type" label="类型" min-width="150px"></el-table-column>
-      <el-table-column prop="time" label="建立日期" :sortable="true"min-width="150px"></el-table-column>
+      <el-table-column prop="time" label="建立日期" :sortable="true" min-width="150px"></el-table-column>
       <el-table-column prop="status" label="状态" :sortable="true" min-width="150px"></el-table-column>
       <el-table-column label="操作" min-width="230px">
         <template scope="scope">
@@ -64,16 +65,8 @@
       </el-table-column>
     </el-table>
     <div class="block">
-      <el-pagination
-      @size-change="pageSizeChange"
-      @current-change="currentPageChange"
-      :current-page="currentPage"
-      :page-sizes="[5, 10,50, 100]"
-      :page-size="10"
-      :total="taskManageData.length"
-      layout=" prev, pager, next, sizes, jumper"
-      >
-    </el-pagination>
+      <el-pagination @size-change="pageSizeChange" @current-change="currentPageChange" :current-page="currentPage" :page-sizes="[5, 10,50, 100]" :page-size="10" :total="taskManageData.length" layout=" prev, pager, next, sizes, jumper">
+      </el-pagination>
     </div>
   </div>
 </template>
@@ -140,7 +133,7 @@ export default {
         time: ''
       },
       //最近查询条件记录
-      latestSearch:{
+      latestSearch: {
         taskType: '',
         taskStatus: '',
         time: ''
@@ -149,7 +142,7 @@ export default {
       dialogTitle: '',
       dialogVisible: false,
       //翻页组件
-      currentPage:1  
+      currentPage: 1
     }
   },
   watch: {
@@ -166,7 +159,7 @@ export default {
     //查询确认
     searchSubmit() {
       this.getTaskManageData();
-      this.latestSearch=this.clone(this.searchForm);
+      this.latestSearch = this.clone(this.searchForm);
       console.log(this.searchForm);
     },
     //刷新表格
@@ -179,35 +172,35 @@ export default {
     },
     //判断每行任务状态
     hasCompleted(status) {
-      return status=='已结束';
+      return status == '已结束';
     },
-    errorCompleted(status){
+    errorCompleted(status) {
       return status == '非正常结束';
     },
     notStart(status) {
       return status == '未开始';
     },
-    readyToStart(status){
+    readyToStart(status) {
       return status == '等待开始';
     },
     isRunning(status) {
       return status == '正在执行';
     },
     //根据任务状态置灰对应操作
-    canStart(status){
-      return this.notStart(status)||this.hasCompleted(status)||this.errorCompleted(status);
+    canStart(status) {
+      return this.notStart(status) || this.hasCompleted(status) || this.errorCompleted(status);
     },
-    canStop(status){
-      return this.readyToStart(status)||this.isRunning(status);
+    canStop(status) {
+      return this.readyToStart(status) || this.isRunning(status);
     },
-    startDisabled(status){
-      return this.hasCompleted(status)||this.errorCompleted(status);
+    startDisabled(status) {
+      return this.hasCompleted(status) || this.errorCompleted(status);
     },
-    editDisabled(status){
-      return this.isRunning(status)||this.readyToStart(status)||this.hasCompleted(status);
+    editDisabled(status) {
+      return this.isRunning(status) || this.readyToStart(status) || this.hasCompleted(status);
     },
-    showLogDisabled(status){
-      return this.notStart(status)||this.readyToStart(status);
+    showLogDisabled(status) {
+      return this.notStart(status) || this.readyToStart(status);
     },
     //跳转详情
     showTaskDetail(id) {
@@ -239,7 +232,7 @@ export default {
     currentPageChange(currentPage) {
       console.log(currentPage)
     },
-    pageSizeChange(pageSize){
+    pageSizeChange(pageSize) {
       console.log(pageSize)
     },
     clone(origin) {
@@ -261,35 +254,33 @@ export default {
       width: 150px;
     }
   }
-  .task-manage-task {
-    width: 100%;
-    margin-top: 16px;
-  }
+
 
   .block {
     text-align: right;
     margin-top: 30px;
   }
-  .el-pagination{
-    button,input{
+  .el-pagination {
+    button,
+    input {
       border: 1px solid #d1dbe5;
       border-radius: 5px;
     }
-    .el-input{
-      input{
+    .el-input {
+      input {
         border-radius: 5px;
       }
     }
-    .btn-next{
+    .btn-next {
       margin: 0 10px;
     }
-  .el-pager{
-    li{
-      margin-left: 10px;
-      border: 1px solid #d1dbe5;
-      border-radius: 5px;
+    .el-pager {
+      li {
+        margin-left: 10px;
+        border: 1px solid #d1dbe5;
+        border-radius: 5px;
+      }
     }
-  }
   }
   .toolbar {
     button {

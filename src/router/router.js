@@ -37,7 +37,7 @@ export default [{
             children: [{
                 path: '',
                 component : r => require.ensure([], () => r(require('../page/main/info-extra/list')), 'info-extra-list'),
-                name: 'info-extra-detail'
+                name: 'info-extra-list'
             }, {
                 path: ':config/detail',
                 component : r => require.ensure([], () => r(require('../page/main/info-extra/detail')), 'info-extra-detail'),
@@ -47,7 +47,7 @@ export default [{
                 component : r => require.ensure([], () => r(require('../page/main/info-extra/edit')), 'info-extra-add'),
                 name: 'info-extra-add'
             },{
-                path: 'edit/:id',
+                path: ':config/edit/:id',
                 component : r => require.ensure([], () => r(require('../page/main/info-extra/edit')), 'info-extra-edit'),
                 name: 'info-extra-edit'
             }]

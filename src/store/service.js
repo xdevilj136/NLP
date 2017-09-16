@@ -3,28 +3,32 @@ import ajax from '../config/ajax'
 export default {
 	configData() {
 		var data = [{
+			id:1,
 			label: '招中标',
 			value: 'a',
 			name: '招中标',
-			admin: 'cjf',
+			creator: 'cjf',
 			time: '2013-09-08'
 		}, {
+			id:2,
 			label: '拜访记录',
 			value: 'b',
 			name: '拜访记录',
-			admin: 'cjf',
+			creator: 'cjf',
 			time: '2013-09-08'
 		}, {
+			id:3,
 			label: '授信批文解析',
 			value: 'c',
 			name: '授信批文解析',
-			admin: 'cjf',
+			creator: 'cjf',
 			time: '2013-09-08'
 		}, {
+			id:4,
 			label: '调查报告解析',
 			value: 'd',
 			name: '调查报告解析',
-			admin: 'cjf',
+			creator: 'cjf',
 			time: '2013-09-08'
 		}];
 		return data

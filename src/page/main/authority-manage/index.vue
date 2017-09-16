@@ -1,7 +1,7 @@
 <template>
   <div class="right-content">
     <div class="title-show-box">用户与权限管理</div>
-    <el-table :data="authorityManage" border>
+    <el-table :data="authorityManage" border class="data-table">
       <el-table-column prop="username" label="用户名">
       </el-table-column>
       <el-table-column prop="authority" label="权限">

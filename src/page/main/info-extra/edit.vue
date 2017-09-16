@@ -1,96 +1,159 @@
 <template>
-<div>
-  <div class="config-content-box clearfix">
-    <span class="config-content-title">规则名称：</span>
-    <el-input class="config-content-input1" 
-    v-model="data.name" placeholder="请输入内容"></el-input>
+  <div>
+    <div class="background-title">
+      <span>规则说明</span>
+    </div>
+
+    <el-form :inline="true" :model="ruleDiscription" class="rule-discription-form" label-width="100px">
+      <el-form-item label="规则名称：">
+        <el-input v-model="ruleDiscription.ruleName" placeholder="请输入" size="small"></el-input>
+      </el-form-item>
+      <el-form-item label="设为公开：">
+        <el-radio-group v-model="ruleDiscription.isPublic">
+          <el-radio label="yes">是</el-radio>
+          <el-radio label="no">否</el-radio>
+        </el-radio-group>
+      </el-form-item>
+    </el-form>
+    <div class="background-title">
+      <span>规则属性</span>
+    </div>
+    <div v-for="(domain, index) in propertyDomains" :key="domain.key">
+      <div class="border-container">
+        <el-form :model="ruleProperty" class="rule-discription-form" label-width="100px">
+          <div class="inline-form">
+            <el-form-item label="属性名称：">
+              <el-input v-model="ruleProperty.name" placeholder="请输入" size="small"></el-input>
+            </el-form-item>
+            <el-form-item label="只匹配一次：">
+              <el-radio-group v-model="ruleProperty.matchOnce">
+                <el-radio label="yes">是</el-radio>
+                <el-radio label="no">否</el-radio>
+              </el-radio-group>
+            </el-form-item>
+          </div>
+          <el-form-item label="触发规则：">
+            <el-input type="textarea" :autosize="{ minRows: 5, maxRows: 5}" placeholder="请输入内容" v-model="ruleProperty.triggerRule">
+            </el-input>
+          </el-form-item>
+          <el-form-item label="匹配规则：">
+            <el-input type="textarea" :autosize="{ minRows: 5, maxRows: 5}" placeholder="请输入内容" v-model="ruleProperty.matchRule">
+            </el-input>
+            <p class="config-content-desc">*匹配规则与触发规则必填一项</p>
+          </el-form-item>
+        </el-form>
+      </div>
+      <el-button v-if="propertyDomains.length>1" @click="removePropertyDomain(domain)" class="inline-button" type="primary" icon="minus" size="small"></el-button>
+      <el-button v-if="index==propertyDomains.length-1" @click="addPropertyDomain" class="inline-button" type="primary" icon="plus" size="small"></el-button>
+    </div>
+    <div class="action-box">
+      <el-button v-if="$route.name=='info-extra-add'" @click="createRule" type="primary" size="small">创建</el-button>
+      <el-button v-if="$route.name=='info-extra-edit'" @click="saveRule" type="primary" size="small">保存</el-button>
+      <el-button size="small">取消</el-button>
+    </div>
   </div>
-  <div class="config-content-box clearfix">
-    <span class="config-content-title">匹配规则：</span>
-    <el-input class="config-content-input" 
-      type="textarea"
-      :autosize="{ minRows: 5, maxRows: 5}"
-      placeholder="请输入内容"
-      v-model="data.match_rule">
-    </el-input>
-  </div>
-  <div class="config-content-box clearfix">
-    <span class="config-content-title">触发规则：</span>
-    <el-input
-      type="textarea" class="config-content-input"
-      :autosize="{ minRows: 5, maxRows: 5}"
-      placeholder="请输入内容"
-      v-model="data.trigger_rule">
-    </el-input>
-    <p class="config-content-desc">匹配规则与触发规则必填一项</p>
-  </div>
-  <div class="config-content-box clearfix">
-    <span>只匹配一次：</span>
-    <el-radio class="radio" v-model="data.once" label="true">是</el-radio>
-    <el-radio class="radio" v-model="data.once" label="false">否</el-radio>
-  </div>
-  <div class="action-box">
-    <el-button type="primary">创建</el-button>
-    <el-button>取消</el-button>
-  </div>
-</div>
 </template>
 <script>
 import { mapActions, mapState } from 'vuex'
 export default {
-	name: 'function-display',
-    data () {
-      return {
-        data: {
-          name: '',
-          match_rule: '',
-          trigger_rule: '',
-          once: 'true'
-        },
-        title: ''
-      }
-    },
-    computed: mapState(['infoExtraDetail']),
-    watch: {
-      '$route' (newVal, oldVal) {
-      }
-    },
-    created(){
-    },
-    methods: {
-      ...mapActions([
-        'infoExtraDetailGet'
-      ]),
+  name: 'info-extra-edit',
+  data() {
+    return {
+      ruleDiscription: {
+        ruleName: '',
+        isPublic: 'yes'
+      },
+      ruleProperty: {
+        matchRule: '',
+        triggerRule: '',
+        matchOnce: 'yes'
+      },
+      propertyDomains: [
+        {
+          key: ''
+        }
+      ]
     }
+  },
+  computed: mapState(['infoExtraDetail']),
+  watch: {
+    '$route'(newVal, oldVal) {
+      console.log(newVal)
+    }
+  },
+  created() {
+    console.log(this.$route)
+  },
+  methods: {
+    ...mapActions([
+      'infoExtraDetailGet'
+    ]),
+    addPropertyDomain() {
+      this.propertyDomains.push(
+        {
+          key: Date.now()
+        }
+      );
+    },
+    removePropertyDomain(item) {
+      var index = this.propertyDomains.indexOf(item)
+      if (index !== -1) {
+        this.propertyDomains.splice(index, 1)
+      }
+    },
+    createRule(){
+
+    },
+    saveRule(){
+
+    }
+  }
 }
 </script>
 
 <style lang="less">
-.config-content-box {
-  margin: 15px 0;
-  .config-content-title {
-    height: 36px;
-    line-height: 36px;
-    color: #666;
-    font-size: 14px;
-    width: 100px;
-    float: left;
+.background-title {
+  background-color: #eef1f6;
+  padding: 10px;
+  color: #666;
+}
+
+.border-container {
+  display: inline-block;
+  border: 1px solid #bfcbd9;
+  border-radius: 5px;
+  margin: 20px;
+  width: 85%;
+}
+
+.rule-discription-form {
+  margin: 10px;
+  .el-form-item {
+    margin-right: 50px;
   }
-  .config-content-input1 {
-    float: left;
-    width: 200px;
-  }
-  .config-content-input {
-    float: left;
-    width: 400px;
-  }
-  .config-content-desc {
-    clear: both;
-    padding: 10px 100px;
-    color: #999
+  input {
+    width: 250px;
   }
 }
+
+.inline-form {
+  .el-form-item {
+    display: inline-block;
+  }
+}
+
+.inline-button {
+  display: inline-block;
+  width: 30px;
+  height: 30px;
+  border-radius: 15px;
+}
+
+.config-content-desc {
+  color: #999
+}
+
 .action-box {
-  margin: 50px 0 0 90px
+  margin: 0 0 30px 30px;
 }
 </style>

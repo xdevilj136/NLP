@@ -116,7 +116,7 @@ export default {
       return false;
     },
     editRule(row) {
-      this.$router.push('/main/info-extra/edit/' + row.id);
+      this.$router.push('/main/info-extra/' + row.value + '/edit/' + row.id);
     },
     deleteRule(row) {
       this.dialogTitle = '确认删除 ' + row.name + ' 规则？';

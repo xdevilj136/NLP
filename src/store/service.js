@@ -53,7 +53,13 @@ export default {
 		if (config === 'a') {
 			data = []
 		} else if (config === 'b') {
-			data = [{
+			data = {
+				id:1,
+				ruleDiscription:{
+					ruleName:'拜访记录',
+					isPublic:'yes'
+				},
+				ruleProperty:[{
 				name: '杜甫悲传',
 				match_rule: '南村群童欺我老无力，公然抱我入竹去',
 				trigger_rule: '唇焦口燥呼不得，归来倚杖自叹息',
@@ -64,6 +70,7 @@ export default {
 				trigger_rule: '唇焦口燥呼不得，归来倚杖自叹息',
 				once: 'true'
 			}]
+		};
 		}
 		return data
 	},

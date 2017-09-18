@@ -49,7 +49,7 @@ export default {
 		state.infoGet = data
 	},
 	[ANALYSIS_GET](state, data) {
-		state.analysiData = data
+		state.analysisData = data
 	},
 	// 抽取信息配置模块
 	[INFO_EXTRA](state, data) {

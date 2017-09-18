@@ -10,8 +10,8 @@
       </el-form-item>
       <el-form-item label="设为公开：">
         <el-radio-group v-model="ruleDiscription.isPublic">
-          <el-radio label="yes">是</el-radio>
-          <el-radio label="no">否</el-radio>
+          <el-radio :label=true>是</el-radio>
+          <el-radio :label=false>否</el-radio>
         </el-radio-group>
       </el-form-item>
     </el-form>
@@ -23,17 +23,17 @@
         <el-form :model="domain.ruleProperty" class="rule-discription-form" label-width="100px">
           <div class="inline-form">
             <el-form-item label="属性名称：">
-              <el-input v-model="domain.ruleProperty.name" placeholder="请输入" size="small"></el-input>
+              <el-input v-model="domain.ruleProperty.attribute" placeholder="请输入" size="small"></el-input>
             </el-form-item>
             <el-form-item label="只匹配一次：">
-              <el-radio-group v-model="domain.ruleProperty.matchOnce">
-                <el-radio label="yes">是</el-radio>
-                <el-radio label="no">否</el-radio>
+              <el-radio-group v-model="domain.ruleProperty.matchOne">
+                <el-radio :label=true>是</el-radio>
+                <el-radio :label=false>否</el-radio>
               </el-radio-group>
             </el-form-item>
           </div>
           <el-form-item label="触发规则：">
-            <el-input type="textarea" :autosize="{ minRows: 5, maxRows: 5}" placeholder="请输入内容" v-model="domain.ruleProperty.triggerRule">
+            <el-input type="textarea" :autosize="{ minRows: 5, maxRows: 5}" placeholder="请输入内容" v-model="domain.ruleProperty.trigger">
             </el-input>
           </el-form-item>
           <el-form-item label="匹配规则：">
@@ -61,17 +61,17 @@ export default {
     return {
       ruleDiscription: {
         ruleName: '',
-        isPublic: 'yes'
+        isPublic: true
       },
 
       propertyDomains: [
         {
           key: '',
           ruleProperty: {
-            name:'',
+            attribute:'',
             matchRule: '',
-            triggerRule: '',
-            matchOnce: 'yes'
+            trigger: '',
+            matchOne: true
           },
         }
       ]
@@ -88,17 +88,17 @@ export default {
   },
   methods: {
     ...mapActions([
-      'infoExtraDetailGet'
+      'infoExtraDetailGet','createRuleRequest'
     ]),
     addPropertyDomain() {
       this.propertyDomains.push(
         {
           key: Date.now(),
           ruleProperty: {
-            name:'',
+            attribute:'',
             matchRule: '',
-            triggerRule: '',
-            matchOnce: 'yes'
+            trigger: '',
+            matchOne: true
           }
           
         }
@@ -111,6 +111,32 @@ export default {
       }
     },
     createRule() {
+      console.log(this.ruleDiscription);
+      console.log(this.propertyDomains);
+      var ruleName=this.ruleDiscription.ruleName;
+      var isPublic=this.ruleDiscription.isPublic;
+      var configs=[];
+      for (var index = 0; index < this.propertyDomains.length; index++) {
+        configs.push( this.propertyDomains[index].ruleProperty);
+      }
+      var content={
+        name:ruleName,
+        configs:configs
+      };
+  var rule={
+    name:ruleName,
+    content:JSON.stringify(content),
+    privilege:isPublic?2:0
+  }
+console.log(rule);
+this.createRuleRequest(rule);
+
+//       {
+// "name":"招中标3",
+// "content":"{\"name\":\"招中标\",\"configs\":[{\"attribute\":\"招标机构\",\"matchOne\":true,\"trigger\":\"\",\"matchRule\":\"(?:招标人|项目法人|采购人|发包人|委托人|采购机构|业主).{0,5}(%organization%)采购单位及联系人电话.{0,5}.{0,5}(%Organization%)招标(?:项目|范围|内容|标段|投标).{0,5}(%organization%)(?:建设|发布|管理|招标|项目|采购)单位.{0,5}(%organization%)(%organization%).{0,10}公告(%organization%).{0,5}(?:采购|改造|升级|扩建|经费|横向|招标|维护|工程|比选)项目(?:受|由)(%organization%).{0,5}委托监督部门(%organization%)监察室\"}]}",
+// "privilege":0
+// }
+
 
     },
     saveRule() {

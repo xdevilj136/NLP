@@ -46,6 +46,7 @@ export default {
 		let data = service.infoGet()
 		commit('INFO_GET', data)
 	},
+	//提交词法分析
 	analysisGet({ commit, state }, json) {
 		let data = service.analysisGet(json)
 		commit('ANALYSIS_GET', data)

@@ -3,28 +3,28 @@ import ajax from '../config/ajax'
 export default {
 	configData() {
 		var data = [{
-			id:1,
+			id: 1,
 			label: '招中标',
 			value: 'a',
 			name: '招中标',
 			creator: 'cjf',
 			time: '2013-09-08'
 		}, {
-			id:2,
+			id: 2,
 			label: '拜访记录',
 			value: 'b',
 			name: '拜访记录',
 			creator: 'cjf',
 			time: '2013-09-08'
 		}, {
-			id:3,
+			id: 3,
 			label: '授信批文解析',
 			value: 'c',
 			name: '授信批文解析',
 			creator: 'cjf',
 			time: '2013-09-08'
 		}, {
-			id:4,
+			id: 4,
 			label: '调查报告解析',
 			value: 'd',
 			name: '调查报告解析',
@@ -34,16 +34,16 @@ export default {
 		return data
 	},
 	// loginCheck
-	loginCheck (data) {
+	loginCheck(data) {
 		ajaxData()
 		return true
 	},
 	// loginOut
-	loginOut (data) {
+	loginOut(data) {
 		return false
 	},
 	// 信息抽取list
-	infoExtraGet (config) {
+	infoExtraGet(config) {
 		let data = [{
 			name: '杜甫悲传',
 			match_rule: '南村群童欺我老无力，公然抱我入竹去',
@@ -54,27 +54,27 @@ export default {
 			data = []
 		} else if (config === 'b') {
 			data = {
-				id:1,
-				ruleDiscription:{
-					ruleName:'拜访记录',
-					isPublic:'yes'
+				id: 1,
+				ruleDiscription: {
+					ruleName: '拜访记录',
+					isPublic: 'yes'
 				},
-				ruleProperty:[{
-				name: '杜甫悲传',
-				match_rule: '南村群童欺我老无力，公然抱我入竹去',
-				trigger_rule: '唇焦口燥呼不得，归来倚杖自叹息',
-				once: 'true'
-			}, {
-				name: '杜甫悲传',
-				match_rule: '南村群童欺我老无力，公然抱我入竹去',
-				trigger_rule: '唇焦口燥呼不得，归来倚杖自叹息',
-				once: 'true'
-			}]
-		};
+				ruleProperty: [{
+					name: '杜甫悲传',
+					match_rule: '南村群童欺我老无力，公然抱我入竹去',
+					trigger_rule: '唇焦口燥呼不得，归来倚杖自叹息',
+					once: 'true'
+				}, {
+					name: '杜甫悲传',
+					match_rule: '南村群童欺我老无力，公然抱我入竹去',
+					trigger_rule: '唇焦口燥呼不得，归来倚杖自叹息',
+					once: 'true'
+				}]
+			};
 		}
 		return data
 	},
-	infoExtraDetailGet (id) {
+	infoExtraDetailGet(id) {
 		let data = {
 			name: '杜甫悲传',
 			match_rule: '南村群童欺我老无力，公然抱我入竹去',
@@ -101,23 +101,27 @@ export default {
 		return newDate;
 	},
 	analysisGet(json) {
-		let data = {
-			"seg_list": ["李彦宏", "是", "马云", "最大", "威胁", "嘛", "？"],
-			"pos_list": { "words": ["李彦宏", "是", "马云", "最大", "威胁", "嘛", "？"], "tags": ["NH", "V", "NH", "NZ", "V", "E", "WP"] },
-			"ner_list": { "words": ["李彦宏", "是", "马云", "最", "大", "威胁", "嘛", "？"], "tags": ["PERSON", "O", "PERSON", "O", "O", "O", "O", "O"] }
-		}
-		let lastData = {}
-		for (let i = 0; i < json.type.length; i++) {
-			for (let j in data) {
-				if (json.type[i] === j) {
-					lastData[j] = data[j]
-					if (data[j].tags) {
-						lastData[j]['newTags'] = unique(data[j].tags)
-					}
-				}
-			}
-		}
-		return lastData
+		// let data = {
+		// 	"seg_list": ["李彦宏", "是", "马云", "最大", "威胁", "嘛", "？"],
+		// 	"pos_list": { "words": ["李彦宏", "是", "马云", "最大", "威胁", "嘛", "？"], "tags": ["NH", "V", "NH", "NZ", "V", "E", "WP"] },
+		// 	"ner_list": { "words": ["李彦宏", "是", "马云", "最", "大", "威胁", "嘛", "？"], "tags": ["PERSON", "O", "PERSON", "O", "O", "O", "O", "O"] }
+		// }
+		let responseData = ajaxData('POST', '/api/functions/grammarParse', json);
+		console.log('responseData');
+
+
+		console.log(responseData);
+		// let result = responseData.result;
+
+		// for (let key in result) {
+		// 	if (result[key].tags) {
+		// 		result[key]['newTags'] = unique(result[key].tags)
+		// 	}
+		// }
+		// console.log('result');
+		// console.log(result);
+
+		// return result;
 	},
 	//获取任务管理筛选数据
 	taskManageData() {
@@ -221,8 +225,8 @@ export default {
 		return data;
 	},
 	//创建规则
-	createRuleResponse(rule){
-		ajaxData('POST','/api/extractConfig/create',rule);
+	createRuleRequest(rule) {
+		ajaxData('POST', '/api/extractConfig/create', rule);
 		return true;
 	}
 
@@ -235,17 +239,23 @@ function unique(data) {
 			lastData.push(data[i])
 		}
 	}
-	return lastData
+	return lastData;
 }
 // 所有请求在此处拦截
-function ajaxData(method='GET', url = '', data = {}, params = {}) {
+function ajaxData(method = 'GET', url = '', data = {}, params = {}) {
 	let start = async function () {
 		// let data = await ajax('POST','/api/functions/grammarParse', {
 		// 	"functions":["WordSegment","PosTag","NamedIdentityRecognize"],
 		// 	"data" :"以前，一直以为在SpringMVC环境中，@RequestBody接收的是一个Json对象，一直在调试代码都没有成功，后来发现，其实 @RequestBody接收的是一个Json对象的字符串，而不是一个Json对象。然而在ajax请求往往传的都是Json对象，后来发现用 JSON.stringify(data)的方式就能将对象变成字符串。同时ajax请求的时候也要指定dataType: "
 		// })
-		let data = await ajax(method,url,data)
-		console.log(data)
+		
+		let result=await ajax(method, url, data).then((response)=>response);
+		return result;
 	}
-	start()
+	return start();
+	// let result={};
+	// promise.then(function(responseData){
+	// 	result= responseData;
+	// });
+	// return result;
 }

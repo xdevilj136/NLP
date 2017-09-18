@@ -126,7 +126,7 @@ export default {
   var rule={
     name:ruleName,
     content:JSON.stringify(content),
-    privilege:isPublic?2:0
+    privilege:isPublic?1:0
   }
 console.log(rule);
 this.createRuleRequest(rule);

@@ -15,21 +15,21 @@
     @click="submitTxt()"
     type="primary">提交文本</el-button>
   </div>
-  <div class="analysi-box" v-if="submit && analysiData['seg_list']">
+  <div class="analysi-box" v-if="submit && analysisData['WordSegment']">
     <p class="analysi-title">分词</p>
     <div class="analysi-content">
       <div class="analysi-content-all">
-        <span v-for="(word, index) in analysiData['seg_list']" :key="index"
+        <span v-for="(word, index) in analysisData['WordSegment']" :key="index"
         :style="{background: '#D8D8D8'}">
         {{word}}
         </span>
       </div>
     </div>
   </div>
-  <analysisResult v-if="submit && analysiData['pos_list']" type="pos_list"
-  headTitle="词性标注" :data="analysiData['pos_list']" />
-  <analysisResult v-if="submit && analysiData['ner_list']" type="ner_list"
-  headTitle="实体识别" :data="analysiData['ner_list']" />
+  <analysisResult v-if="submit && analysisData['NamedIdentityRecognize']" type="NamedIdentityRecognize"
+  headTitle="词性标注" :data="analysisData['NamedIdentityRecognize']" />
+  <analysisResult v-if="submit && analysisData['PosTag']" type="PosTag"
+  headTitle="实体识别" :data="analysisData['PosTag']" />
 </div>
 </template>
 <script>
@@ -41,13 +41,13 @@ export default {
       return {
         typeOption: [{
           name: '分词',
-          value: 'seg_list'
+          value: 'WordSegment'
         }, {
           name: '词性标注',
-          value: 'ner_list'
+          value: 'PosTag'
         }, {
           name: '实体识别',
-          value: 'pos_list'
+          value: 'NamedIdentityRecognize'
         }],
         data: {
           type: [],
@@ -59,7 +59,7 @@ export default {
     components: {
    		analysisResult
   	},
-    computed: mapState(['analysiData']),
+    computed: mapState(['analysisData']),
     watch: {
     },
     created(){
@@ -70,7 +70,11 @@ export default {
   		]),
       submitTxt () {
         this.submit = true
-        this.analysisGet(this.data)
+        console.log(this.data)
+        this.analysisGet({
+          functions:this.data.type,
+          data:this.data.value
+        })
       }
     }
 }

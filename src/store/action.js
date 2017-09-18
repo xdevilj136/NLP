@@ -58,6 +58,11 @@ export default {
 	infoExtraDetailGet({ commit, state}, id) {
 		let data = service.infoExtraDetailGet(id)
 		commit('INFO_EXTRA_DETAIL', data)
+	},
+	//创建规则
+	createRuleRequest({ commit, state}, rule){
+		let response = service.createRuleRequest(rule)
+		commit('CREATE_RULE_REQUEST', response)
 	}
 }
 

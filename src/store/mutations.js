@@ -10,6 +10,7 @@ const INFO_EXTRA = 'INFO_EXTRA'
 const INFO_EXTRA_DETAIL = 'INFO_EXTRA_DETAIL'
 const LOGIN_CHECK = 'LOGIN_CHECK'
 const DATA_SOURCE = 'DATA_SOURCE'
+const CREATE_RULE_REQUEST='CREATE_RULE_REQUEST'
 
 export default {
 	[TEST_ACTION](state, text) {
@@ -56,5 +57,9 @@ export default {
 	},
 	[INFO_EXTRA_DETAIL] (state, data) {
 		state.infoExtraDetail = data
+	},
+	//创建规则
+	[CREATE_RULE_REQUEST](state,data){
+		state.createRuleResponse=data;
 	}
 }

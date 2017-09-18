@@ -20,7 +20,8 @@ const state = {
 	infoGet: {}, // 信息抽取
 	analysiData: {}, // 词法分析数据
 	infoExtra: [], // 信息抽取配置数据list
-	infoExtraDetail: {} //信息抽取配置数据config
+	infoExtraDetail: {}, //信息抽取配置数据config
+	createRuleResponse:true//创建规则响应
 }
 
 export default new Vuex.Store({

@@ -3,8 +3,8 @@
     <p class="analysi-title">{{headTitle?headTitle:'--'}}</p>
     <div class="analysi-content">
       <div class="analysi-content-less">
-        <span v-for="(word, index) in data.words" :key="index"
-        :style="{ background: color[type][data.tags[index]].color }">
+        <span v-for="(word, index) in data.Words" :key="index"
+        :style="{ background: color[type][data.Tags[index]].color }">
         {{word}}
         </span>
       </div>

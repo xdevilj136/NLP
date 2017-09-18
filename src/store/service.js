@@ -35,7 +35,7 @@ export default {
 	},
 	// loginCheck
 	loginCheck(data) {
-		ajaxData()
+		ajax()
 		return true
 	},
 	// loginOut
@@ -106,22 +106,21 @@ export default {
 		// 	"pos_list": { "words": ["李彦宏", "是", "马云", "最大", "威胁", "嘛", "？"], "tags": ["NH", "V", "NH", "NZ", "V", "E", "WP"] },
 		// 	"ner_list": { "words": ["李彦宏", "是", "马云", "最", "大", "威胁", "嘛", "？"], "tags": ["PERSON", "O", "PERSON", "O", "O", "O", "O", "O"] }
 		// }
-		let responseData = ajaxData('POST', '/api/functions/grammarParse', json);
-		console.log('responseData');
-
-
-		console.log(responseData);
-		// let result = responseData.result;
-
-		// for (let key in result) {
-		// 	if (result[key].tags) {
-		// 		result[key]['newTags'] = unique(result[key].tags)
-		// 	}
-		// }
-		// console.log('result');
-		// console.log(result);
-
-		// return result;
+		let responseData = ajax('POST', '/api/functions/grammarParse', json).then((data) => {
+			let result = data.result;
+			for (let key in result) {
+				let item = JSON.parse(result[key]);
+				let matchList=item.SegList||item.PosList||item.NerList;
+				if (matchList) {
+					if (matchList.Tags) {
+						matchList['newTags'] = unique(matchList.Tags)
+					}
+				}
+				result[key]=item;
+			}
+			return data;
+		});
+		return responseData;
 	},
 	//获取任务管理筛选数据
 	taskManageData() {
@@ -226,7 +225,7 @@ export default {
 	},
 	//创建规则
 	createRuleRequest(rule) {
-		ajaxData('POST', '/api/extractConfig/create', rule);
+		ajax('POST', '/api/extractConfig/create', rule);
 		return true;
 	}
 
@@ -242,17 +241,13 @@ function unique(data) {
 	return lastData;
 }
 // 所有请求在此处拦截
-function ajaxData(method = 'GET', url = '', data = {}, params = {}) {
-	let start = async function () {
-		// let data = await ajax('POST','/api/functions/grammarParse', {
-		// 	"functions":["WordSegment","PosTag","NamedIdentityRecognize"],
-		// 	"data" :"以前，一直以为在SpringMVC环境中，@RequestBody接收的是一个Json对象，一直在调试代码都没有成功，后来发现，其实 @RequestBody接收的是一个Json对象的字符串，而不是一个Json对象。然而在ajax请求往往传的都是Json对象，后来发现用 JSON.stringify(data)的方式就能将对象变成字符串。同时ajax请求的时候也要指定dataType: "
-		// })
-		
-		let result=await ajax(method, url, data);
-		return result;
-	}
-	return start();
+let ajaxData = async function (method = 'GET', url = '', data = {}, params = {}) {
+	// let data = await ajax('POST','/api/functions/grammarParse', {
+	// 	"functions":["WordSegment","PosTag","NamedIdentityRecognize"],
+	// 	"data" :"以前，一直以为在SpringMVC环境中，@RequestBody接收的是一个Json对象，一直在调试代码都没有成功，后来发现，其实 @RequestBody接收的是一个Json对象的字符串，而不是一个Json对象。然而在ajax请求往往传的都是Json对象，后来发现用 JSON.stringify(data)的方式就能将对象变成字符串。同时ajax请求的时候也要指定dataType: "
+	// })
+	let result = await ajax(method, url, data);
+	return result;
 	// let result={};
 	// promise.then(function(responseData){
 	// 	result= responseData;

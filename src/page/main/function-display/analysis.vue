@@ -15,21 +15,21 @@
     @click="submitTxt()"
     type="primary">提交文本</el-button>
   </div>
-  <div class="analysi-box" v-if="submit && analysisData['WordSegment']">
+  <div class="analysi-box" v-if="submit && analysisData.result['WordSegment'].SegList">
     <p class="analysi-title">分词</p>
     <div class="analysi-content">
       <div class="analysi-content-all">
-        <span v-for="(word, index) in analysisData['WordSegment']" :key="index"
+        <span v-for="(word, index) in analysisData.result['WordSegment'].SegList" :key="index"
         :style="{background: '#D8D8D8'}">
         {{word}}
         </span>
       </div>
     </div>
   </div>
-  <analysisResult v-if="submit && analysisData['NamedIdentityRecognize']" type="NamedIdentityRecognize"
-  headTitle="词性标注" :data="analysisData['NamedIdentityRecognize']" />
-  <analysisResult v-if="submit && analysisData['PosTag']" type="PosTag"
-  headTitle="实体识别" :data="analysisData['PosTag']" />
+  <analysisResult v-if="submit && analysisData.result['NamedIdentityRecognize'].NerList" type="ner_list"
+  headTitle="词性标注" :data="analysisData.result['NamedIdentityRecognize'].NerList" />
+  <analysisResult v-if="submit && analysisData.result['PosTag'].PosList" type="pos_list"
+  headTitle="实体识别" :data="analysisData.result['PosTag'].pos_list" />
 </div>
 </template>
 <script>
@@ -74,7 +74,8 @@ export default {
         this.analysisGet({
           functions:this.data.type,
           data:this.data.value
-        })
+        });
+        console.log(this.analysisData)
       }
     }
 }

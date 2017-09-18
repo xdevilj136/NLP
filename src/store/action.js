@@ -49,10 +49,8 @@ export default {
 	//提交词法分析
 	analysisGet({ commit, state }, json) {
 		service.analysisGet(json).then((data)=>{
-			console.log(data)
 			commit('ANALYSIS_GET', data)
 		})
-		
 	},
 	// 根据配置config，抽取信息获取list
 	infoExtraGet({ commit, state}, config) {

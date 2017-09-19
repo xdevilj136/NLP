@@ -5,11 +5,11 @@ export default {
 		commit('TEST_ACTION', text)
 	},
 	// login
-	loginCheck({commit, state}, data) {
+	loginCheck({ commit, state }, data) {
 		let check = service.loginCheck(data)
 		commit('LOGIN_CHECK', check)
 	},
-	loginOut({commit, state}, data) {
+	loginOut({ commit, state }, data) {
 		let check = service.loginOut(data)
 		commit('LOGIN_CHECK', check)
 	},
@@ -48,21 +48,33 @@ export default {
 	},
 	//提交词法分析
 	analysisGet({ commit, state }, json) {
-		service.analysisGet(json).then((data)=>{
+		service.analysisGet(json).then((data) => {
 			commit('ANALYSIS_GET', data)
 		})
 	},
+	//提交机构名标准化
+	processCompanyStd({ commit, state }, json) {
+		service.processCompanyStd(json).then((data) => {
+			commit('PROCESS_COMPANY_STD', data)
+		})
+	},
+	//提交机构名识别
+	processCompanySegment({ commit, state }, json) {
+		service.processCompanySegment(json).then((data) => {
+			commit('PROCESS_COMPANY_SEGMENT', data)
+		})
+	},
 	// 根据配置config，抽取信息获取list
-	infoExtraGet({ commit, state}, config) {
+	infoExtraGet({ commit, state }, config) {
 		let data = service.infoExtraGet(config)
 		commit('INFO_EXTRA', data)
 	},
-	infoExtraDetailGet({ commit, state}, id) {
+	infoExtraDetailGet({ commit, state }, id) {
 		let data = service.infoExtraDetailGet(id)
 		commit('INFO_EXTRA_DETAIL', data)
 	},
 	//创建规则
-	createRuleRequest({ commit, state}, rule){
+	createRuleRequest({ commit, state }, rule) {
 		let response = service.createRuleRequest(rule)
 		commit('CREATE_RULE_REQUEST', response)
 	}

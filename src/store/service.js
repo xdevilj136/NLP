@@ -100,23 +100,44 @@ export default {
 		}
 		return newDate;
 	},
+	//词法分析
 	analysisGet(json) {
-		// let data = {
-		// 	"seg_list": ["李彦宏", "是", "马云", "最大", "威胁", "嘛", "？"],
-		// 	"pos_list": { "words": ["李彦宏", "是", "马云", "最大", "威胁", "嘛", "？"], "tags": ["NH", "V", "NH", "NZ", "V", "E", "WP"] },
-		// 	"ner_list": { "words": ["李彦宏", "是", "马云", "最", "大", "威胁", "嘛", "？"], "tags": ["PERSON", "O", "PERSON", "O", "O", "O", "O", "O"] }
-		// }
 		let responseData = ajax('POST', '/api/functions/grammarParse', json).then((data) => {
 			let result = data.result;
 			for (let key in result) {
 				let item = JSON.parse(result[key]);
-				let matchList=item.SegList||item.PosList||item.NerList;
+				let matchList = item.SegList || item.PosList || item.NerList;
 				if (matchList) {
 					if (matchList.Tags) {
 						matchList['newTags'] = unique(matchList.Tags)
 					}
 				}
-				result[key]=item;
+				result[key] = item;
+			}
+			return data;
+		});
+		return responseData;
+	},
+	//机构名标准化
+	processCompanyStd(json) {
+		let responseData = ajax('POST', '/api/functions/companyStd', json).then((data) => {
+			if(data.result&&data.result.CompanyStd){
+				data.result.CompanyStd = JSON.parse(data.result.CompanyStd);
+			}
+			return data;
+		});
+		return responseData;
+	},
+	//机构名识别
+	processCompanySegment(json) {
+		let responseData = ajax('POST', '/api/functions/companySegment', json).then((data) => {
+			if(data.result&&data.result.CompanySegment){
+				let companySegment = JSON.parse(data.result.CompanySegment);
+				let companySeg=companySegment.CompanySeg;
+				if(companySeg.Tags){
+					companySeg['newTags'] = unique(companySeg.Tags)
+				}
+				data.result.CompanySegment=companySegment;
 			}
 			return data;
 		});
@@ -239,18 +260,4 @@ function unique(data) {
 		}
 	}
 	return lastData;
-}
-// 所有请求在此处拦截
-let ajaxData = async function (method = 'GET', url = '', data = {}, params = {}) {
-	// let data = await ajax('POST','/api/functions/grammarParse', {
-	// 	"functions":["WordSegment","PosTag","NamedIdentityRecognize"],
-	// 	"data" :"以前，一直以为在SpringMVC环境中，@RequestBody接收的是一个Json对象，一直在调试代码都没有成功，后来发现，其实 @RequestBody接收的是一个Json对象的字符串，而不是一个Json对象。然而在ajax请求往往传的都是Json对象，后来发现用 JSON.stringify(data)的方式就能将对象变成字符串。同时ajax请求的时候也要指定dataType: "
-	// })
-	let result = await ajax(method, url, data);
-	return result;
-	// let result={};
-	// promise.then(function(responseData){
-	// 	result= responseData;
-	// });
-	// return result;
 }

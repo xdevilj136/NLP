@@ -1,58 +1,92 @@
 <template>
-<div>
-  <div class="content-ident-box">
-    <p class="content-title">机构名标准化</p>
-    <el-input class="content-input" v-model="data.name" placeholder="请输入机构名"></el-input>
-    <el-button class="content-submit" @click="submitTxt('one')" type="primary">提交</el-button>
+  <div>
+    <el-tabs value="companyStd">
+      <el-tab-pane label="机构名标准化" name="companyStd">
+        <div class="content-ident-box">
+          <p class="content-title">机构名标准化</p>
+          <el-input class="content-input" v-model="data.toStdName" placeholder="请输入机构名"></el-input>
+          <el-button class="content-submit" @click="submitTxt('companyStd')" type="primary">提交</el-button>
+        </div>
+        <div class="content-ident-box">
+          <p class="content-title">全称</p>
+          <el-input class="content-input" :disabled="true" v-model="data.fullName" placeholder="请输入机构名"></el-input>
+        </div>
+      </el-tab-pane>
+      <el-tab-pane label="机构名分析" name="companySegment">
+        <div class="content-ident-box">
+          <p class="content-title">机构名分析</p>
+          <el-input class="content-input" v-model="data.toAnalysisName" placeholder="请输入机构名"></el-input>
+          <el-button class="content-submit" @click="submitTxt('companySegment')" type="primary">提交</el-button>
+        </div>
+        <analysisResult v-if="companySegment.result" type="seg_list" headTitle="分析结果" :data="companySegment.result['CompanySegment'].CompanySeg" />
+      </el-tab-pane>
+    </el-tabs>
+
   </div>
-  <div class="content-ident-box">
-    <p class="content-title">全称</p>
-    <el-input class="content-input" :disabled="true"
-    v-model="data.nameInit" placeholder="请输入机构名"></el-input>
-  </div>
-  <div class="content-ident-box">
-    <p class="content-title">机构名分析</p>
-    <el-input class="content-input" v-model="data.nameAll" placeholder="请输入机构名"></el-input>
-    <el-button class="content-submit" @click="submitTxt('two')" type="primary">提交</el-button>
-  </div>
-  <analysisResult v-if="analysiData['ner_list']" type="ner_list"
-  headTitle="分析结果" :data="analysiData['ner_list']" />
-</div>
 </template>
 <script>
 import { mapActions, mapState } from 'vuex'
 import analysisResult from 'components/analysisResult';
 export default {
-	name: 'machanism-ident',
-    data () {
-      return {
-        data: {
-          name: '',
-          nameAll: '',
-          nameInit: ''
-        }
-      }
-    },
-    watch: {
-    },
-    components: {
-   		analysisResult
-  	},
-    computed: mapState(['analysiData']),
-    created(){
-    },
-    methods: {
-      ...mapActions([
-        'analysisGet'
-  		]),
-      submitTxt (type) {
-        if (type === 'one') {
-          this.data.nameInit = this.data.name
-        } else {
-          this.analysisGet({type: ['ner_list']})
-        }
+  name: 'machanism-ident',
+  data() {
+    return {
+      data: {
+        toStdName: '',
+        toAnalysisName: '',
+        fullName: ''
       }
     }
+  },
+  watch: {
+    companyStd: function(companyStd) {
+      if (companyStd.result && companyStd.result.CompanyStd) {
+        this.data.fullName = companyStd.result.CompanyStd.CompanyStd[this.data.toStdName].StdName;
+      }
+    }
+  },
+  components: {
+    analysisResult
+  },
+  computed: mapState(['companyStd', 'companySegment']),
+  created() {
+  },
+  methods: {
+    ...mapActions([
+      'processCompanyStd', 'processCompanySegment'
+    ]),
+    submitTxt(type) {
+      if (type === 'companyStd') {
+        this.data.toStdName = this.data.toStdName.replace(/\s/g, '');
+        if (this.data.toStdName == '') {
+          this.$alert('输入内容不能为空', '提示', {
+            confirmButtonText: '确定',
+            type: 'warning'
+          });
+          return;
+        }
+        this.processCompanyStd({
+          functions: ['CompanyStd'],
+          data: this.data.toStdName
+        })
+      }
+      else if (type === 'companySegment') {
+        this.data.toAnalysisName = this.data.toAnalysisName.replace(/\s/g, '');
+
+        if (this.data.toAnalysisName == '') {
+          this.$alert('输入内容不能为空', '提示', {
+            confirmButtonText: '确定',
+            type: 'warning'
+          });
+          return;
+        }
+        this.processCompanySegment({
+          functions: ['CompanySegment'],
+          data: this.data.toAnalysisName
+        })
+      }
+    }
+  }
 }
 </script>
 

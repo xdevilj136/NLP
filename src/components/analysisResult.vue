@@ -1,15 +1,15 @@
 <template>
-<div class="analysi-box">
-    <p class="analysi-title">{{headTitle?headTitle:'--'}}</p>
-    <div class="analysi-content">
-      <div class="analysi-content-less">
+<div class="analysis-box">
+    <p class="analysis-title">{{headTitle?headTitle:'--'}}</p>
+    <div class="analysis-content">
+      <div class="analysis-content-less">
         <span v-for="(word, index) in data.Words" :key="index"
         :style="{ background: color[type][data.Tags[index]].color }">
         {{word}}
         </span>
       </div>
-      <div class="analysi-description">
-        <p class="analysi-des-title">词性类别图示：</p>
+      <div class="analysis-description">
+        <p class="analysis-des-title">词性类别图示：</p>
         <span v-for="(tag, index) in data.newTags" :key="index"
         :style="{ background: color[type][tag].color }">
         {{color[type][tag].name}}
@@ -38,26 +38,26 @@ export default {
 </script>
 
 <style lang="less">
-.analysi-box {
+.analysis-box {
   margin-top: 20px;
-  .analysi-title {
+  .analysis-title {
     color: #333;
     padding: 10px 0;
     font-size: 14px;
   }
-  .analysi-content {
+  .analysis-content {
     padding: 10px 20px;
     background: #F7F7F7;
     max-height: 250px;
     min-height: 50px;
     overflow: auto;
-    .analysi-content-all span {
+    .analysis-content-all span {
       font-size: 12px;
       padding: 6px 10px;
       margin: 0 3px 3px 0;
       float: left;
     }
-    .analysi-content-less {
+    .analysis-content-less {
       float: left;
       width: ~"calc(80% - 50px)";
       padding-right: 50px;
@@ -68,10 +68,10 @@ export default {
         float: left;
       }
     }
-    .analysi-description {
+    .analysis-description {
       width: 20%;
       float: left;
-      .analysi-des-title {
+      .analysis-des-title {
         font-size: 12px;
         padding: 6px 0;
       }

@@ -68,7 +68,7 @@ export default {
         {
           key: '',
           ruleProperty: {
-            attribute:'',
+            attribute: '',
             matchRule: '',
             trigger: '',
             matchOne: true
@@ -88,19 +88,19 @@ export default {
   },
   methods: {
     ...mapActions([
-      'infoExtraDetailGet','createRuleRequest'
+      'infoExtraDetailGet', 'createRuleRequest'
     ]),
     addPropertyDomain() {
       this.propertyDomains.push(
         {
           key: Date.now(),
           ruleProperty: {
-            attribute:'',
+            attribute: '',
             matchRule: '',
             trigger: '',
             matchOne: true
           }
-          
+
         }
       );
     },
@@ -113,31 +113,20 @@ export default {
     createRule() {
       console.log(this.ruleDiscription);
       console.log(this.propertyDomains);
-      var ruleName=this.ruleDiscription.ruleName;
-      var isPublic=this.ruleDiscription.isPublic;
-      var configs=[];
+      var ruleName = this.ruleDiscription.ruleName;
+      var isPublic = this.ruleDiscription.isPublic;
+      var configs = [];
       for (var index = 0; index < this.propertyDomains.length; index++) {
-        configs.push( this.propertyDomains[index].ruleProperty);
+        configs.push(this.propertyDomains[index].ruleProperty);
       }
-      var content={
-        name:ruleName,
-        configs:configs
-      };
-  var rule={
-    name:ruleName,
-    content:JSON.stringify(content),
-    privilege:isPublic?1:0
-  }
-console.log(rule);
-this.createRuleRequest(rule);
 
-//       {
-// "name":"招中标3",
-// "content":"{\"name\":\"招中标\",\"configs\":[{\"attribute\":\"招标机构\",\"matchOne\":true,\"trigger\":\"\",\"matchRule\":\"(?:招标人|项目法人|采购人|发包人|委托人|采购机构|业主).{0,5}(%organization%)采购单位及联系人电话.{0,5}.{0,5}(%Organization%)招标(?:项目|范围|内容|标段|投标).{0,5}(%organization%)(?:建设|发布|管理|招标|项目|采购)单位.{0,5}(%organization%)(%organization%).{0,10}公告(%organization%).{0,5}(?:采购|改造|升级|扩建|经费|横向|招标|维护|工程|比选)项目(?:受|由)(%organization%).{0,5}委托监督部门(%organization%)监察室\"}]}",
-// "privilege":0
-// }
-
-
+      var rule = {
+        name: ruleName,
+        content: JSON.stringify(configs),
+        privilege: isPublic ? 1 : 0
+      }
+      console.log(rule);
+      this.createRuleRequest(rule);
     },
     saveRule() {
 

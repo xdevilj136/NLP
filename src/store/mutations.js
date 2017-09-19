@@ -11,6 +11,8 @@ const INFO_EXTRA_DETAIL = 'INFO_EXTRA_DETAIL'
 const LOGIN_CHECK = 'LOGIN_CHECK'
 const DATA_SOURCE = 'DATA_SOURCE'
 const CREATE_RULE_REQUEST='CREATE_RULE_REQUEST'
+const PROCESS_COMPANY_SEGMENT='PROCESS_COMPANY_SEGMENT'
+const PROCESS_COMPANY_STD='PROCESS_COMPANY_STD'
 
 export default {
 	[TEST_ACTION](state, text) {
@@ -48,8 +50,17 @@ export default {
 	[INFO_GET](state, data) {
 		state.infoGet = data
 	},
+	//词法分析
 	[ANALYSIS_GET](state, data) {
 		state.analysisData = data
+	},
+	//机构名标准化
+	[PROCESS_COMPANY_STD](state, data) {
+		state.companyStd = data
+	},
+	//机构名识别
+	[PROCESS_COMPANY_SEGMENT](state, data) {
+		state.companySegment = data
 	},
 	// 抽取信息配置模块
 	[INFO_EXTRA](state, data) {

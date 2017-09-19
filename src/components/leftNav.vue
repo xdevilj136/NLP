@@ -28,7 +28,7 @@ export default {
             value: 'info-extra'
           },{
             label: '功能展示',
-            value: 'function-display',
+            value: '',
             children: [{
                 label: '信息抽取',
                 value: 'function-display/info-get'
@@ -81,6 +81,9 @@ export default {
           })
         } else {
           this.changeTest(data)
+          if(data.value==''){
+            return;
+          }
           let route = '/main/' + data.value
           this.$router.push(route)
         }

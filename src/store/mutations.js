@@ -10,9 +10,11 @@ const INFO_EXTRA = 'INFO_EXTRA'
 const INFO_EXTRA_DETAIL = 'INFO_EXTRA_DETAIL'
 const LOGIN_CHECK = 'LOGIN_CHECK'
 const DATA_SOURCE = 'DATA_SOURCE'
-const CREATE_RULE_REQUEST='CREATE_RULE_REQUEST'
-const PROCESS_COMPANY_SEGMENT='PROCESS_COMPANY_SEGMENT'
-const PROCESS_COMPANY_STD='PROCESS_COMPANY_STD'
+const CREATE_RULE_REQUEST = 'CREATE_RULE_REQUEST'
+const PROCESS_COMPANY_SEGMENT = 'PROCESS_COMPANY_SEGMENT'
+const PROCESS_COMPANY_STD = 'PROCESS_COMPANY_STD'
+const DELETE_CONFIG_RULE = 'DELETE_CONFIG_RULE'
+const CONFIG_RULE='CONFIG_RULE'
 
 export default {
 	[TEST_ACTION](state, text) {
@@ -25,6 +27,14 @@ export default {
 	// 获取信息抽取配置
 	[INFO_CONFIG](state, data) {
 		state.configList = data
+	},
+	// 获取单个信息抽取配置规则
+	[CONFIG_RULE](state, data) {
+		state.configRule = data
+	},
+	// 删除信息抽取配置规则
+	[DELETE_CONFIG_RULE](state, data) {
+		state.deleteRuleResponse = data
 	},
 	//获取任务管理数据
 	[TASK_MANAGE](state, data) {
@@ -66,11 +76,11 @@ export default {
 	[INFO_EXTRA](state, data) {
 		state.infoExtra = data
 	},
-	[INFO_EXTRA_DETAIL] (state, data) {
+	[INFO_EXTRA_DETAIL](state, data) {
 		state.infoExtraDetail = data
 	},
 	//创建规则
-	[CREATE_RULE_REQUEST](state,data){
-		state.createRuleResponse=data;
+	[CREATE_RULE_REQUEST](state, data) {
+		state.createRuleResponse = data;
 	}
 }

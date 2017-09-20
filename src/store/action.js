@@ -13,9 +13,23 @@ export default {
 		let check = service.loginOut(data)
 		commit('LOGIN_CHECK', check)
 	},
-	getInfoConfig({ commit, state }) {
-		let data = service.configData()
-		commit('INFO_CONFIG', data)
+	//获取信息抽取配置规则列表
+	getInfoConfig({ commit, state }, params) {
+		service.configData(params).then(data => {
+			commit('INFO_CONFIG', data)
+		})
+	},
+	//根据id获取对应信息抽取配置规则
+	queryRuleById({ commit, state }, id) {
+		service.queryRuleById(id).then(data => {
+			commit('CONFIG_RULE', data)
+		})
+	},
+	//删除信息抽取配置规则idid
+	deleteConfigRule({ commit, state }, id) {
+		service.deleteConfigRule(id).then(data => {
+			commit('DELETE_CONFIG_RULE', data)
+		})
 	},
 	//获取任务管理筛选数据
 	getTaskManageData({ commit, state }, data) {
@@ -75,8 +89,9 @@ export default {
 	},
 	//创建规则
 	createRuleRequest({ commit, state }, rule) {
-		let response = service.createRuleRequest(rule)
-		commit('CREATE_RULE_REQUEST', response)
+		service.createRuleRequest(rule).then((data) => {
+			commit('CREATE_RULE_REQUEST', data)
+		})
 	}
 }
 

@@ -3,13 +3,14 @@
     <div class="info-extra-list-head-box">
       <el-form :inline="true" :model="searchForm" class="searchBar">
         <el-form-item label="创建人">
-          <el-select v-model="searchForm.name" placeholder="请选择" size="small" filterable>
-            <el-option v-for="item in nameOptions" :key="item.value" :label="item.label" :value="item.value">
-            </el-option>
-          </el-select>
+          <!-- <el-select v-model="searchForm.name" placeholder="请选择" size="small" filterable>
+                <el-option v-for="item in nameOptions" :key="item.value" :label="item.label" :value="item.value">
+                </el-option>
+              </el-select> -->
+          <el-input v-model="searchForm.name" placeholder="请输入" size="small"></el-input>
         </el-form-item>
         <el-form-item label="建立日期：">
-          <el-select v-model="searchForm.time" placeholder="请选择" size="small">
+          <el-select v-model="searchForm.timeRange" placeholder="请选择" size="small">
             <el-option v-for="item in timeRangeOptions" :key="item.value" :label="item.label" :value="item.value">
             </el-option>
           </el-select>
@@ -19,32 +20,32 @@
       </el-form>
     </div>
     <div style="overflow:hidden;">
-      <span class="lightFont">共搜索到{{data.length?data.length:0}}条数据</span>
+      <span class="lightFont">共搜索到{{ruleList.length?ruleList.length:0}}条数据</span>
       <div class="fr">
         <el-button type="primary" @click="gotoNext('/main/info-extra/add')" size="small">新增配置</el-button>
       </div>
     </div>
-    <el-table :data="data" class="data-table" :default-sort="{prop: 'time', order: 'descending'}" border>
+    <el-table :data="ruleList" class="data-table" :default-sort="{prop: 'ctime', order: 'descending'}" border>
       <el-table-column prop="name" label="规则名称">
         <template scope="scope">
           <router-link :to="'/main/info-extra/' + scope.row.value + '/detail'">{{ scope.row.name }}</router-link>
         </template>
       </el-table-column>
-      <el-table-column prop="creator" label="创建人">
+      <el-table-column prop="username" label="创建人">
       </el-table-column>
-      <el-table-column prop="time" label="创建日期" :sortable="true">
+      <el-table-column prop="ctime" label="创建日期" :sortable="true">
       </el-table-column>
       <el-table-column label="操作">
         <template scope="scope">
           <div class="toolbar">
-            <el-button type="text" :disabled="noPermission(scope.row.status)" @click="editRule(scope.row)">编辑</el-button>
-            <el-button type="text" :disabled="noPermission(scope.row.status)" @click="deleteRule(scope.row)">删除</el-button>
+            <el-button type="text" :disabled="!scope.row.editable" @click="editRule(scope.row)">编辑</el-button>
+            <el-button type="text" :disabled="!scope.row.editable" @click="deleteRule(scope.row)">删除</el-button>
           </div>
           <el-dialog :title="dialogTitle" :visible.sync="dialogVisible" size="tiny" :modal="true" :modal-append-to-body="false">
             <span>删除后，该规则将无法使用。</span>
             <span slot="footer" class="dialog-footer">
               <el-button @click="dialogVisible = false">取 消</el-button>
-              <el-button type="primary" @click.native.prevent="deleteDialogConfirm(scope.row)">确 定</el-button>
+              <el-button type="primary" @click="deleteDialogConfirm">确 定</el-button>
             </span>
           </el-dialog>
         </template>
@@ -91,40 +92,111 @@ export default {
         value: 'beyondOneYear',
         label: '一年以上'
       }],
-      data: [],
+      ruleList: [],
+      //查询条件
       searchForm: {
         name: '',
-        time: ''
+        timeRange: ''
+      },
+      //最近一次查询条件
+      lastSearch:{
+        name: '',
+        timeRange: ''
       },
       dialogTitle: '',
-      dialogVisible: false
+      dialogVisible: false,
+      //删除规则id
+      toDeleteRuleId: ''
     }
   },
-  computed: mapState(['configList']),
-  created() {
-    this.data = this.configList
+  created(){
+    this.refreshRuleTable(this.lastSearch);
+  },
+  computed: mapState(['configList', 'deleteRuleResponse']),
+  watch: {
+    configList: function(configList) {
+      if (configList.list) {
+        this.ruleList = this.configList.list
+      }
+    },
+    deleteRuleResponse: function(response) {
+      if ('result' in response && 'error' in response) {
+        if (response.error) {
+          this.$notify({
+            message: response.errorMessage,
+            type: 'warnning',
+            duration: 2000,
+            offset: 200
+          });
+        }
+        else {
+          this.$notify({
+            message: response.result,
+            type: 'success',
+            duration: 2000,
+            offset: 200
+          });
+          this.refreshRuleTable(this.lastSearch);
+        }
+      }
+    }
   },
   methods: {
-    searchSubmit() {
+    ...mapActions([
+      'getInfoConfig', 'deleteConfigRule'
+    ]),
 
+    //计算时间 （最近时间范围）-》建立时间
+    computeCreateTime(timeRange) {
+      let timeRange_ms = '';
+      switch (timeRange) {
+        case 'oneMonth':
+          timeRange_ms = 30 * 24 * 60 * 60 * 1000;
+          break;
+        case 'threeMonth':
+          timeRange_ms = 3 * 30 * 24 * 60 * 60 * 1000;
+          break;
+        case 'halfYear':
+          timeRange_ms = 6 * 30 * 24 * 60 * 60 * 1000;
+          break;
+        case 'oneYear':
+          timeRange_ms = 12 * 30 * 24 * 60 * 60 * 1000;
+          break;
+        case 'beyondOneYear':
+          timeRange_ms = 12 * 30 * 24 * 60 * 60 * 1000;
+          break;
+      };
+      return (timeRange_ms ? new Date(Date.now() - timeRange_ms).toLocaleDateString() : '').replace(/\//g, '-');
     },
+    searchSubmit() {
+      this.lastSearch.name=this.searchForm.name;
+      this.lastSearch.timeRange=this.searchForm.timeRange;
+      this.refreshRuleTable(this.searchForm);
+    },
+    refreshRuleTable(requirement){
+      let creator = requirement.name.trim();
+      //计算建立时间
+      let createTime = this.computeCreateTime(requirement.timeRange);
+      //查询参数
+      let params = {};
+      if (creator) params.fu = creator;
+      if (createTime) params.bt = createTime
+      this.getInfoConfig(params);
+    },  
     gotoNext(path) {
-      console.log(path)
       this.$router.push(path)
     },
-    noPermission(status) {
-      return false;
-    },
     editRule(row) {
-      this.$router.push('/main/info-extra/' + row.value + '/edit/' + row.id);
+      this.$router.push('/main/info-extra/' + row.name + '/edit/' + row.id);
     },
     deleteRule(row) {
       this.dialogTitle = '确认删除 ' + row.name + ' 规则？';
       this.dialogVisible = true;
-
+      this.toDeleteRuleId = row.id;
     },
-    deleteDialogConfirm(row) {
+    deleteDialogConfirm() {
       this.dialogVisible = false;
+      this.deleteConfigRule(this.toDeleteRuleId);
     }
   }
 }

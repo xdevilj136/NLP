@@ -8,6 +8,8 @@
 </div>
 </template>
 <script>
+import utils from 'src/config/utils'
+
 export default {
 	name: 'function-display',
     data () {
@@ -15,7 +17,7 @@ export default {
           titleList: {
               'machanism-ident': '机构名识别',
               'analysis': '词法分析',
-              'info-get': '信息抽取'
+              'data-extract': '信息抽取'
           },
           title: ''
       }

@@ -31,7 +31,7 @@ export default {
             value: '',
             children: [{
                 label: '信息抽取',
-                value: 'function-display/info-get'
+                value: 'function-display/data-extract'
             }, {
                 label: '词法分析',
                 value: 'function-display/analysis'

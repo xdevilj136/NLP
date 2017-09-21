@@ -19,12 +19,11 @@ const state = {
 	configList: [], // 配置list
 	configRule:{},
 	deleteRuleResponse:{},
-	infoGet: {}, // 信息抽取
+	updateRuleResponse:{},
+	extractedData: {}, // 抽取到的数据
 	companyStd:{},//机构名标准化
 	companySegment:{},//机构名识别
 	analysisData: {}, // 词法分析数据
-	infoExtra: [], // 信息抽取配置数据list
-	infoExtraDetail: {}, //信息抽取配置数据config
 	createRuleResponse:{}//创建规则响应
 }
 

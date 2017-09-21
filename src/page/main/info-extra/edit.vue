@@ -66,6 +66,7 @@ export default {
       }
     };
     return {
+      ruleId:'',
       ruleDiscription: {
         ruleName: '',
         isPublic: true
@@ -93,9 +94,49 @@ export default {
       }
     }
   },
-  computed: mapState(['infoExtraDetail', 'createRuleResponse','configRule']),
+  computed: mapState([
+    'infoExtraDetail',
+    'createRuleResponse',
+    'configRule',
+    'updateRuleResponse'
+  ]),
   watch: {
     createRuleResponse: function(response) {
+      this.responseAlert(response);
+    },
+    updateRuleResponse: function(response) {
+      this.responseAlert(response);
+    },
+    configRule: function(configRule) {
+      if (configRule.result) {
+        this.ruleId=configRule.result.id;
+        this.ruleDiscription.ruleName = configRule.result.name ? configRule.result.name : '';
+        this.ruleDiscription.isPublic = configRule.result.privilege ? true : false;
+        if (configRule.result.content) {
+          let attributeList = JSON.parse(configRule.result.content);
+          for (var index = 0; index < attributeList.length; index++) {
+            this.propertyDomains[index] = {
+              key: index,
+              ruleProperty: attributeList[index]
+            };
+          }
+        }
+      }
+    }
+  },
+  created() {
+    if(this.$route.name!=='info-extra-add'){
+      this.queryRuleById(this.$route.params.id);
+    }
+  },
+  methods: {
+    ...mapActions([
+      'createRuleRequest',
+      'queryRuleById',
+      'updateRuleRequest'
+    ]),
+    //对请求返回响应的提示
+    responseAlert(response){
       if ('result' in response && 'error' in response) {
         if (response.error) {
           this.$alert(response.errorMessage, '提示', {
@@ -115,24 +156,7 @@ export default {
         }
       }
     },
-    configRule:function(configRule){
-      if(configRule){
-        this.ruleDiscription.ruleName=configRule.name?configRule.name:'';
-        this.ruleDiscription.isPublic=configRule.privilege?true:false;
-        if(configRule.content){
-          let attributeList=JSON.parse(configRule.content);
-          this.propertyDomains=attributeList;
-        }
-      }
-    }
-  },
-  created() {
-    this.queryRuleById(this.$route.params.id);
-  },
-  methods: {
-    ...mapActions([
-      'infoExtraDetailGet', 'createRuleRequest','queryRuleById'
-    ]),
+    //增加规则属性表单域
     addPropertyDomain() {
       this.propertyDomains.push(
         {
@@ -153,7 +177,9 @@ export default {
         this.propertyDomains.splice(index, 1)
       }
     },
-    createRule() {
+    //提交校验
+    submitValidate() {
+      let result = false;
       //属性表单校验
       let rulePropertyForms = this.$refs['rulePropertyForm'];
       let rulePropertyFormsValid = true;
@@ -166,39 +192,71 @@ export default {
           }
         });
       }, this);
-      //提交校验
+      //规则说明表单校验
       this.$refs['ruleDiscriptionForm'].validate((ruleDiscriptionValid) => {
         if (ruleDiscriptionValid && rulePropertyFormsValid) {
-          var ruleName = this.ruleDiscription.ruleName.trim();
-          var isPublic = this.ruleDiscription.isPublic;
-          var configs = [];
-          for (var index = 0; index < this.propertyDomains.length; index++) {
-            let ruleProperty = this.propertyDomains[index].ruleProperty;
-            for (var key in ruleProperty) {
-              if (ruleProperty.hasOwnProperty(key) && typeof ruleProperty[key] == 'string') {
-                ruleProperty[key] = ruleProperty[key].trim();
-              }
-            }
-            configs.push(ruleProperty);
-          }
-          var rule = {
-            name: ruleName,
-            content: JSON.stringify(configs),
-            privilege: isPublic ? 1 : 0
-          }
-          this.createRuleRequest(rule);
-        } else {
-          this.$alert('请按规则填写', '提示', {
-            confirmButtonText: '确定',
-            type: 'warning'
-          });
-          return;
+          result = true;
         }
       });
-
+      return result;
+    },
+    createRule() {
+      if (this.submitValidate()) {
+        var ruleName = this.ruleDiscription.ruleName.trim();
+        var isPublic = this.ruleDiscription.isPublic;
+        var configs = [];
+        for (var index = 0; index < this.propertyDomains.length; index++) {
+          let ruleProperty = this.propertyDomains[index].ruleProperty;
+          for (var key in ruleProperty) {
+            if (ruleProperty.hasOwnProperty(key) && typeof ruleProperty[key] == 'string') {
+              ruleProperty[key] = ruleProperty[key].trim();
+            }
+          }
+          configs.push(ruleProperty);
+        }
+        var rule = {
+          name: ruleName,
+          content: JSON.stringify(configs),
+          privilege: isPublic ? 1 : 0
+        }
+        this.createRuleRequest(rule);
+      } else {
+        this.$alert('请按规则填写', '提示', {
+          confirmButtonText: '确定',
+          type: 'warning'
+        });
+        return;
+      }
     },
     saveRule() {
-
+      if (this.submitValidate()) {
+        var ruleName = this.ruleDiscription.ruleName.trim();
+        var isPublic = this.ruleDiscription.isPublic;
+        var configs = [];
+        for (var index = 0; index < this.propertyDomains.length; index++) {
+          let ruleProperty = this.propertyDomains[index].ruleProperty;
+          for (var key in ruleProperty) {
+            if (ruleProperty.hasOwnProperty(key) && typeof ruleProperty[key] == 'string') {
+              ruleProperty[key] = ruleProperty[key].trim();
+            }
+          }
+          configs.push(ruleProperty);
+        }
+        //修改需要传id
+        var rule = {
+          name: ruleName,
+          content: JSON.stringify(configs),
+          privilege: isPublic ? 1 : 0,
+          id: this.ruleId
+        };
+        this.updateRuleRequest(rule);
+      } else {
+        this.$alert('请按规则填写', '提示', {
+          confirmButtonText: '确定',
+          type: 'warning'
+        });
+        return;
+      }
     }
   }
 }

@@ -1,19 +1,19 @@
 <template>
   <div>
-    <el-button @click="editRule(data.id)" class="fr" style="margin-bottom:10px;" type="primary" size="small">编辑</el-button>
+    <el-button @click="editRule" class="fr" style="margin-bottom:10px;" type="primary" size="small">编辑</el-button>
     <div class="background-title">
       <span>规则说明</span>
     </div>
     <div class="desc">
       <span>规则名称：</span>
-      <span style="margin-right:200px;">{{data.ruleDiscription.ruleName}}</span>
+      <span style="margin-right:200px;">{{ruleDiscription.ruleName}}</span>
       <span>设为私密：</span>
-      <span>{{data.ruleDiscription.isPublic=='yes'?'否':'是'}}</span>
+      <span>{{ruleDiscription.isPublic?'否':'是'}}</span>
     </div>
     <div class="background-title">
       <span>规则属性</span>
     </div>
-    <infoExtraCard v-for="(item, index) in data.ruleProperty" :data="item" />
+    <infoExtraCard v-for="(item, index)  in attributeList" :data="item" :key="index"/>
   </div>
 </template>
 <script>
@@ -23,33 +23,39 @@ export default {
   name: 'info-extra-detail',
   data() {
     return {
-      data: [],
-      title: ''
+      ruleId:'',
+      ruleDiscription: {
+        ruleName: '',
+        isPublic: true
+      },
+      attributeList:[]
     }
   },
   components: {
     infoExtraCard
   },
-  computed: mapState(['infoExtra']),
+  computed: mapState(['configRule']),
   watch: {
-    '$route'(newVal, oldVal) {
-      this.infoExtraGet(this.$route.params.config)
-      this.data = this.infoExtra
+    configRule: function(configRule) {
+      if (configRule.result) {
+        this.ruleId=configRule.result.id;
+        this.ruleDiscription.ruleName = configRule.result.name ? configRule.result.name : '';
+        this.ruleDiscription.isPublic = configRule.result.privilege ? true : false;
+        if (configRule.result.content) {
+          this.attributeList = JSON.parse(configRule.result.content);
+        }
+      }
     }
   },
   created() {
-    this.infoExtraGet(this.$route.params.config)
-    this.data = this.infoExtra
+    this.queryRuleById(this.$route.params.id);
   },
   methods: {
     ...mapActions([
-      'infoExtraGet'
+      'queryRuleById'
     ]),
-    addConfig() {
-      this.$router.push('add')
-    },
-    editRule(id) {
-      this.$router.push('/main/info-extra/edit/' + id);
+    editRule() {
+      this.$router.push('/main/info-extra/' + this.ruleDiscription.ruleName + '/edit/' + this.ruleId);
     }
   }
 }

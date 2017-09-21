@@ -2,21 +2,21 @@
 <div class="clearfix" >
   <table class="info-extra-card-box">
     <tr class="info-extra-card-head">
-      <th>{{data.name}}</th>
+      <th>{{data.attribute}}</th>
       <th>
       </th>
     </tr>
     <tr class="info-extra-card-body">
       <td>触发规则</td>
-      <td>{{data.match_rule}}</td>
+      <td>{{data.matchRule}}</td>
     </tr>
     <tr class="info-extra-card-body">
       <td>匹配规则</td>
-      <td>{{data.trigger_rule}}</td>
+      <td>{{data.trigger}}</td>
     </tr>
     <tr class="info-extra-card-footer">
       <td>只匹配一次</td>
-      <td>{{data.once==='true' ? '是':'否'}}</td>
+      <td>{{data.matchOne ? '是':'否'}}</td>
     </tr>
   </table>
 </div>

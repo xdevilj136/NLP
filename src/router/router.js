@@ -39,7 +39,7 @@ export default [{
                 component : r => require.ensure([], () => r(require('../page/main/info-extra/list')), 'info-extra-list'),
                 name: 'info-extra-list'
             }, {
-                path: ':config/detail',
+                path: ':config/detail/:id',
                 component : r => require.ensure([], () => r(require('../page/main/info-extra/detail')), 'info-extra-detail'),
                 name: 'info-extra-detail'
             }, {
@@ -61,8 +61,8 @@ export default [{
                 path: 'analysis',
                 component : r => require.ensure([], () => r(require('../page/main/function-display/analysis')), 'analysis'),
             }, {
-                path: 'info-get',
-                component : r => require.ensure([], () => r(require('../page/main/function-display/info-get')), 'info-get'),
+                path: 'data-extract',
+                component : r => require.ensure([], () => r(require('../page/main/function-display/data-extract')), 'data-extract'),
             }]
         }, {
             path: '*',

@@ -25,6 +25,8 @@
 <script>
 import { mapActions, mapState } from 'vuex'
 import analysisResult from 'components/analysisResult';
+import utils from 'src/config/utils'
+
 export default {
   name: 'analysis',
   data() {
@@ -57,11 +59,24 @@ export default {
   computed: mapState(['analysisData']),
   watch: {
     analysisData: function(analysisData) {
+      //去重处理
       let result = analysisData.result;
-      if (result) {
-        this.processedData.WordSegment = result.WordSegment ? result.WordSegment : '';
-        this.processedData.NamedIdentityRecognize = result.NamedIdentityRecognize ? result.NamedIdentityRecognize : '';
-        this.processedData.PosTag = result.PosTag ? result.PosTag : '';
+			for (let key in result) {
+				let item = JSON.parse(result[key]);
+				let matchList = item.SegList || item.PosList || item.NerList;
+				if (matchList) {
+					if (matchList.Tags) {
+						matchList['newTags'] = utils.unique(matchList.Tags)
+					}
+				}
+				result[key] = item;
+      }
+      //解析赋值
+      let filterResult = analysisData.result;
+      if (filterResult) {
+        this.processedData.WordSegment = filterResult.WordSegment ? filterResult.WordSegment : '';
+        this.processedData.NamedIdentityRecognize = filterResult.NamedIdentityRecognize ? filterResult.NamedIdentityRecognize : '';
+        this.processedData.PosTag = filterResult.PosTag ? filterResult.PosTag : '';
       }
     }
 
@@ -77,6 +92,13 @@ export default {
       let textContent = this.text.value.replace(/\s/g, '');
       if (textContent == '') {
         this.$alert('输入内容不能为空', '提示', {
+          confirmButtonText: '确定',
+          type: 'warning'
+        });
+        return;
+      }
+      if(this.text.type.length==0){
+        this.$alert('请选择分析选项', '提示', {
           confirmButtonText: '确定',
           type: 'warning'
         });

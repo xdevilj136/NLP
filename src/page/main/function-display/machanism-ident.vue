@@ -18,7 +18,7 @@
           <el-input class="content-input" v-model="data.toAnalysisName" placeholder="请输入机构名"></el-input>
           <el-button class="content-submit" @click="submitTxt('companySegment')" type="primary">提交</el-button>
         </div>
-        <analysisResult v-if="companySegment.result" type="seg_list" headTitle="分析结果" :data="companySegment.result['CompanySegment'].CompanySeg" />
+        <analysisResult v-if="processedCompanySeg.result" type="seg_list" headTitle="分析结果" :data="processedCompanySeg.result['CompanySegment'].CompanySeg" />
       </el-tab-pane>
     </el-tabs>
 
@@ -27,6 +27,8 @@
 <script>
 import { mapActions, mapState } from 'vuex'
 import analysisResult from 'components/analysisResult';
+import utils from 'src/config/utils'
+
 export default {
   name: 'machanism-ident',
   data() {
@@ -35,14 +37,28 @@ export default {
         toStdName: '',
         toAnalysisName: '',
         fullName: ''
-      }
+      },
+      processedCompanySeg:{}
     }
   },
   watch: {
     companyStd: function(companyStd) {
       if (companyStd.result && companyStd.result.CompanyStd) {
+				companyStd.result.CompanyStd = JSON.parse(companyStd.result.CompanyStd);
         this.data.fullName = companyStd.result.CompanyStd.CompanyStd[this.data.toStdName].StdName;
       }
+    },
+    companySegment:function(data){
+      //去重处理
+      if (data.result && data.result.CompanySegment) {
+				let parsedSeg = JSON.parse(data.result.CompanySegment);
+				let companySeg = parsedSeg.CompanySeg;
+				if (companySeg.Tags) {
+					companySeg['newTags'] = utils.unique(companySeg.Tags)
+				}
+				data.result.CompanySegment = parsedSeg;
+      }
+      this.processedCompanySeg=data;
     }
   },
   components: {

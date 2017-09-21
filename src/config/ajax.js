@@ -1,5 +1,6 @@
-export default (type='GET', url='', data={}, async=true) => {
-	return new Promise((resolve, reject) => { //定义一个promise
+import store from 'src/store/'
+
+export default (type='GET', url='', data={}, commitToken='',async=true) => {
 		type = type.toUpperCase();
 
 		let requestObj;
@@ -24,7 +25,7 @@ export default (type='GET', url='', data={}, async=true) => {
 			requestObj.setRequestHeader("Content-type", "application/json");
 			requestObj.send(JSON.stringify(data));
 		}else {
-			reject('error type');
+			// reject('error type');
 		}
 
 		requestObj.onreadystatechange = () => {
@@ -34,11 +35,12 @@ export default (type='GET', url='', data={}, async=true) => {
 					if (typeof obj !== 'object') {
 						obj = JSON.parse(obj);
 					}
-					resolve(obj);
+					store.commit(commitToken, obj);
+					
+					
 				}else {
-					reject(requestObj);
+					// window.location.href="/login";
 				}
 			}
 		}
-	})
 }

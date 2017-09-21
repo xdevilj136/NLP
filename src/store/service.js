@@ -1,14 +1,7 @@
 import ajax from '../config/ajax'
 
 export default {
-	//获取信息抽取配置规则列表
-	configData(params) {
 
-		let responseData = ajax('GET', '/api/extractConfig/queryAll',params).then((data) => {
-			return data.result;
-		});
-		return responseData;
-	},
 	// loginCheck
 	loginCheck(data) {
 		ajax()
@@ -18,120 +11,42 @@ export default {
 	loginOut(data) {
 		return false
 	},
-	// 信息抽取list
-	infoExtraGet(config) {
-		let data = [{
-			name: '杜甫悲传',
-			match_rule: '南村群童欺我老无力，公然抱我入竹去',
-			trigger_rule: '唇焦口燥呼不得，归来倚杖自叹息',
-			once: 'true'
-		}]
-		if (config === 'a') {
-			data = []
-		} else if (config === 'b') {
-			data = {
-				id: 1,
-				ruleDiscription: {
-					ruleName: '拜访记录',
-					isPublic: 'yes'
-				},
-				ruleProperty: [{
-					name: '杜甫悲传',
-					match_rule: '南村群童欺我老无力，公然抱我入竹去',
-					trigger_rule: '唇焦口燥呼不得，归来倚杖自叹息',
-					once: 'true'
-				}, {
-					name: '杜甫悲传',
-					match_rule: '南村群童欺我老无力，公然抱我入竹去',
-					trigger_rule: '唇焦口燥呼不得，归来倚杖自叹息',
-					once: 'true'
-				}]
-			};
-		}
-		return data
+	//获取信息抽取配置规则列表
+	configData(params) {
+		ajax('GET', '/api/extractConfig/queryAll', params,'INFO_CONFIG');
 	},
 	//根据id查询单个配置规则
 	queryRuleById(id) {
-		let responseData = ajax('GET', '/api/extractConfig/queryById', { id: id }).then((data) => {
-			return data.result;
-		});
-		return responseData;
+		ajax('GET', '/api/extractConfig/queryById', { id: id },'CONFIG_RULE');
+	},
+	//创建抽取信息配置规则
+	createRuleRequest(rule) {
+		ajax('POST', '/api/extractConfig/create', rule,'CREATE_RULE_REQUEST');
+	},
+	//修改抽取信息配置规则
+	updateRuleRequest(rule) {
+		ajax('POST', '/api/extractConfig/edit', rule,'UPDATE_RULE_REQUEST');
 	},
 	//删除配置规则
-	deleteConfigRule(id){
-		let responseData = ajax('GET', '/api/extractConfig/delete',{id:id}).then((data) => {
-			return data;
-		});
-		return responseData;
+	deleteConfigRule(id) {
+		ajax('GET', '/api/extractConfig/delete', { id: id },'DELETE_CONFIG_RULE');
 	},
-	infoExtraDetailGet(id) {
-		let data = {
-			name: '杜甫悲传',
-			match_rule: '南村群童欺我老无力，公然抱我入竹去',
-			trigger_rule: '唇焦口燥呼不得，归来倚杖自叹息',
-			once: 'true'
-		}
-		return data
-	},
-	infoGet() {
-		let data = { "招中标": { "招标机构": ["海致网络技术有限公司"], "代理机构": ["海致网络技术（北京）有限公司"], "中标机构": ["大连樱华健康科技有限公司"], "中标金额": ["人民币580.2万元"] } };
-		let newDate = {
-			name: '',
-			children: []
-		}
-		for (let i in data) {
-			newDate['name'] = i;
-			for (let j in data[i]) {
-				newDate['children'].push({
-					name: j,
-					value: data[i][j]
-				})
-			}
-		}
-		return newDate;
+	//信息抽取处理
+	dataExtract(data) {
+		ajax('POST', '/api/functions/dataExtract', data,'DATA_EXTRACT');
+
 	},
 	//词法分析
 	analysisGet(json) {
-		let responseData = ajax('POST', '/api/functions/grammarParse', json).then((data) => {
-			let result = data.result;
-			for (let key in result) {
-				let item = JSON.parse(result[key]);
-				let matchList = item.SegList || item.PosList || item.NerList;
-				if (matchList) {
-					if (matchList.Tags) {
-						matchList['newTags'] = unique(matchList.Tags)
-					}
-				}
-				result[key] = item;
-			}
-			return data;
-		});
-		return responseData;
+		ajax('POST', '/api/functions/grammarParse', json,'ANALYSIS_GET');
 	},
 	//机构名标准化
 	processCompanyStd(json) {
-		let responseData = ajax('POST', '/api/functions/companyStd', json).then((data) => {
-			if(data.result&&data.result.CompanyStd){
-				data.result.CompanyStd = JSON.parse(data.result.CompanyStd);
-			}
-			return data;
-		});
-		return responseData;
+		ajax('POST', '/api/functions/companyStd', json,'PROCESS_COMPANY_STD');
 	},
 	//机构名识别
 	processCompanySegment(json) {
-		let responseData = ajax('POST', '/api/functions/companySegment', json).then((data) => {
-			if(data.result&&data.result.CompanySegment){
-				let companySegment = JSON.parse(data.result.CompanySegment);
-				let companySeg=companySegment.CompanySeg;
-				if(companySeg.Tags){
-					companySeg['newTags'] = unique(companySeg.Tags)
-				}
-				data.result.CompanySegment=companySegment;
-			}
-			return data;
-		});
-		return responseData;
+		ajax('POST', '/api/functions/companySegment', json,'PROCESS_COMPANY_SEGMENT');
 	},
 	//获取任务管理筛选数据
 	taskManageData() {
@@ -233,16 +148,8 @@ export default {
 			}
 		]
 		return data;
-	},
-	//创建规则
-	createRuleRequest(rule) {
-		let responseData = ajax('POST', '/api/extractConfig/create', rule).then((data) => {
-			return data;
-		});
-		return responseData;
 	}
-
-}
+};
 // 去重操作
 function unique(data) {
 	let lastData = []

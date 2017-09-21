@@ -28,7 +28,7 @@
     <el-table :data="ruleList" class="data-table" :default-sort="{prop: 'ctime', order: 'descending'}" border>
       <el-table-column prop="name" label="规则名称">
         <template scope="scope">
-          <router-link :to="'/main/info-extra/' + scope.row.value + '/detail'">{{ scope.row.name }}</router-link>
+          <router-link :to="'/main/info-extra/' + scope.row.name + '/detail/'+scope.row.id">{{ scope.row.name }}</router-link>
         </template>
       </el-table-column>
       <el-table-column prop="username" label="创建人">
@@ -115,8 +115,8 @@ export default {
   computed: mapState(['configList', 'deleteRuleResponse']),
   watch: {
     configList: function(configList) {
-      if (configList.list) {
-        this.ruleList = this.configList.list
+      if (configList.result&&configList.result.list) {
+        this.ruleList = this.configList.result.list
       }
     },
     deleteRuleResponse: function(response) {

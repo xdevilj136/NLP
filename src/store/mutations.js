@@ -4,17 +4,16 @@ const TASK_MANAGE = 'TASK_MANAGE'
 const TASK_LOG = 'TASK_LOG'
 const TASK_MANAGE_DETAIL = 'TASK_MANAGE_DETAIL'
 const AUTHORITY_MANAGE = 'AUTHORITY_MANAGE'
-const INFO_GET = 'INFO_GET'
+const DATA_EXTRACT = 'DATA_EXTRACT'
 const ANALYSIS_GET = 'ANALYSIS_GET'
-const INFO_EXTRA = 'INFO_EXTRA'
-const INFO_EXTRA_DETAIL = 'INFO_EXTRA_DETAIL'
 const LOGIN_CHECK = 'LOGIN_CHECK'
 const DATA_SOURCE = 'DATA_SOURCE'
 const CREATE_RULE_REQUEST = 'CREATE_RULE_REQUEST'
+const UPDATE_RULE_REQUEST = 'UPDATE_RULE_REQUEST'
 const PROCESS_COMPANY_SEGMENT = 'PROCESS_COMPANY_SEGMENT'
 const PROCESS_COMPANY_STD = 'PROCESS_COMPANY_STD'
 const DELETE_CONFIG_RULE = 'DELETE_CONFIG_RULE'
-const CONFIG_RULE='CONFIG_RULE'
+const CONFIG_RULE = 'CONFIG_RULE'
 
 export default {
 	[TEST_ACTION](state, text) {
@@ -31,6 +30,14 @@ export default {
 	// 获取单个信息抽取配置规则
 	[CONFIG_RULE](state, data) {
 		state.configRule = data
+	},
+	//创建规则
+	[CREATE_RULE_REQUEST](state, data) {
+		state.createRuleResponse = data;
+	},
+	//创建规则
+	[UPDATE_RULE_REQUEST](state, data) {
+		state.updateRuleResponse = data;
 	},
 	// 删除信息抽取配置规则
 	[DELETE_CONFIG_RULE](state, data) {
@@ -56,9 +63,9 @@ export default {
 	[DATA_SOURCE](state, data) {
 		state.dataSource = data
 	},
-	// function-display info-get
-	[INFO_GET](state, data) {
-		state.infoGet = data
+	// 信息抽取处理
+	[DATA_EXTRACT](state, data) {
+		state.extractedData = data
 	},
 	//词法分析
 	[ANALYSIS_GET](state, data) {
@@ -71,16 +78,6 @@ export default {
 	//机构名识别
 	[PROCESS_COMPANY_SEGMENT](state, data) {
 		state.companySegment = data
-	},
-	// 抽取信息配置模块
-	[INFO_EXTRA](state, data) {
-		state.infoExtra = data
-	},
-	[INFO_EXTRA_DETAIL](state, data) {
-		state.infoExtraDetail = data
-	},
-	//创建规则
-	[CREATE_RULE_REQUEST](state, data) {
-		state.createRuleResponse = data;
 	}
+
 }

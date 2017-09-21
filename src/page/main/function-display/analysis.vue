@@ -18,8 +18,8 @@
         </div>
       </div>
     </div>
-    <analysisResult v-if="submit && processedData.NamedIdentityRecognize" type="ner_list" headTitle="词性标注" :data="processedData.NamedIdentityRecognize.NerList" />
-    <analysisResult v-if="submit && processedData.PosTag" type="pos_list" headTitle="实体识别" :data="processedData.PosTag.PosList" />
+    <analysisResult v-if="submit && processedData.NamedIdentityRecognize" type="ner_list" headTitle="实体识别" :data="processedData.NamedIdentityRecognize.NerList" />
+    <analysisResult v-if="submit && processedData.PosTag" type="pos_list" headTitle="词性标注" :data="processedData.PosTag.PosList" />
   </div>
 </template>
 <script>

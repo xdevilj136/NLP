@@ -3,7 +3,6 @@
     <div class="background-title">
       <span>规则说明</span>
     </div>
-
     <el-form :inline="true" :rules="rules" :model="ruleDiscription" ref="ruleDiscriptionForm" class="rule-discription-form" label-width="100px">
       <el-form-item label="规则名称：" prop="ruleName">
         <el-input v-model="ruleDiscription.ruleName" placeholder="请输入" size="small"></el-input>
@@ -20,7 +19,7 @@
     </div>
     <div v-for="(domain, index) in propertyDomains" :key="domain.key">
       <div class="border-container">
-        <el-form :model="domain.ruleProperty" ref="rulePropertyForm" :rules="rules" class="rule-discription-form" label-width="100px">
+        <el-form :model="domain.ruleProperty" ref="rulePropertyForm" :rules="rules" class="rule-property-form" label-width="100px">
           <div class="inline-form">
             <el-form-item label="属性名称：" prop="attribute">
               <el-input v-model="domain.ruleProperty.attribute" placeholder="请输入" size="small"></el-input>
@@ -33,12 +32,10 @@
             </el-form-item>
           </div>
           <el-form-item label="触发规则：" prop="trigger">
-            <el-input type="textarea" :autosize="{ minRows: 5, maxRows: 5}" placeholder="请输入内容" v-model="domain.ruleProperty.trigger">
-            </el-input>
+            <codemirror v-model="domain.ruleProperty.trigger" :options="options" placeholder="请输入内容"></codemirror>
           </el-form-item>
           <el-form-item label="匹配规则：" prop="matchRule">
-            <el-input type="textarea" :autosize="{ minRows: 5, maxRows: 5}" placeholder="请输入内容" v-model="domain.ruleProperty.matchRule">
-            </el-input>
+            <codemirror v-model="domain.ruleProperty.matchRule" :options="options" placeholder="请输入内容"></codemirror>
             <p class="config-content-desc">*匹配规则与触发规则必填一项</p>
           </el-form-item>
         </el-form>
@@ -55,8 +52,14 @@
 </template>
 <script>
 import { mapActions, mapState } from 'vuex'
+import { codemirror } from 'vue-codemirror-lite'
+require('codemirror/addon/display/placeholder.js')
+
 export default {
   name: 'info-extra-edit',
+  components: {
+    codemirror
+  },
   data() {
     var validateEmpty = (rule, value, callback) => {
       if (value.trim() === '') {
@@ -66,7 +69,7 @@ export default {
       }
     };
     return {
-      ruleId:'',
+      ruleId: '',
       ruleDiscription: {
         ruleName: '',
         isPublic: true
@@ -91,6 +94,12 @@ export default {
           { required: true, message: '请输入属性名称', trigger: 'change' },
           { validator: validateEmpty, trigger: 'change' }
         ]
+      },
+      options: {
+        lineNumbers: true,
+        lineWrapping: true,
+        cursorHeight: 0.7,
+        placeholder: '请输入内容'
       }
     }
   },
@@ -109,9 +118,9 @@ export default {
     },
     configRule: function(configRule) {
       if (configRule.result) {
-        this.ruleId=configRule.result.id;
+        this.ruleId = configRule.result.id;
         this.ruleDiscription.ruleName = configRule.result.name ? configRule.result.name : '';
-        this.ruleDiscription.isPublic = configRule.result.privilege ? true : false;
+        this.ruleDiscription.isPublic = configRule.result.privilege == 0 ? false : true;
         if (configRule.result.content) {
           let attributeList = JSON.parse(configRule.result.content);
           for (var index = 0; index < attributeList.length; index++) {
@@ -125,7 +134,7 @@ export default {
     }
   },
   created() {
-    if(this.$route.name!=='info-extra-add'){
+    if (this.$route.name !== 'info-extra-add') {
       this.queryRuleById(this.$route.params.id);
     }
   },
@@ -136,7 +145,7 @@ export default {
       'updateRuleRequest'
     ]),
     //对请求返回响应的提示
-    responseAlert(response){
+    responseAlert(response) {
       if ('result' in response && 'error' in response) {
         if (response.error) {
           this.$alert(response.errorMessage, '提示', {
@@ -277,14 +286,23 @@ export default {
   width: 85%;
 }
 
-.rule-discription-form {
+.rule-discription-form,
+.rule-property-form {
   margin: 10px;
   .el-form-item {
     margin-right: 50px;
   }
+  .CodeMirror-placeholder {
+    color: #97a9c6;
+  }
   input {
     width: 250px;
   }
+}
+
+.rule-property-form>.el-form-item .el-form-item__content {
+  border: 1px solid #bfcbd9;
+  border-radius: 5px;
 }
 
 .inline-form {

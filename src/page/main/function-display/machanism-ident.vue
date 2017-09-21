@@ -9,7 +9,7 @@
         </div>
         <div class="content-ident-box">
           <p class="content-title">全称</p>
-          <el-input class="content-input" :disabled="true" v-model="data.fullName" placeholder="请输入机构名"></el-input>
+          <el-input class="content-input" :readonly="true" v-model="data.fullName" placeholder="请输入机构名"></el-input>
         </div>
       </el-tab-pane>
       <el-tab-pane label="机构名分析" name="companySegment">

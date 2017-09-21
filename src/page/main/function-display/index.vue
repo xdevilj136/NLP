@@ -8,7 +8,6 @@
 </div>
 </template>
 <script>
-import utils from 'src/config/utils'
 
 export default {
 	name: 'function-display',

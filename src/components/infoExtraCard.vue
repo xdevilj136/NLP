@@ -1,36 +1,39 @@
 <template>
-<div class="clearfix" >
-  <table class="info-extra-card-box">
-    <tr class="info-extra-card-head">
-      <th>{{data.attribute}}</th>
-      <th>
-      </th>
-    </tr>
-    <tr class="info-extra-card-body">
-      <td>触发规则</td>
-      <td>{{data.matchRule}}</td>
-    </tr>
-    <tr class="info-extra-card-body">
-      <td>匹配规则</td>
-      <td>{{data.trigger}}</td>
-    </tr>
-    <tr class="info-extra-card-footer">
-      <td>只匹配一次</td>
-      <td>{{data.matchOne ? '是':'否'}}</td>
-    </tr>
-  </table>
-</div>
+  <div class="clearfix">
+    <table class="info-extra-card-box">
+      <tr class="info-extra-card-head">
+        <th>{{data.attribute}}</th>
+        <th>
+        </th>
+      </tr>
+      <tr class="info-extra-card-body">
+        <td>触发规则</td>
+        <td>
+          <pre>{{data.trigger}}</pre>
+        </td>
+      </tr>
+      <tr class="info-extra-card-body">
+        <td>匹配规则</td>
+        <td>
+          <pre>{{data.matchRule}}</pre>
+        </td> 
+      </tr>
+      <tr class="info-extra-card-footer">
+        <td>只匹配一次</td>
+        <td>{{data.matchOne ? '是':'否'}}</td>
+      </tr>
+    </table>
+  </div>
 </template>
 <script>
 export default {
   name: 'info-extra-card',
-  data () {
-      return {
-      }
+  data() {
+    return {
+    }
   },
   props: ['data'],
-  created(){
-  },
+
   methods: {
   }
 }
@@ -70,7 +73,10 @@ export default {
     vertical-align: top;
     overflow: auto;
     width: ~'calc(100% - 22px)';
-    display: inline-block
+    display: inline-block;
+    pre{
+      font-size: 12px;
+    }
   }
   .info-extra-card-footer td {
     height: 30px;

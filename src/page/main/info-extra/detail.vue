@@ -40,7 +40,7 @@ export default {
       if (configRule.result) {
         this.ruleId=configRule.result.id;
         this.ruleDiscription.ruleName = configRule.result.name ? configRule.result.name : '';
-        this.ruleDiscription.isPublic = configRule.result.privilege ? true : false;
+        this.ruleDiscription.isPublic = configRule.result.privilege==0 ? false : true;
         if (configRule.result.content) {
           this.attributeList = JSON.parse(configRule.result.content);
         }

@@ -3,8 +3,9 @@
     <el-checkbox-group class="mgb10" v-model="text.type">
       <el-checkbox v-for="type in typeOption" :label="type.value" :key="type.value">{{type.name}}</el-checkbox>
     </el-checkbox-group>
-    <el-input class="mgt10 mgb10" type="textarea" :autosize="{ minRows: 5, maxRows: 5}" placeholder="请输入要进行词法分析的内容" v-model="text.value">
+    <el-input class="mgt10 mgb10" type="textarea" :maxlength="1000" :autosize="{ minRows: 5, maxRows: 5}" placeholder="请输入要进行词法分析的内容" v-model="text.value">
     </el-input>
+        <p v-if="text.value.length>=1000" style="color:red;">超出最大长度限制1000</p>
     <div class="submit-box">
       <el-button @click="submitTxt()" type="primary">提交文本</el-button>
     </div>

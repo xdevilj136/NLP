@@ -4,15 +4,16 @@
       <el-option v-for="(item,index) in ruleList" :key="index" :label="item.name" :value="index">
       </el-option>
     </el-select>
-    <el-input class="mgt10 mgb10" type="textarea" :autosize="{ minRows: 8, maxRows: 8}" placeholder="请输入要进行信息抽取的内容" v-model="data.value">
+    <el-input class="mgt10 mgb10" type="textarea" :autosize="{ minRows: 8, maxRows: 8}" :maxlength="1000" placeholder="请输入要进行信息抽取的内容" v-model="data.value">
     </el-input>
+    <p v-if="data.value.length>=1000" style="color:red;">超出最大长度限制1000</p>
     <div class="submit-box">
       <el-button @click="submitTxt" type="primary">提交文本</el-button>
     </div>
-    <el-table v-if="submit && extractSuccess" class="mgt10 mgb10" :data="extractResult">
-      <el-table-column prop="name" label="关键信息">
+    <el-table v-if="submit && extractSuccess" border style="width: 100%" class="mgt10 mgb10" :data="extractResult">
+      <el-table-column  min-width="100" prop="name" label="名称">
       </el-table-column>
-      <el-table-column prop="value" label="值">
+      <el-table-column  min-width="500" prop="value" label="值">
       </el-table-column>
     </el-table>
   </div>
@@ -35,6 +36,7 @@ export default {
     }
   },
   watch: {
+
     configList: function(configList) {
       if (configList.result && configList.result.list) {
         this.ruleList = this.configList.result.list
@@ -118,5 +120,8 @@ export default {
 .submit-box {
   text-align: right;
   margin-bottom: 50px;
+}
+.message{
+  top:160px;
 }
 </style>

@@ -59,7 +59,7 @@ export default {
     },
     methods: {
       ...mapActions([
-  			'changeTest', 'getInfoConfig'
+  			'getInfoConfig'
   		]),
       init () {
         this.getInfoConfig()
@@ -80,7 +80,6 @@ export default {
 
           })
         } else {
-          this.changeTest(data)
           if(data.value==''){
             return;
           }

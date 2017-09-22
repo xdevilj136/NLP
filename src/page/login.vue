@@ -16,7 +16,6 @@ export default {
       loginCard
   	},
     created(){
-        
     }
 }
 </script>

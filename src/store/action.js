@@ -1,9 +1,6 @@
 import service from './service'
 
 export default {
-	changeTest({ commit, state }, text) {
-		commit('TEST_ACTION', text)
-	},
 	// login
 	loginCheck({ commit, state }, data) {
 		let check = service.loginCheck(data)

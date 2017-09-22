@@ -12,7 +12,7 @@
           </el-select>
         </el-form-item>
         <el-form-item label="建立日期：">
-          <el-select v-model="searchForm.time" placeholder="请选择" size="small">
+          <el-select v-model="searchForm.timeRange" placeholder="请选择" size="small">
             <el-option v-for="item in timeRangeOptions" :key="item.value" :label="item.label" :value="item.value">
             </el-option>
           </el-select>
@@ -31,7 +31,7 @@
     <div style="overflow:hidden;">
       <span class="lightFont">共搜索到{{taskManageData.length?taskManageData.length:0}}条数据</span>
       <div class="fr">
-        <el-button @click="refreshTable" size="small">刷新</el-button>
+        <el-button @click="refreshTask" size="small">刷新</el-button>
         <el-button type="primary" @click="createTask" size="small">新增任务</el-button>
       </div>
     </div>
@@ -50,9 +50,9 @@
           <div class="toolbar">
             <el-button v-if="canStart(scope.row.status)" :disabled="startDisabled(scope.row.status)" type="text" @click="startTask">开始</el-button>
             <el-button v-if="canStop(scope.row.status)" type="text" @click="stopTask">终止</el-button>
-            <el-button type="text" :disabled="editDisabled(scope.row.status)" @click="editTask">编辑</el-button>
-            <el-button type="text" @click="deleteTask(scope.row)">删除</el-button>
-            <el-button type="text" :disabled="showLogDisabled(scope.row.status)" @click="showTaskLog(scope.row)">查看日志</el-button>
+            <el-button type="text" :disabled="editDisabled(scope.row.status)" @click="editTask(scope.row.id)">编辑</el-button>
+            <el-button type="text" @click="deleteTask(scope.row.name)">删除</el-button>
+            <el-button type="text" :disabled="showLogDisabled(scope.row.status)" @click="showTaskLog(scope.row.id)">查看日志</el-button>
           </div>
           <el-dialog :title="dialogTitle" :visible.sync="dialogVisible" size="tiny" :modal="true" :modal-append-to-body="false">
             <span>删除后，该任务将无法正常执行。</span>
@@ -130,13 +130,13 @@ export default {
       searchForm: {
         taskType: '',
         taskStatus: '',
-        time: ''
+        timeRange: ''
       },
       //最近查询条件记录
       latestSearch: {
         taskType: '',
         taskStatus: '',
-        time: ''
+        timeRange: ''
       },
       //对话框
       dialogTitle: '',
@@ -156,20 +156,7 @@ export default {
     ...mapActions([
       'getTaskManageData'
     ]),
-    //查询确认
-    searchSubmit() {
-      this.getTaskManageData();
-      this.latestSearch = this.clone(this.searchForm);
-      console.log(this.searchForm);
-    },
-    //刷新表格
-    refreshTable() {
-      console.log(this.latestSearch);
-    },
-    //新增任务
-    createTask() {
-      this.$router.push('/main/task-manage/create')
-    },
+    
     //判断每行任务状态
     hasCompleted(status) {
       return status == '已结束';
@@ -202,11 +189,58 @@ export default {
     showLogDisabled(status) {
       return this.notStart(status) || this.readyToStart(status);
     },
+      //计算时间 （最近时间范围）-》建立时间
+    computeCreateTime(timeRange) {
+      let timeRange_ms = '';
+      switch (timeRange) {
+        case 'oneMonth':
+          timeRange_ms = 30 * 24 * 60 * 60 * 1000;
+          break;
+        case 'threeMonth':
+          timeRange_ms = 3 * 30 * 24 * 60 * 60 * 1000;
+          break;
+        case 'halfYear':
+          timeRange_ms = 6 * 30 * 24 * 60 * 60 * 1000;
+          break;
+        case 'oneYear':
+          timeRange_ms = 12 * 30 * 24 * 60 * 60 * 1000;
+          break;
+        case 'beyondOneYear':
+          timeRange_ms = 12 * 30 * 24 * 60 * 60 * 1000;
+          break;
+      };
+      return (timeRange_ms ? (new Date(Date.now() - timeRange_ms).toLocaleDateString()) : '').replace(/\//g, '-');
+    },
     //跳转详情
     showTaskDetail(id) {
       this.$router.push('/main/task-manage/detail/' + id)
     },
-
+    //查询确认
+    searchSubmit() {
+      this.latestSearch = this.clone(this.searchForm);
+      this.refreshTaskTable(this.searchForm);
+    },
+    refreshTaskTable(requirement){
+      let taskType = requirement.taskType;
+      let taskStatus=requirement.taskStatus;
+      //计算建立时间
+      let createTime = this.computeCreateTime(requirement.timeRange);
+      //查询参数
+      let params = {};
+      if (taskType) params.t = taskType;
+      if (taskStatus) params.s = taskStatus;
+      if(createTime) params.bt=createTime
+      this.getTaskManageData(params);
+    },  
+    //根据上一次查询条件刷新任务列表
+    refreshTask(){
+      console.log(this.latestSearch)
+      this.refreshTaskTable(this.latestSearch);
+    },
+    //新增任务
+    createTask() {
+      this.$router.push('/main/task-manage/create')
+    },
     //操作菜单
     startTask() {
 
@@ -214,14 +248,15 @@ export default {
     stopTask() {
 
     },
-    editTask() {
+    editTask(id) {
+      this.$router.push('/main/task-manage/edit/'+id)
     },
-    deleteTask(row) {
+    deleteTask(name) {
       this.dialogVisible = true;
-      this.dialogTitle = "确认删除 " + row.name + " ?"
+      this.dialogTitle = "确认删除 " + name + " ?"
     },
-    showTaskLog(row) {
-      this.$router.push('/main/task-manage/log/' + row.id)
+    showTaskLog(id) {
+      this.$router.push('/main/task-manage/log/' + id)
     },
     //对话框确认
     deleteDialogConfirm(row) {

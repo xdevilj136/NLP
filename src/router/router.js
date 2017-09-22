@@ -11,14 +11,19 @@ export default [{
         path: '/main',
         component: r => require.ensure([], () => r(require('../page/index')), 'main'),
         children: [{
-            path: 'test',
-            component : r => require.ensure([], () => r(require('../page/main/test')), 'test')
+            path: 'not-found',
+            component : r => require.ensure([], () => r(require('../page/main/not-found')), 'not-found')
         }, {
             path: 'task-manage',
             component : r => require.ensure([], () => r(require('../page/main/task-manage/index')), 'task-manage')
         }, {
             path: 'task-manage/create',
-            component : r => require.ensure([], () => r(require('../page/main/task-manage/create')), 'task-manage-create')
+            component : r => require.ensure([], () => r(require('../page/main/task-manage/create')), 'task-manage-create'),
+            name:'task-manage-create'
+        },{
+            path: 'task-manage/edit/:id',
+            component : r => require.ensure([], () => r(require('../page/main/task-manage/create')), 'task-manage-edit'),
+            name:'task-manage-edit'
         },{
             path: 'task-manage/detail/:id',
             component : r => require.ensure([], () => r(require('../page/main/task-manage/detail')), 'task-manage-detail')
@@ -66,7 +71,7 @@ export default [{
             }]
         }, {
             path: '*',
-            redirect: 'test'
+            redirect: 'not-found'
         }]
     }, {
         path: '*',

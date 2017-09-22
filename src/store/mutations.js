@@ -1,4 +1,3 @@
-const TEST_ACTION = 'TEST_ACTION'
 const INFO_CONFIG = 'INFO_CONFIG'
 const TASK_MANAGE = 'TASK_MANAGE'
 const TASK_LOG = 'TASK_LOG'
@@ -16,9 +15,6 @@ const DELETE_CONFIG_RULE = 'DELETE_CONFIG_RULE'
 const CONFIG_RULE = 'CONFIG_RULE'
 
 export default {
-	[TEST_ACTION](state, text) {
-		state.test = text
-	},
 	//login
 	[LOGIN_CHECK](state, data) {
 		state.isLogin = data

@@ -58,7 +58,8 @@
       </div>
     </div>
     <div class="clearfix mgt15">
-      <el-button @click="save" type="primary" size="small">保存</el-button>
+      <el-button v-if="$route.name=='task-manage-create'" @click="createTask" type="primary" size="small">创建</el-button>
+      <el-button v-if="$route.name=='task-manage-edit'" @click="saveTask" type="primary" size="small">保存</el-button>
       <el-button @click="goBack" size="small">取消</el-button>
     </div>
   </div>
@@ -106,13 +107,16 @@ export default {
       }, {
         value: '机构名标准化',
         label: '机构名标准化'
+      }, {
+        value: '机构名识别',
+        label: '机构名识别'
+      }, {
+        value: '未选中项目',
+        label: '未选中项目'
       }]
     }
   },
   watch: {
-    'task.type'(newData, oldData) {
-      this.task.value = ''
-    }
   },
   created() {
   },
@@ -120,7 +124,10 @@ export default {
     goBack() {
       this.$router.go(-1)
     },
-    save() {
+    createTask(){
+
+    },
+    saveTask() {
       this.$notify({
         message: '保存成功，页面即将自动关闭',
         type: 'success',

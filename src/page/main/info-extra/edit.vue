@@ -52,6 +52,7 @@
 </template>
 <script>
 import { mapActions, mapState } from 'vuex'
+import utils from 'src/config/utils'
 import { codemirror } from 'vue-codemirror-lite'
 require('codemirror/addon/display/placeholder.js')
 
@@ -111,10 +112,10 @@ export default {
   ]),
   watch: {
     createRuleResponse: function(response) {
-      this.responseAlert(response);
+      utils.notifyResponse(response,()=>this.$router.go(-1))
     },
     updateRuleResponse: function(response) {
-      this.responseAlert(response);
+      utils.notifyResponse(response,()=>this.$router.go(-1))
     },
     configRule: function(configRule) {
       if (configRule.result) {
@@ -144,27 +145,7 @@ export default {
       'queryRuleById',
       'updateRuleRequest'
     ]),
-    //对请求返回响应的提示
-    responseAlert(response) {
-      if ('result' in response && 'error' in response) {
-        if (response.error) {
-          this.$alert(response.errorMessage, '提示', {
-            confirmButtonText: '确定',
-            type: 'warning'
-          });
-          return;
-        }
-        else {
-          this.$router.go(-1);
-          this.$notify({
-            message: response.result,
-            type: 'success',
-            duration: 2000,
-            offset: 200
-          });
-        }
-      }
-    },
+
     //增加规则属性表单域
     addPropertyDomain() {
       this.propertyDomains.push(

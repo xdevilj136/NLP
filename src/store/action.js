@@ -10,6 +10,10 @@ export default {
 		let check = service.loginOut(data)
 		commit('LOGIN_CHECK', check)
 	},
+
+	/*
+		信息抽取配置
+	*/
 	//获取信息抽取配置规则列表
 	getInfoConfig({ }, params) {
 		service.configData(params);
@@ -30,10 +34,33 @@ export default {
 	deleteConfigRule({ }, id) {
 		service.deleteConfigRule(id);
 	},
+	/*
+		任务管理
+	*/
+	//新建任务
+	createTaskRequest({ }, task) {
+		service.createTaskRequest(task);
+	},
+	//修改对应任务
+	updateTaskRequest({ }, task) {
+		service.updateTaskRequest(task);
+	},
+	//停止任务
+	stopTaskRequest({ }, id) {
+		service.stopTaskRequest(id);
+	},
+	//删除任务
+	deleteTaskRequest({ }, id) {
+		service.deleteTaskRequest(id);
+	},
+	//根据id获取对应任务管理信息
+	queryTaskById({ }, id) {
+		service.queryTaskById(id);
+	},	
 	//获取任务管理筛选数据
-	getTaskManageData({ commit, state }, data) {
-		data = service.taskManageData()
-		commit('TASK_MANAGE', data)
+	getTaskManageData({ }, params) {
+		service.taskManageData(params)
+
 	},
 	//获取任务管理详情数据
 	getTaskManageDetail({ commit, state }, id) {
@@ -45,6 +72,8 @@ export default {
 		let data = service.taskLog(id)
 		commit('TASK_LOG', data)
 	},
+	/*
+	*/
 	//获取权限管理数据
 	getAuthorityManage({ commit, state }) {
 		let data = service.authorityManage()
@@ -56,23 +85,23 @@ export default {
 		commit('DATA_SOURCE', data)
 	},
 
-/*
-	功能展示接口
-*/
+	/*
+		功能展示接口
+	*/
 	//信息抽取处理
-	dataExtract({},data) {
+	dataExtract({ }, data) {
 		service.dataExtract(data);
 	},
 	//提交词法分析
-	analysisGet({}, json) {
+	analysisGet({ }, json) {
 		service.analysisGet(json);
 	},
 	//提交机构名标准化
-	processCompanyStd({}, json) {
+	processCompanyStd({ }, json) {
 		service.processCompanyStd(json);
 	},
 	//提交机构名识别
-	processCompanySegment({}, json) {
+	processCompanySegment({ }, json) {
 		service.processCompanySegment(json);
 	}
 

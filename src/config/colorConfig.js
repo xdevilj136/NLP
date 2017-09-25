@@ -4,8 +4,8 @@ const pos_list = {
         name: '形容词'
     },
     'B': {
-        color: '#FF8EC5',
-        name: '名词修饰符'
+        color: '#8093FF',
+        name: '区别词'
     },
     'C': {
         color: '#DE89F5',
@@ -15,69 +15,57 @@ const pos_list = {
         color: '#B583E4',
         name: '副词'
     },
-    'E': {
-        color: '#8E74FE',
-        name: '叹词'
+    'S':{
+        color: '#FF8FC5',
+        name: '处所词'
     },
-    'G': {
-        color: '#8392FE',
-        name: '语素'
+    'Z':{
+        color: '#54B6FF',
+        name: '状态词'
     },
-    'I': {
-        color: '#598AFE',
-        name: '习语'
-    },
-    'J': {
-        color: '#59B5FE',
-        name: '缩写词'
-    },
-    'K': {
+    'K':{
         color: '#49C9EC',
         name: '后缀'
     },
-    'M': {
+    'M':{
         color: '#96DDF2',
-        name: '数次'
+        name: '数词'
     },
     'N': {
         color: '#6EE3E2',
-        name: '一般名词'
+        name: '名词'
     },
-    'ND': {
+    'F':{
         color: '#53DFC2',
-        name: '方位'
+        name: '方位'        
     },
-    'NH': {
-        color: '#5CEBA9',
-        name: '人名'
-    },
-    'NI': {
-        color: '#51E07E',
-        name: '机构名'
-    },
-    'NIS': {
+    'Y':{
         color: '#83F5A6',
-        name: '机构名后缀'
-    },
-    'NL': {
-        color: '#82DF6F',
-        name: '位置词'
-    },
-    'NN': {
-        color: '#A3E447',
-        name: '专有名词'
+        name: '语气词'
     },
     'NS': {
         color: '#DAE279',
         name: '地名'
     },
     'NT': {
+        color: '#51E07E',
+        name: '机构名'
+    },
+    'NZ': {
+        color: '#A3E447',
+        name: '专有名词'
+    },
+    'NR':{
+        color: '#5CEBA9',
+        name: '人名'        
+    },
+    'T':{
         color: '#F2EF89',
         name: '时间'
     },
-    'NZ': {
-        color: '#F9E76B',
-        name: '其他名词'
+    'H':{
+        color: '#FAE669',
+        name: '前缀'
     },
     'O': {
         color: '#F9D34D',
@@ -103,13 +91,9 @@ const pos_list = {
         color: '#FEA586',
         name: '动词'
     },
-    'WP': {
+    'W': {
         color: '#D8D8D8',
         name: '标点符号'
-    },
-    'X': {
-        color: '#BDBDBD',
-        name: '未知数、符号'
     }
 }
 const ner_list = {

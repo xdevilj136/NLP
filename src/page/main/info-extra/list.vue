@@ -55,6 +55,8 @@
 </template>
 <script>
 import { mapActions, mapState } from 'vuex'
+import utils from 'src/config/utils'
+
 export default {
   name: 'info-extra-detail',
   data() {
@@ -120,25 +122,7 @@ export default {
       }
     },
     deleteRuleResponse: function(response) {
-      if ('result' in response && 'error' in response) {
-        if (response.error) {
-          this.$notify({
-            message: response.errorMessage,
-            type: 'warnning',
-            duration: 2000,
-            offset: 200
-          });
-        }
-        else {
-          this.$notify({
-            message: response.result,
-            type: 'success',
-            duration: 2000,
-            offset: 200
-          });
-          this.refreshRuleTable(this.lastSearch);
-        }
-      }
+      utils.notifyResponse(response,()=>{this.refreshRuleTable(this.lastSearch);})
     }
   },
   methods: {

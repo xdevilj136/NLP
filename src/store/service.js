@@ -11,83 +11,115 @@ export default {
 	loginOut(data) {
 		return false
 	},
+	/*
+		信心抽取配置
+	*/
 	//获取信息抽取配置规则列表
 	configData(params) {
-		ajax('GET', '/api/extractConfig/queryAll', params,'INFO_CONFIG');
+		ajax('GET', '/api/extractConfig/queryAll', params, 'INFO_CONFIG');
 	},
 	//根据id查询单个配置规则
 	queryRuleById(id) {
-		ajax('GET', '/api/extractConfig/queryById', { id: id },'CONFIG_RULE');
+		ajax('GET', '/api/extractConfig/queryById', { id: id }, 'CONFIG_RULE');
 	},
 	//创建抽取信息配置规则
 	createRuleRequest(rule) {
-		ajax('POST', '/api/extractConfig/create', rule,'CREATE_RULE_REQUEST');
+		ajax('POST', '/api/extractConfig/create', rule, 'CREATE_RULE_REQUEST');
 	},
 	//修改抽取信息配置规则
 	updateRuleRequest(rule) {
-		ajax('POST', '/api/extractConfig/edit', rule,'UPDATE_RULE_REQUEST');
+		ajax('POST', '/api/extractConfig/edit', rule, 'UPDATE_RULE_REQUEST');
 	},
 	//删除配置规则
 	deleteConfigRule(id) {
-		ajax('GET', '/api/extractConfig/delete', { id: id },'DELETE_CONFIG_RULE');
+		ajax('GET', '/api/extractConfig/delete', { id: id }, 'DELETE_CONFIG_RULE');
 	},
+	/*
+		功能展示
+	*/
 	//信息抽取处理
 	dataExtract(data) {
-		ajax('POST', '/api/functions/dataExtract', data,'DATA_EXTRACT');
-
+		ajax('POST', '/api/functions/dataExtract', data, 'DATA_EXTRACT');
 	},
 	//词法分析
 	analysisGet(json) {
-		ajax('POST', '/api/functions/grammarParse', json,'ANALYSIS_GET');
+		ajax('POST', '/api/functions/grammarParse', json, 'ANALYSIS_GET');
 	},
 	//机构名标准化
 	processCompanyStd(json) {
-		ajax('POST', '/api/functions/companyStd', json,'PROCESS_COMPANY_STD');
+		ajax('POST', '/api/functions/companyStd', json, 'PROCESS_COMPANY_STD');
 	},
 	//机构名识别
 	processCompanySegment(json) {
-		ajax('POST', '/api/functions/companySegment', json,'PROCESS_COMPANY_SEGMENT');
+		ajax('POST', '/api/functions/companySegment', json, 'PROCESS_COMPANY_SEGMENT');
+	},
+	/*
+		任务管理
+	*/
+	//新建任务
+	createTaskRequest(task) {
+		ajax('POST', '/api/task/create', task, 'CREATE_TASK_REQUEST');
+
+	},
+	//修改任务
+	updateTaskRequest(task) {
+		ajax('POST', '/api/task/edit', task, 'DELETE_TASK_REQUEST');
+	},
+	//停止任务
+	stopTaskRequest(id) {
+		ajax('GET', '/api/task/stop', { id: id }, 'STOP_TASK_REQUEST');
+	},
+	//删除任务
+	deleteTaskRequest(id) {
+		ajax('GET', '/api/task/delete', { id: id }, 'DELETE_TASK_REQUEST');
+	},
+	//根据id获取单个任务信息
+	queryTaskById(id) {
+		ajax('GET', '/api/task/queryById', { id: id }, 'SINGLE_TASK');
 	},
 	//获取任务管理筛选数据
-	taskManageData() {
-		var data = [{
-			id: 1,
-			name: '新闻实体识别',
-			type: '实体识别',
-			time: '2017-08-09',
-			status: '未开始'
-		}, {
-			id: 2,
-			name: '存量裁判文书解析',
-			type: '裁判文书',
-			time: '2017-08-29',
-			status: '正在执行'
-		}, {
-			id: 3,
-			name: '客户拜访记录',
-			type: '拜访记录',
-			time: '2017-08-29',
-			status: '已结束'
-		}, {
-			id: 4,
-			name: '调查报告解析',
-			type: '调查报告解析',
-			time: '2017-08-29',
-			status: '非正常结束'
-		}, {
-			id: 5,
-			name: '授信审批解析',
-			type: '授信审批解析',
-			time: '2017-08-29',
-			status: '等待开始'
-		}, {
-			id: 6,
-			name: '授信审批解析',
-			type: '授信审批解析',
-			time: '2017-08-29',
-			status: '等待开始'
-		}];
-		return data;
+	taskManageData(params) {
+		ajax('GET', '/api/task/query', params, 'TASK_MANAGE');
+
+		// var data = 
+		// [{
+		// 	id: 1,
+		// 	name: '新闻实体识别',
+		// 	type: '实体识别',
+		// 	time: '2017-08-09',
+		// 	status: '未开始'
+		// }, {
+		// 	id: 2,
+		// 	name: '存量裁判文书解析',
+		// 	type: '裁判文书',
+		// 	time: '2017-08-29',
+		// 	status: '正在执行'
+		// }, {
+		// 	id: 3,
+		// 	name: '客户拜访记录',
+		// 	type: '拜访记录',
+		// 	time: '2017-08-29',
+		// 	status: '已结束'
+		// }, {
+		// 	id: 4,
+		// 	name: '调查报告解析',
+		// 	type: '调查报告解析',
+		// 	time: '2017-08-29',
+		// 	status: '非正常结束'
+		// }, {
+		// 	id: 5,
+		// 	name: '授信审批解析',
+		// 	type: '授信审批解析',
+		// 	time: '2017-08-29',
+		// 	status: '等待开始'
+		// }, {
+		// 	id: 6,
+		// 	name: '授信审批解析',
+		// 	type: '授信审批解析',
+		// 	time: '2017-08-29',
+		// 	status: '等待开始'
+		// }];
+		// return data;
 	},
 	//获取任务管理详情数据
 	taskManageDetail(id) {
@@ -112,6 +144,9 @@ export default {
 		};
 		return data;
 	},
+	/*
+	
+	*/
 	//获取权限管理数据
 	authorityManage() {
 		var data = [{

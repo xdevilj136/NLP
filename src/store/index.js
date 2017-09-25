@@ -10,7 +10,12 @@ Vue.use(Vuex)
 const state = {
 	infoConfig: [],
 	isLogin: true,
+	createTaskResponse:{},
+	updateTaskResponse:{},
+	stopTaskResponse:{},
+	deleteTaskResponse:{},
 	taskManageData:[],
+	singleTask:{},
 	taskManageDetail:{},
 	taskLog:{},
 	authorityManage:[],

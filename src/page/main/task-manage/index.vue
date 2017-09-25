@@ -29,49 +29,51 @@
       </el-form>
     </div>
     <div style="overflow:hidden;">
-      <span class="lightFont">共搜索到{{taskManageData.length?taskManageData.length:0}}条数据</span>
+      <span class="lightFont">共搜索到{{taskList.length?taskList.length:0}}条数据</span>
       <div class="fr">
         <el-button @click="refreshTask" size="small">刷新</el-button>
         <el-button type="primary" @click="createTask" size="small">新增任务</el-button>
       </div>
     </div>
-    <el-table :data="taskManageData" border class="data-table" :default-sort="{prop: 'time', order: 'descending'}">
+    <el-table :data="taskList" border class="data-table" :default-sort="{prop: 'time', order: 'descending'}">
       <el-table-column prop="name" label="任务名称" min-width="230px">
         <template scope="scope">
           <router-link :to="'/main/task-manage/detail/' + scope.row.id">{{ scope.row.name }}</router-link>
 
         </template>
       </el-table-column>
-      <el-table-column prop="type" label="类型" min-width="150px"></el-table-column>
-      <el-table-column prop="time" label="建立日期" :sortable="true" min-width="150px"></el-table-column>
-      <el-table-column prop="status" label="状态" :sortable="true" min-width="150px"></el-table-column>
+      <el-table-column prop="type" label="类型" :formatter="taskTypeFormatter" min-width="150px"></el-table-column>
+      <el-table-column prop="ctime" label="建立日期" :sortable="true" min-width="150px"></el-table-column>
+      <el-table-column prop="status" label="状态" :sortable="true" :formatter="taskStatusFormatter" min-width="150px"></el-table-column>
       <el-table-column label="操作" min-width="230px">
         <template scope="scope">
           <div class="toolbar">
             <el-button v-if="canStart(scope.row.status)" :disabled="startDisabled(scope.row.status)" type="text" @click="startTask">开始</el-button>
-            <el-button v-if="canStop(scope.row.status)" type="text" @click="stopTask">终止</el-button>
+            <el-button v-if="canStop(scope.row.status)" type="text" @click="stopTask(scope.row)">终止</el-button>
             <el-button type="text" :disabled="editDisabled(scope.row.status)" @click="editTask(scope.row.id)">编辑</el-button>
-            <el-button type="text" @click="deleteTask(scope.row.name)">删除</el-button>
+            <el-button type="text" @click="deleteTask(scope.row)">删除</el-button>
             <el-button type="text" :disabled="showLogDisabled(scope.row.status)" @click="showTaskLog(scope.row.id)">查看日志</el-button>
           </div>
           <el-dialog :title="dialogTitle" :visible.sync="dialogVisible" size="tiny" :modal="true" :modal-append-to-body="false">
             <span>删除后，该任务将无法正常执行。</span>
             <span slot="footer" class="dialog-footer">
               <el-button @click="dialogVisible = false">取 消</el-button>
-              <el-button type="primary" @click.native.prevent="deleteDialogConfirm(scope.row)">确 定</el-button>
+              <el-button type="primary" @click.native.prevent="deleteDialogConfirm">确 定</el-button>
             </span>
           </el-dialog>
         </template>
       </el-table-column>
     </el-table>
     <div class="block">
-      <el-pagination @size-change="pageSizeChange" @current-change="currentPageChange" :current-page="currentPage" :page-sizes="[5, 10,50, 100]" :page-size="10" :total="taskManageData.length" layout=" prev, pager, next, sizes, jumper">
+      <el-pagination @size-change="pageSizeChange" @current-change="currentPageChange" :current-page="currentPage" :page-sizes="[5, 10,50, 100]" :page-size="10" :total="taskList.length" layout=" prev, pager, next, sizes, jumper">
       </el-pagination>
     </div>
   </div>
 </template>
 <script>
 import { mapActions, mapState } from 'vuex'
+import utils from 'src/config/utils'
+
 export default {
   name: 'task-manage',
   data() {
@@ -126,6 +128,9 @@ export default {
         value: 'end',
         label: '已结束'
       }],
+      taskList:[
+
+      ],
       //查询条件表单
       searchForm: {
         taskType: '',
@@ -142,36 +147,107 @@ export default {
       dialogTitle: '',
       dialogVisible: false,
       //翻页组件
-      currentPage: 1
+      currentPage: 1,
+      //待删除任务id
+      toDeleteTaskId:''
     }
   },
+
+  computed: mapState([
+    'taskManageData',
+    'stopTaskResponse',
+    'deleteTaskResponse'
+    ]),
   watch: {
-
+    deleteTaskResponse: function(response) {
+      utils.notifyResponse(response,()=>{this.refreshRuleTable(this.lastSearch)})
+    },
+    stopTaskResponse: function(response) {
+      utils.notifyResponse(response,()=>{this.refreshRuleTable(this.lastSearch)})
+    },
+    taskManageData:function(data){
+      if (data.result&&data.result.list) {
+        this.taskList = data.result.list
+      }
+    }
   },
-  computed: mapState(['taskManageData']),
-
   created() {
+        this.refreshTask();
   },
   methods: {
     ...mapActions([
-      'getTaskManageData'
+      'getTaskManageData',
+      'stopTaskRequest',
+      'deleteTaskRequest'
     ]),
-    
+    //任务类型格式化
+    taskTypeFormatter(row, column, cellValue){
+      let result='';
+      switch (cellValue) {
+        case 0:
+          result="中文分词"
+          break;
+        case 1:
+          result="词性标注"
+          break;
+        case 2:
+          result="实体识别"
+          break;
+        case 3:
+          result="信息抽取"
+          break;
+        case 5:
+          result="企业名称标准化"
+          break;                          
+        default:
+          break;
+      }
+      return result;
+    },
+    //任务状态格式化
+    taskStatusFormatter(row, column, cellValue){
+      let result='';
+      switch (cellValue) {
+        case 0:
+          result="未开始"
+          break;
+        case 1:
+          result="正在执行"
+          break;
+        case 2:
+          result="等待开始"
+          break;
+        case 4:
+          result="已经结束"
+          break;   
+        case 5:
+          result="非正常结束"
+          break;                                  
+        default:
+          break;
+      }
+      return result;
+    },
     //判断每行任务状态
     hasCompleted(status) {
-      return status == '已结束';
+      //已结束
+      return status == 4;
     },
     errorCompleted(status) {
-      return status == '非正常结束';
+      //非正常结束
+      return status == 5;
     },
     notStart(status) {
-      return status == '未开始';
+      //未开始
+      return status == 0;
     },
     readyToStart(status) {
-      return status == '等待开始';
+      //等待开始
+      return status == 2;
     },
     isRunning(status) {
-      return status == '正在执行';
+      //正在执行
+      return status == 1;
     },
     //根据任务状态置灰对应操作
     canStart(status) {
@@ -245,23 +321,24 @@ export default {
     startTask() {
 
     },
-    stopTask() {
-
+    stopTask(row) {
+      this.stopTaskRequest(row.id);
     },
     editTask(id) {
       this.$router.push('/main/task-manage/edit/'+id)
     },
-    deleteTask(name) {
+    deleteTask(row) {
       this.dialogVisible = true;
-      this.dialogTitle = "确认删除 " + name + " ?"
+      this.dialogTitle = "确认删除 " + row.name + " ?"
+      this.toDeleteTaskId = row.id;
     },
     showTaskLog(id) {
       this.$router.push('/main/task-manage/log/' + id)
     },
     //对话框确认
-    deleteDialogConfirm(row) {
-      console.log(row);
+    deleteDialogConfirm() {
       this.dialogVisible = false;
+      this.deleteTaskRequest(this.toDeleteTaskId);
     },
     //翻页组件操作
     currentPageChange(currentPage) {

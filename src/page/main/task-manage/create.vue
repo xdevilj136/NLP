@@ -20,8 +20,8 @@
             <el-option v-for="item in taskTypeOptions" :key="item.value" :label="item.label" :value="item.value">
             </el-option>
           </el-select>
-          <el-select v-model="task.value" class="input" :disabled="task.type === '信息抽取'? false: true" placeholder="请选择" size="small">
-            <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value">
+          <el-select v-model="task.extractConfigId" class="input" :disabled="task.type === 3? false: true" placeholder="请选择" size="small">
+            <el-option v-for="item in ruleList" :key="item.id" :label="item.name" :value="item.id">
             </el-option>
           </el-select>
         </div>
@@ -30,15 +30,7 @@
     <div class="clearfix mgt15">
       <span class="detail-left-label">输入数据:</span>
       <div class="detail-right-content-box">
-        <el-select v-model="task.input" class="input" placeholder="请选择" size="small">
-          <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value">
-          </el-option>
-        </el-select>
-        <el-select v-model="task.value" class="input" :disabled="task.type === '信息抽取'? false: true" placeholder="请选择" size="small">
-          <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value">
-          </el-option>
-        </el-select>
-        <el-select v-model="task.value" class="input" :disabled="task.type === '信息抽取'? false: true" placeholder="请选择" size="small">
+        <el-select v-model="task.inputSourceId" class="input" placeholder="请选择" size="small">
           <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value">
           </el-option>
         </el-select>
@@ -47,11 +39,7 @@
     <div class="clearfix mgt15">
       <span class="detail-left-label">输出目标:</span>
       <div class="detail-right-content-box">
-        <el-select v-model="task.output" class="input" placeholder="请选择" size="small">
-          <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value">
-          </el-option>
-        </el-select>
-        <el-select v-model="task.value" class="input" :disabled="task.type === '信息抽取'? false: true" placeholder="请选择" size="small">
+        <el-select v-model="task.outputSourceId" class="input" placeholder="请选择" size="small">
           <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value">
           </el-option>
         </el-select>
@@ -65,6 +53,9 @@
   </div>
 </template>
 <script>
+import { mapActions, mapState } from 'vuex'
+import utils from 'src/config/utils'
+
 export default {
   name: 'task-manage-create',
   data() {
@@ -72,7 +63,7 @@ export default {
       task: {
         name: '',
         type: '',
-        value: '',
+        extractConfigId: '',
         input: '',
         output: ''
       },
@@ -93,19 +84,19 @@ export default {
         label: '北京烤鸭'
       }],
       taskTypeOptions: [{
-        value: '信息抽取',
+        value: 3,
         label: '信息抽取'
       }, {
-        value: '中文分词',
+        value: 0,
         label: '中文分词'
       }, {
-        value: '词性标注',
+        value: 1,
         label: '词性标注'
       }, {
-        value: '实体识别',
+        value: 2,
         label: '实体识别'
       }, {
-        value: '机构名标准化',
+        value: 5,
         label: '机构名标准化'
       }, {
         value: '机构名识别',
@@ -113,27 +104,102 @@ export default {
       }, {
         value: '未选中项目',
         label: '未选中项目'
-      }]
+      }],
+      ruleList:[]
     }
   },
+    computed: mapState([
+    'createTaskResponse',
+    'updateTaskResponse',
+    'configList',
+    'singleTask'
+  ]),
   watch: {
+    createTaskResponse: function(response) {
+      utils.notifyResponse(response,()=>this.$router.go(-1))
+    },
+    updateTaskResponse: function(response) {
+      utils.notifyResponse(response,()=>this.$router.go(-1))
+    },
+    configList: function(configList) {
+      if (configList.result&&configList.result.list) {
+        this.ruleList = this.configList.result.list
+      }
+    },
+    singleTask:function(singleTask){
+      if (singleTask.result) {
+        this.task = Object.assign({}, this.singleTask.result);
+      }
+    }
   },
   created() {
+    this.getInfoConfig();
+    if (this.$route.name == 'task-manage-edit') {
+      this.queryTaskById(this.$route.params.id);
+    }
   },
   methods: {
+    ...mapActions([
+      'createTaskRequest',
+      'updateTaskRequest',
+      'getInfoConfig',
+      'queryTaskById'
+      ]),
     goBack() {
       this.$router.go(-1)
     },
+    submitValidate(){
+      let valid=true;
+      if(this.task.name===''||this.task.type===''||this.task.inputSourceId===''||this.task.inputSourceId===''){
+        valid=false;
+      }
+      if(this.task.type&&this.task.extractConfigId===''){
+        valid=false;
+      }
+      return valid;
+    },
     createTask(){
+      if (this.submitValidate()) {
+        var newTask={};
+        newTask.name=this.task.name.trim();
+        newTask.type=this.task.type;
+        if(newTask.type==3){
+          newTask.extractConfigId=1;
+        }
+        newTask.inputSourceId=1;
+        newTask.outputSourceId=1;
+        newTask.service=0;
 
+        this.createTaskRequest(newTask);
+      } else {
+        this.$alert('请输入或选择数据', '提示', {
+          confirmButtonText: '确定',
+          type: 'warning'
+        });
+        return;
+      }
     },
     saveTask() {
-      this.$notify({
-        message: '保存成功，页面即将自动关闭',
-        type: 'success',
-        duration: 2000,
-        offset: 200
-      });
+      if (this.submitValidate()) {
+        var newTask={};
+        newTask.name=this.task.name.trim();
+        newTask.type=this.task.type;
+        if(newTask.type==3){
+          newTask.extractConfigId=1;
+        }
+        newTask.inputSourceId=1;
+        newTask.outputSourceId=1;
+        newTask.service=0;
+        newTask.id=Number(this.$route.params.id);
+
+        this.updateTaskRequest(newTask);
+      } else {
+        this.$alert('请输入或选择数据', '提示', {
+          confirmButtonText: '确定',
+          type: 'warning'
+        });
+        return;
+      }
     }
   }
 }

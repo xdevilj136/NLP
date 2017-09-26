@@ -98,35 +98,45 @@ export default {
       {
         value: 'beyondOneYear',
         label: '一年以上'
-      }],
+      }],                 
       taskTypeOptions: [{
-        value: 'identity',
+        value: 0,
+        label: '中文分词'
+      },
+      {
+        value: 1,
+        label: '词性标注'
+      },
+      {
+        value: 2,
         label: '实体识别'
       },
       {
-        value: 'judge',
-        label: '裁判文书'
+        value: 3,
+        label: '信息抽取'
       },
       {
-        value: 'visitRecord',
-        label: '拜访记录'
-      },
-      {
-        value: 'report',
-        label: '调查报告解析'
+        value: 5,
+        label: '企业名称标准化'
       }],
       taskStatusOptions: [{
-        value: 'all',
+        value: '',
         label: '所有任务'
       }, {
-        value: 'begin',
+        value: 0,
         label: '未开始'
       }, {
-        value: 'running',
+        value: 1,
         label: '正在执行'
       }, {
-        value: 'end',
-        label: '已结束'
+        value: 2,
+        label: '等待开始'
+      }, {
+        value: 4,
+        label: '已经结束'
+      }, {
+        value: 5,
+        label: '非正常结束'
       }],
       taskList:[
 
@@ -160,10 +170,10 @@ export default {
     ]),
   watch: {
     deleteTaskResponse: function(response) {
-      utils.notifyResponse(response,()=>{this.refreshRuleTable(this.lastSearch)})
+      utils.notifyResponse(response,()=>{this.refreshTask()})
     },
     stopTaskResponse: function(response) {
-      utils.notifyResponse(response,()=>{this.refreshRuleTable(this.lastSearch)})
+      utils.notifyResponse(response,()=>{this.refreshTask()})
     },
     taskManageData:function(data){
       if (data.result&&data.result.list) {
@@ -298,14 +308,14 @@ export default {
     },
     refreshTaskTable(requirement){
       let taskType = requirement.taskType;
-      let taskStatus=requirement.taskStatus;
+      let taskStatus = requirement.taskStatus;
       //计算建立时间
       let createTime = this.computeCreateTime(requirement.timeRange);
       //查询参数
       let params = {};
-      if (taskType) params.t = taskType;
-      if (taskStatus) params.s = taskStatus;
-      if(createTime) params.bt=createTime
+      if (taskType!=='') params.t = taskType;
+      if (taskStatus!=='') params.s = taskStatus;
+      if(createTime!=='') params.bt=createTime
       this.getTaskManageData(params);
     },  
     //根据上一次查询条件刷新任务列表

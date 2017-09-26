@@ -68,9 +68,8 @@ export default {
 		commit('TASK_MANAGE_DETAIL', data)
 	},
 	//获取任务日志
-	getTaskLog({ commit, state }, id) {
-		let data = service.taskLog(id)
-		commit('TASK_LOG', data)
+	getTaskLog({ }, id) {
+		service.taskLog(id)
 	},
 	/*
 	*/

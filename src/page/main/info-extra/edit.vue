@@ -9,33 +9,33 @@
       </el-form-item>
       <el-form-item label="设为公开：">
         <el-radio-group v-model="ruleDiscription.isPublic">
-          <el-radio :label=true>是</el-radio>
-          <el-radio :label=false>否</el-radio>
+          <el-radio :label="true">是</el-radio>
+          <el-radio :label="false">否</el-radio>
         </el-radio-group>
       </el-form-item>
     </el-form>
     <div class="background-title">
       <span>规则属性</span>
     </div>
-    <div v-for="(domain, index) in propertyDomains" :key="domain.key">
+    <div v-for="(domain, index) in propertyDomains" :key="'property'+index">
       <div class="border-container">
-        <el-form :model="domain.ruleProperty" ref="rulePropertyForm" :rules="rules" class="rule-property-form" label-width="100px">
+        <el-form :model="domain" ref="rulePropertyForm" :rules="rules" class="rule-property-form" label-width="100px">
           <div class="inline-form">
             <el-form-item label="属性名称：" prop="attribute">
-              <el-input v-model="domain.ruleProperty.attribute" placeholder="请输入" size="small"></el-input>
+              <el-input v-model="domain.attribute" placeholder="请输入" size="small"></el-input>
             </el-form-item>
-            <el-form-item label="只匹配一次：">
-              <el-radio-group v-model="domain.ruleProperty.matchOne">
-                <el-radio :label=true>是</el-radio>
-                <el-radio :label=false>否</el-radio>
+            <el-form-item label="只匹配一次："  prop="matchOne">
+              <el-radio-group v-model="domain.matchOne">
+                <el-radio :label="true">是</el-radio>
+                <el-radio :label="false">否</el-radio>
               </el-radio-group>
             </el-form-item>
           </div>
           <el-form-item label="触发规则：" prop="trigger">
-            <codemirror v-model="domain.ruleProperty.trigger" :options="options" placeholder="请输入内容"></codemirror>
+            <codemirror v-model="domain.trigger" :options="options" placeholder="请输入内容"></codemirror>
           </el-form-item>
           <el-form-item label="匹配规则：" prop="matchRule">
-            <codemirror v-model="domain.ruleProperty.matchRule" :options="options" placeholder="请输入内容"></codemirror>
+            <codemirror v-model="domain.matchRule" :options="options" placeholder="请输入内容"></codemirror>
             <p class="config-content-desc">*匹配规则与触发规则必填一项</p>
           </el-form-item>
         </el-form>
@@ -77,14 +77,11 @@ export default {
       },
       propertyDomains: [
         {
-          key: '',
-          ruleProperty: {
             attribute: '',
             matchRule: '',
             trigger: '',
             matchOne: true
-          },
-        }
+          }
       ],
       rules: {
         ruleName: [
@@ -125,10 +122,8 @@ export default {
         if (configRule.result.content) {
           let attributeList = JSON.parse(configRule.result.content);
           for (var index = 0; index < attributeList.length; index++) {
-            this.propertyDomains[index] = {
-              key: index,
-              ruleProperty: attributeList[index]
-            };
+            this.propertyDomains[index] = attributeList[index]
+            
           }
         }
       }
@@ -145,19 +140,17 @@ export default {
       'queryRuleById',
       'updateRuleRequest'
     ]),
-
+matchOneChange(){
+  console.log('matchOneChange')
+},
     //增加规则属性表单域
     addPropertyDomain() {
       this.propertyDomains.push(
         {
-          key: Date.now(),
-          ruleProperty: {
             attribute: '',
             matchRule: '',
             trigger: '',
             matchOne: true
-          }
-
         }
       );
     },
@@ -196,7 +189,7 @@ export default {
         var isPublic = this.ruleDiscription.isPublic;
         var configs = [];
         for (var index = 0; index < this.propertyDomains.length; index++) {
-          let ruleProperty = this.propertyDomains[index].ruleProperty;
+          let ruleProperty = this.propertyDomains[index];
           for (var key in ruleProperty) {
             if (ruleProperty.hasOwnProperty(key) && typeof ruleProperty[key] == 'string') {
               ruleProperty[key] = ruleProperty[key].trim();
@@ -224,7 +217,7 @@ export default {
         var isPublic = this.ruleDiscription.isPublic;
         var configs = [];
         for (var index = 0; index < this.propertyDomains.length; index++) {
-          let ruleProperty = this.propertyDomains[index].ruleProperty;
+          let ruleProperty = this.propertyDomains[index];
           for (var key in ruleProperty) {
             if (ruleProperty.hasOwnProperty(key) && typeof ruleProperty[key] == 'string') {
               ruleProperty[key] = ruleProperty[key].trim();

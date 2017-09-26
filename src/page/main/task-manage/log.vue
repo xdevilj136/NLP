@@ -8,10 +8,10 @@
     </div>
     <el-form label-position="right" label-width="100px">
       <el-form-item label="任务名称：">
-        <span>{{taskLog.name}}</span>
+        <span>{{log.name}}</span>
       </el-form-item>
       <el-form-item label="日志：">
-        <el-input type="textarea" v-model="taskLog.content" :readonly="true" :autosize="{ minRows: 20}"></el-input>
+        <el-input type="textarea" v-model="log.content" :readonly="true" :autosize="{ minRows: 20}"></el-input>
       </el-form-item>
     </el-form>
   </div>
@@ -22,15 +22,35 @@ export default {
   name: 'log',
   data() {
     return {
-      log: this.getTaskLog(this.$route.params.id)
+      log: {
+        name:'',
+        content:''
+      }
     };
   },
   watch: {
-
+    taskLog: function(data) {
+      if ('result' in data) {
+        if (data.error) {
+          this.$notify({
+                    message: data.errorMessage,
+                    type: 'warnning',
+                    duration: 2000,
+                    offset: 200
+                });
+                this.$router.go(-1);
+        }
+        else {
+          this.log.name = data.result.name;
+          this.log.content = data.result.log;
+        }
+      }
+    }
   },
   computed: mapState(['taskLog']),
 
   created() {
+    this.getTaskLog(this.$route.params.id)
   },
   methods: {
     ...mapActions([

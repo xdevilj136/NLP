@@ -51,9 +51,9 @@ if (context.length) {
 //     changeOrigin: true,
 //     secure: false,
 // }))
-// server.use('/api', proxyMiddleware({target: 'http://192.168.1.43:8082', changeOrigin: true}));
+server.use('/api', proxyMiddleware({target: 'http://192.168.1.43:8082', changeOrigin: true}));
 
-server.use('/api', proxyMiddleware({target: 'http://10.10.10.11:8082', changeOrigin: true}));
+// server.use('/api', proxyMiddleware({target: 'http://10.10.10.11:8082', changeOrigin: true}));
 
 
 

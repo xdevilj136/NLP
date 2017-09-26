@@ -81,45 +81,6 @@ export default {
 	taskManageData(params) {
 		ajax('GET', '/api/task/query', params, 'TASK_MANAGE');
 
-		// var data = 
-		// [{
-		// 	id: 1,
-		// 	name: '新闻实体识别',
-		// 	type: '实体识别',
-		// 	time: '2017-08-09',
-		// 	status: '未开始'
-		// }, {
-		// 	id: 2,
-		// 	name: '存量裁判文书解析',
-		// 	type: '裁判文书',
-		// 	time: '2017-08-29',
-		// 	status: '正在执行'
-		// }, {
-		// 	id: 3,
-		// 	name: '客户拜访记录',
-		// 	type: '拜访记录',
-		// 	time: '2017-08-29',
-		// 	status: '已结束'
-		// }, {
-		// 	id: 4,
-		// 	name: '调查报告解析',
-		// 	type: '调查报告解析',
-		// 	time: '2017-08-29',
-		// 	status: '非正常结束'
-		// }, {
-		// 	id: 5,
-		// 	name: '授信审批解析',
-		// 	type: '授信审批解析',
-		// 	time: '2017-08-29',
-		// 	status: '等待开始'
-		// }, {
-		// 	id: 6,
-		// 	name: '授信审批解析',
-		// 	type: '授信审批解析',
-		// 	time: '2017-08-29',
-		// 	status: '等待开始'
-		// }];
-		// return data;
 	},
 	//获取任务管理详情数据
 	taskManageDetail(id) {
@@ -136,13 +97,7 @@ export default {
 	},
 	//获取任务日志
 	taskLog(id) {
-		var data = {
-			id: 1,
-			name: '客户拜访记录',
-			content: '日志文本文本日志文本文本日志文本文本日志文本文本日志文本文本日志文本文本日志' +
-			'文本文本日志文本文本日志文本文本日志文本文本日志文本文本日志文本文本日志文本文本'
-		};
-		return data;
+		ajax('GET', '/api/task/getLog', {id:id}, 'TASK_LOG');
 	},
 	/*
 	

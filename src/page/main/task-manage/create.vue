@@ -164,7 +164,7 @@ export default {
         newTask.name=this.task.name.trim();
         newTask.type=this.task.type;
         if(newTask.type==3){
-          newTask.extractConfigId=1;
+          newTask.extractConfigId=this.task.extractConfigId;
         }
         newTask.inputSourceId=1;
         newTask.outputSourceId=1;

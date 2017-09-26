@@ -36,7 +36,7 @@ export default {
             if (newVal.params.config) {
                 this.title.splice(1, 5, {
                     name: newVal.params.config,
-                    route: '/main/info-extra/' + newVal.params.config + '/detail'
+                    route: '/main/info-extra/' + newVal.params.config + '/detail/'+newVal.params.id
                 }, { name: this.action[newVal.name], route: '' })
             } else {
                 this.title.splice(1, 5, { name: this.action[newVal.name], route: '' })

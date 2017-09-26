@@ -39,11 +39,10 @@
       <el-table-column prop="name" label="任务名称" min-width="230px">
         <template scope="scope">
           <router-link :to="'/main/task-manage/detail/' + scope.row.id">{{ scope.row.name }}</router-link>
-
         </template>
       </el-table-column>
       <el-table-column prop="type" label="类型" :formatter="taskTypeFormatter" min-width="150px"></el-table-column>
-      <el-table-column prop="ctime" label="建立日期" :sortable="true" min-width="150px"></el-table-column>
+      <el-table-column prop="ctime" label="建立日期" :sortable="true" min-width="200px"></el-table-column>
       <el-table-column prop="status" label="状态" :sortable="true" :formatter="taskStatusFormatter" min-width="150px"></el-table-column>
       <el-table-column label="操作" min-width="230px">
         <template scope="scope">

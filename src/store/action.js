@@ -49,6 +49,10 @@ export default {
 	stopTaskRequest({ }, id) {
 		service.stopTaskRequest(id);
 	},
+	//开始任务
+	startTaskRequest({ }, id) {
+		service.startTaskRequest(id);
+	},	
 	//删除任务
 	deleteTaskRequest({ }, id) {
 		service.deleteTaskRequest(id);
@@ -61,11 +65,6 @@ export default {
 	getTaskManageData({ }, params) {
 		service.taskManageData(params)
 
-	},
-	//获取任务管理详情数据
-	getTaskManageDetail({ commit, state }, id) {
-		let data = service.taskManageDetail(id)
-		commit('TASK_MANAGE_DETAIL', data)
 	},
 	//获取任务日志
 	getTaskLog({ }, id) {

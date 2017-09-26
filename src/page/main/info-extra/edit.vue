@@ -122,8 +122,7 @@ export default {
         if (configRule.result.content) {
           let attributeList = JSON.parse(configRule.result.content);
           for (var index = 0; index < attributeList.length; index++) {
-            this.propertyDomains[index] = attributeList[index]
-            
+            this.$set(this.propertyDomains, index, attributeList[index])
           }
         }
       }

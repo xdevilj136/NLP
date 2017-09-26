@@ -33,6 +33,9 @@
 			<el-card  :body-style="{ padding: '0' }" class="image-card">
 				<img src="../../../images/natural-language/sqlserver.png" class="image">
 			</el-card>
+			<el-card  :body-style="{ padding: '0' }" class="image-card">
+				<img src="../../../images/natural-language/postgreSOL.png" class="image">
+			</el-card>
 		</div>
 	</div>
 </template>

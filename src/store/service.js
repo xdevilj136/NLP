@@ -65,6 +65,10 @@ export default {
 	updateTaskRequest(task) {
 		ajax('POST', '/api/task/edit', task, 'DELETE_TASK_REQUEST');
 	},
+	//开始任务
+	startTaskRequest(id) {
+		ajax('GET', '/api/task/start', { id: id }, 'START_TASK_REQUEST');
+	},	
 	//停止任务
 	stopTaskRequest(id) {
 		ajax('GET', '/api/task/stop', { id: id }, 'STOP_TASK_REQUEST');
@@ -81,19 +85,6 @@ export default {
 	taskManageData(params) {
 		ajax('GET', '/api/task/query', params, 'TASK_MANAGE');
 
-	},
-	//获取任务管理详情数据
-	taskManageDetail(id) {
-		var data = {
-			id: 1,
-			name: '新闻实体识别',
-			type: '实体识别',
-			consumedTime: '2017-08-09',
-			status: '未开始',
-			totalRecordNumber: 10000,
-			outputLocation: 'location/zz'
-		};
-		return data;
 	},
 	//获取任务日志
 	taskLog(id) {

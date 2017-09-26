@@ -48,7 +48,7 @@
       <el-table-column label="操作" min-width="230px">
         <template scope="scope">
           <div class="toolbar">
-            <el-button v-if="canStart(scope.row.status)" :disabled="startDisabled(scope.row.status)" type="text" @click="startTask">开始</el-button>
+            <el-button v-if="canStart(scope.row.status)" :disabled="startDisabled(scope.row.status)" type="text" @click="startTask(scope.row)">开始</el-button>
             <el-button v-if="canStop(scope.row.status)" type="text" @click="stopTask(scope.row)">终止</el-button>
             <el-button type="text" :disabled="editDisabled(scope.row.status)" @click="editTask(scope.row.id)">编辑</el-button>
             <el-button type="text" @click="deleteTask(scope.row)">删除</el-button>
@@ -65,7 +65,7 @@
       </el-table-column>
     </el-table>
     <div class="block">
-      <el-pagination @size-change="pageSizeChange" @current-change="currentPageChange" :current-page="currentPage" :page-sizes="[5, 10,50, 100]" :page-size="10" :total="taskList.length" layout=" prev, pager, next, sizes, jumper">
+      <el-pagination @size-change="pageSizeChange" @current-change="currentPageChange" :current-page="currentPage" :page-sizes="[5, 10,50, 100]" :page-size="pageSize" :total="totalCount" layout=" prev, pager, next, sizes, jumper">
       </el-pagination>
     </div>
   </div>
@@ -145,19 +145,25 @@ export default {
       searchForm: {
         taskType: '',
         taskStatus: '',
-        timeRange: ''
+        timeRange: '',
+        currentPage:'',
+        pageSize:''
       },
       //最近查询条件记录
       latestSearch: {
         taskType: '',
         taskStatus: '',
-        timeRange: ''
+        timeRange: '',
+        currentPage:'',
+        pageSize:''        
       },
       //对话框
       dialogTitle: '',
       dialogVisible: false,
       //翻页组件
       currentPage: 1,
+      pageSize:10,
+      totalCount:10,
       //待删除任务id
       toDeleteTaskId:''
     }
@@ -166,6 +172,7 @@ export default {
   computed: mapState([
     'taskManageData',
     'stopTaskResponse',
+    'startTaskResponse',
     'deleteTaskResponse'
     ]),
   watch: {
@@ -175,9 +182,13 @@ export default {
     stopTaskResponse: function(response) {
       utils.notifyResponse(response,()=>{this.refreshTask()})
     },
+    startTaskResponse: function(response) {
+      utils.notifyResponse(response,()=>{this.refreshTask()})
+    },    
     taskManageData:function(data){
       if (data.result&&data.result.list) {
         this.taskList = data.result.list
+        this.totalCount=data.result.count
       }
     }
   },
@@ -188,6 +199,7 @@ export default {
     ...mapActions([
       'getTaskManageData',
       'stopTaskRequest',
+      'startTaskRequest',
       'deleteTaskRequest'
     ]),
     //任务类型格式化
@@ -309,12 +321,16 @@ export default {
     refreshTaskTable(requirement){
       let taskType = requirement.taskType;
       let taskStatus = requirement.taskStatus;
+      let currentPage= requirement.currentPage
+      let pageSize=requirement.pageSize
       //计算建立时间
       let createTime = this.computeCreateTime(requirement.timeRange);
       //查询参数
       let params = {};
       if (taskType!=='') params.t = taskType;
       if (taskStatus!=='') params.s = taskStatus;
+      if(currentPage!=='') params.p=currentPage
+      if(pageSize!=='') params.ps=pageSize
       if(createTime!=='') params.bt=createTime
       this.getTaskManageData(params);
     },  
@@ -328,8 +344,8 @@ export default {
       this.$router.push('/main/task-manage/create')
     },
     //操作菜单
-    startTask() {
-
+    startTask(row) {
+      this.startTaskRequest(row.id);
     },
     stopTask(row) {
       this.stopTaskRequest(row.id);
@@ -353,10 +369,17 @@ export default {
     //翻页组件操作
     currentPageChange(currentPage) {
       console.log(currentPage)
+      this.currentPage=currentPage
+      this.latestSearch.currentPage=currentPage-1
+      this.refreshTaskTable(this.latestSearch);
     },
     pageSizeChange(pageSize) {
       console.log(pageSize)
+      this.pageSize=pageSize
+      this.latestSearch.pageSize=pageSize
+      this.refreshTaskTable(this.latestSearch);
     },
+    //克隆对象
     clone(origin) {
       return Object.assign({}, origin);
     }

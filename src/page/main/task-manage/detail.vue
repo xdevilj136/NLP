@@ -11,34 +11,28 @@
         <span class="detail-right-label">{{detail.name}}</span>
       </el-form-item>
       <el-form-item label="类型：">
-        <span class="detail-right-label">{{detail.type}}</span>
-
+        <span class="detail-right-label">{{detail.type | taskTypeFilter}}</span>
       </el-form-item>
       <el-form-item label="完成状态：">
-        <span class="detail-right-label">{{detail.status}}</span>
-
+        <span class="detail-right-label">{{detail.status | taskStatusFilter}}</span>
       </el-form-item>
       <el-form-item label="用时：">
-        <span class="detail-right-label">{{detail.duration}}</span>
-
+        <span class="detail-right-label">{{detail.duration | taskDurationFilter}}</span>
       </el-form-item>
       <el-form-item label="总记录数：">
         <span class="detail-right-label">{{detail.outputCount}}</span>
-
       </el-form-item>
       <el-form-item label="输出位置：">
         <span class="detail-right-label">{{detail.outputPath}}</span>
-
       </el-form-item>
-
     </el-form>
 
     <div class="toolbar">
-      <el-button v-if="indexMethods.canStart(detail.status)" :disabled="indexMethods.startDisabled(detail.status)" type="text" @click="indexMethods.startTask">开始</el-button>
-      <el-button v-if="indexMethods.canStop(detail.status)" type="text" @click="indexMethods.stopTask">终止</el-button>
-      <el-button type="text" :disabled="indexMethods.editDisabled(detail.status)" @click="indexMethods.editTask(detail.id)">编辑</el-button>
-      <el-button type="text" @click="deleteTask(detail.name)">删除</el-button>
-      <el-button type="text" :disabled="indexMethods.showLogDisabled(detail.status)" @click="indexMethods.showTaskLog(detail.id)">查看日志</el-button>
+      <el-button v-if="indexMethods.canStart(detail.status)" :disabled="indexMethods.startDisabled(detail.status)" type="text" @click="startTask(detail.id)">开始</el-button>
+      <el-button v-if="indexMethods.canStop(detail.status)" type="text" @click="stopTask(detail.id)">终止</el-button>
+      <el-button type="text" :disabled="indexMethods.editDisabled(detail.status)" @click="editTask(detail.id)">编辑</el-button>
+      <el-button type="text" @click="deleteTask(detail.name,detail.id)">删除</el-button>
+      <el-button type="text" :disabled="indexMethods.showLogDisabled(detail.status)" @click="showTaskLog(detail.id)">查看日志</el-button>
     </div>
 
     <el-dialog :title="dialogTitle" :visible.sync="dialogVisible" size="tiny" :modal="true" :modal-append-to-body="false">
@@ -53,6 +47,7 @@
 <script>
 import { mapActions, mapState } from 'vuex'
 import index from './index';
+import utils from 'src/config/utils'
 
 export default {
   name: 'task-manage-detail',
@@ -68,34 +63,126 @@ export default {
       },
       dialogVisible: false,
       dialogTitle: '',
-      indexMethods: index.methods
+      indexMethods: index.methods,
+      toDeleteTaskId: ''
     };
   },
   watch: {
-    taskManageDetail: function(taskManageDetail) {
-      if (taskManageDetail.result) {
-        this.detail = Object.assign({}, taskManageDetail)
+    singleTask: function(singleTask) {
+      if (singleTask.result) {
+        this.detail = Object.assign({}, singleTask.result)
       }
+    },
+    deleteTaskResponse: function(response) {
+      utils.notifyResponse(response, () => { this.$router.go(-1) })
+    },
+    stopTaskResponse: function(response) {
+      utils.notifyResponse(response, () => { this.$router.go(-1) })
+    },
+    startTaskResponse: function(response) {
+      utils.notifyResponse(response, () => { this.$router.go(-1) })
     }
 
   },
-  computed: mapState(['taskManageDetail']),
+  computed: mapState([
+    'singleTask',
+    'stopTaskResponse',
+    'startTaskResponse',
+    'deleteTaskResponse'
+  ]),
 
   created() {
-    this.getTaskManageDetail(this.$route.params.id)
+    this.queryTaskById(this.$route.params.id)
   },
   methods: {
     ...mapActions([
-      'getTaskManageDetail',
-      'deleteTaskRequest'
+      'queryTaskById',
+      'deleteTaskRequest',
+      'startTaskRequest',
+      'stopTaskRequest'
     ]),
-    deleteTask(name) {
+    //操作菜单
+    startTask(id) {
+      this.startTaskRequest(id);
+    },
+    stopTask(id) {
+      this.stopTaskRequest(id);
+    },
+    editTask(id) {
+      this.$router.push('/main/task-manage/edit/' + id)
+    },
+    deleteTask(name, id) {
       this.dialogVisible = true;
       this.dialogTitle = "确认删除 " + name + " ?"
+      this.toDeleteTaskId = id;
     },
-    deleteDialogConfirm(){
+    showTaskLog(id) {
+      this.$router.push('/main/task-manage/log/' + id)
+    },
+    deleteDialogConfirm() {
       this.dialogVisible = false;
-      this.deleteTaskRequest(this.$route.params.id);
+      this.deleteTaskRequest(this.toDeleteTaskId);
+    }
+  },
+  filters: {
+    taskTypeFilter: function(value) {
+      let result = ''
+      switch (value) {
+        case 0:
+          result = "中文分词"
+          break;
+        case 1:
+          result = "词性标注"
+          break;
+        case 2:
+          result = "实体识别"
+          break;
+        case 3:
+          result = "信息抽取"
+          break;
+        case 5:
+          result = "企业名称标准化"
+          break;
+        default:
+          break;
+      }
+      return result
+    },
+    taskStatusFilter: function(value) {
+      let result = '';
+      switch (value) {
+        case 0:
+          result = "未开始"
+          break;
+        case 1:
+          result = "正在执行"
+          break;
+        case 2:
+          result = "等待开始"
+          break;
+        case 4:
+          result = "已经结束"
+          break;
+        case 5:
+          result = "非正常结束"
+          break;
+        default:
+          break;
+      }
+      return result;
+    },
+    taskDurationFilter: function(value_ms) {
+      if (typeof value_ms == 'number') {
+        let days = parseInt(value_ms / (1000 * 60 * 60 * 24))
+        let hours = parseInt((value_ms % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60))
+        let minutes = parseInt((value_ms % (1000 * 60 * 60)) / (1000 * 60))
+        let seconds = parseInt((value_ms % (1000 * 60)) / 1000)
+        let daysStr=(days==0)?'':days+'天'
+        let hoursStr=(hours==0)?'':hours+'小时'
+        let minutesStr=(minutes==0)?'':minutes+'分'
+        let secondsStr=(seconds==0)?'':seconds+'秒'
+        return (daysStr+hoursStr+minutesStr+secondsStr)||0
+      }
     }
   }
 }

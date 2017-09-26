@@ -1,12 +1,12 @@
 const INFO_CONFIG = 'INFO_CONFIG'
 const CREATE_TASK_REQUEST = 'CREATE_TASK_REQUEST'
 const UPDATE_TASK_REQUEST = 'UPDATE_TASK_REQUEST'
-const STOP_TASK_REQUEST='STOP_TASK_REQUEST'
-const DELETE_TASK_REQUEST='DELETE_TASK_REQUEST'
+const STOP_TASK_REQUEST = 'STOP_TASK_REQUEST'
+const START_TASK_REQUEST = 'START_TASK_REQUEST'
+const DELETE_TASK_REQUEST = 'DELETE_TASK_REQUEST'
 const TASK_MANAGE = 'TASK_MANAGE'
-const SINGLE_TASK='SINGLE_TASK'
+const SINGLE_TASK = 'SINGLE_TASK'
 const TASK_LOG = 'TASK_LOG'
-const TASK_MANAGE_DETAIL = 'TASK_MANAGE_DETAIL'
 const AUTHORITY_MANAGE = 'AUTHORITY_MANAGE'
 const DATA_EXTRACT = 'DATA_EXTRACT'
 const ANALYSIS_GET = 'ANALYSIS_GET'
@@ -56,23 +56,23 @@ export default {
 	[STOP_TASK_REQUEST](state, data) {
 		state.stopTaskResponse = data;
 	},
-		//删除任务
-		[DELETE_TASK_REQUEST](state, data) {
-			state.deleteTaskResponse = data;
-		},
+	//开始任务
+	[START_TASK_REQUEST](state, data) {
+		state.startTaskResponse = data;
+	},
+	//删除任务
+	[DELETE_TASK_REQUEST](state, data) {
+		state.deleteTaskResponse = data;
+	},
 	//获取单个任务管理数据
 	[SINGLE_TASK](state, data) {
 		state.singleTask = data
-	},		
+	},
 	//获取任务管理数据
 	[TASK_MANAGE](state, data) {
 		state.taskManageData = data
 	},
-	//获取任务管理详情数据
-	[TASK_MANAGE_DETAIL](state, data) {
-		state.taskManageDetail = data
-	},
-	//获取任务管理详情数据
+	//获取任务日志
 	[TASK_LOG](state, data) {
 		state.taskLog = data
 	},

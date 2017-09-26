@@ -16,7 +16,7 @@ export default {
 	*/
 	//获取信息抽取配置规则列表
 	configData(params) {
-		ajax('GET', '/api/extractConfig/queryAll', params, 'INFO_CONFIG');
+		ajax('GET', '/api/extractConfig/query', params, 'INFO_CONFIG');
 	},
 	//根据id查询单个配置规则
 	queryRuleById(id) {
@@ -88,7 +88,7 @@ export default {
 	},
 	//获取任务日志
 	taskLog(id) {
-		ajax('GET', '/api/task/getLog', {id:id}, 'TASK_LOG');
+		ajax('GET', '/api/task/log', {id:id}, 'TASK_LOG');
 	},
 	/*
 	

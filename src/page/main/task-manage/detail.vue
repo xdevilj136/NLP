@@ -34,14 +34,6 @@
       <el-button type="text" @click="deleteTask(detail.name,detail.id)">删除</el-button>
       <el-button type="text" :disabled="indexMethods.showLogDisabled(detail.status)" @click="showTaskLog(detail.id)">查看日志</el-button>
     </div>
-
-    <el-dialog :title="dialogTitle" :visible.sync="dialogVisible" size="tiny" :modal="true" :modal-append-to-body="false">
-      <span>删除后，该任务将无法正常执行。</span>
-      <span slot="footer" class="dialog-footer">
-        <el-button @click="dialogVisible = false">取 消</el-button>
-        <el-button type="primary" @click="deleteDialogConfirm">确 定</el-button>
-      </span>
-    </el-dialog>
   </div>
 </template>
 <script>
@@ -61,8 +53,6 @@ export default {
         outputCount: '',
         outputPath: ''
       },
-      dialogVisible: false,
-      dialogTitle: '',
       indexMethods: index.methods,
       toDeleteTaskId: ''
     };
@@ -112,15 +102,21 @@ export default {
       this.$router.push('/main/task-manage/edit/' + id)
     },
     deleteTask(name, id) {
-      this.dialogVisible = true;
-      this.dialogTitle = "确认删除 " + name + " ?"
       this.toDeleteTaskId = id;
+      this.$confirm('删除后，该任务将无法正常执行。', '确认删除 ' + name + ' ?', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        this.deleteDialogConfirm()
+      }).catch(() => {
+
+      });
     },
     showTaskLog(id) {
       this.$router.push('/main/task-manage/log/' + id)
     },
     deleteDialogConfirm() {
-      this.dialogVisible = false;
       this.deleteTaskRequest(this.toDeleteTaskId);
     }
   },
@@ -177,11 +173,11 @@ export default {
         let hours = parseInt((value_ms % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60))
         let minutes = parseInt((value_ms % (1000 * 60 * 60)) / (1000 * 60))
         let seconds = parseInt((value_ms % (1000 * 60)) / 1000)
-        let daysStr=(days==0)?'':days+'天'
-        let hoursStr=(hours==0)?'':hours+'小时'
-        let minutesStr=(minutes==0)?'':minutes+'分'
-        let secondsStr=(seconds==0)?'':seconds+'秒'
-        return (daysStr+hoursStr+minutesStr+secondsStr)||0
+        let daysStr = (days == 0) ? '' : days + '天'
+        let hoursStr = (hours == 0) ? '' : hours + '小时'
+        let minutesStr = (minutes == 0) ? '' : minutes + '分'
+        let secondsStr = (seconds == 0) ? '' : seconds + '秒'
+        return (daysStr + hoursStr + minutesStr + secondsStr) || 0
       }
     }
   }

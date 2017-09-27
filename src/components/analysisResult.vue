@@ -4,15 +4,15 @@
     <div class="analysis-content">
       <div class="analysis-content-less">
         <span v-for="(word, index) in data.Words" :key="index"
-        :style="{ background: (color[type][data.Tags[index]]?color[type][data.Tags[index]].color:color[type]['other'].color )}">
+        :style="{ background: matchWordColor(index)}">
         {{word}}
         </span>
       </div>
       <div class="analysis-description">
         <p class="analysis-des-title">词性类别图示：</p>
         <span v-for="(tag, index) in data.newTags" :key="index"
-        :style="{ background: (color[type][tag]?color[type][tag].color: color[type]['other'].color)}">
-        {{(color[type][tag]?color[type][tag].name: color[type]['other'].name)}}
+        :style="{ background: matchTagColor(tag)}">
+        {{matchTagName(tag)}}
         </span>
       </div>
     </div>
@@ -29,10 +29,40 @@ export default {
           ner_list: ner_list,
           pos_list: pos_list
         },
+        otherColorCount:0
       }
   },
   props:['headTitle', 'data', 'type'],
   created(){
+  },
+  methods:{
+    matchWordColor(index){
+      console.log('index'+index)
+      let colorType=this.color[this.type]
+      let tags=this.data.Tags
+      let num = this.otherColorCount
+      let matchColor=''
+      if(colorType[tags[index]]){
+        //tag存在颜色配置
+        matchColor=colorType[tags[index]].color
+      }
+      else{
+        //不存在tag的颜色配置, 从备选颜色中匹配
+        console.log(this.otherColorCount)
+        // this.otherColorCount= num + 1
+        
+        matchColor=colorType['other'].color[this.otherColorCount]
+      }
+      return matchColor
+    },
+    matchTagColor(tag){
+      let colorType=this.color[this.type]
+      return  (colorType[tag]?colorType[tag].color: colorType['other'].color[0])
+    },
+    matchTagName(tag){
+      let colorType=this.color[this.type]
+      return (colorType[tag]?colorType[tag].name: colorType['other'].name)
+    }
   }
 }
 </script>

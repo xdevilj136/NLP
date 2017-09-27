@@ -41,13 +41,6 @@
             <el-button type="text" :disabled="!scope.row.editable" @click="editRule(scope.row)">编辑</el-button>
             <el-button type="text" :disabled="!scope.row.editable" @click="deleteRule(scope.row)">删除</el-button>
           </div>
-          <el-dialog :title="dialogTitle" :visible.sync="dialogVisible" size="tiny" :modal="true" :modal-append-to-body="false">
-            <span>删除后，该规则将无法使用。</span>
-            <span slot="footer" class="dialog-footer">
-              <el-button @click="dialogVisible = false">取 消</el-button>
-              <el-button type="primary" @click="deleteDialogConfirm">确 定</el-button>
-            </span>
-          </el-dialog>
         </template>
       </el-table-column>
     </el-table>
@@ -105,8 +98,6 @@ export default {
         name: '',
         timeRange: ''
       },
-      dialogTitle: '',
-      dialogVisible: false,
       //删除规则id
       toDeleteRuleId: ''
     }
@@ -174,12 +165,18 @@ export default {
       this.$router.push('/main/info-extra/' + row.name + '/edit/' + row.id);
     },
     deleteRule(row) {
-      this.dialogTitle = '确认删除 ' + row.name + ' 规则？';
-      this.dialogVisible = true;
       this.toDeleteRuleId = row.id;
+      this.$confirm('删除后，该规则将无法使用。', '确认删除 '+row.name+' ?', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(() => {
+          this.deleteDialogConfirm()
+        }).catch(() => {
+          
+        });
     },
     deleteDialogConfirm() {
-      this.dialogVisible = false;
       this.deleteConfigRule(this.toDeleteRuleId);
     }
   }

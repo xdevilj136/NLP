@@ -53,13 +53,6 @@
             <el-button type="text" @click="deleteTask(scope.row)">删除</el-button>
             <el-button type="text" :disabled="showLogDisabled(scope.row.status)" @click="showTaskLog(scope.row.id)">查看日志</el-button>
           </div>
-          <el-dialog :title="dialogTitle" :visible.sync="dialogVisible" size="tiny" :modal="true" :modal-append-to-body="false">
-            <span>删除后，该任务将无法正常执行。</span>
-            <span slot="footer" class="dialog-footer">
-              <el-button @click="dialogVisible = false">取 消</el-button>
-              <el-button type="primary" @click.native.prevent="deleteDialogConfirm">确 定</el-button>
-            </span>
-          </el-dialog>
         </template>
       </el-table-column>
     </el-table>
@@ -97,7 +90,7 @@ export default {
       {
         value: 'beyondOneYear',
         label: '一年以上'
-      }],                 
+      }],
       taskTypeOptions: [{
         value: 0,
         label: '中文分词'
@@ -137,7 +130,7 @@ export default {
         value: 5,
         label: '非正常结束'
       }],
-      taskList:[
+      taskList: [
 
       ],
       //查询条件表单
@@ -145,26 +138,26 @@ export default {
         taskType: '',
         taskStatus: '',
         timeRange: '',
-        currentPage:'',
-        pageSize:''
+        currentPage: '',
+        pageSize: ''
       },
       //最近查询条件记录
       latestSearch: {
         taskType: '',
         taskStatus: '',
         timeRange: '',
-        currentPage:'',
-        pageSize:''        
+        currentPage: '',
+        pageSize: ''
       },
       //对话框
       dialogTitle: '',
       dialogVisible: false,
       //翻页组件
       currentPage: 1,
-      pageSize:10,
-      totalCount:10,
+      pageSize: 10,
+      totalCount: 10,
       //待删除任务id
-      toDeleteTaskId:''
+      toDeleteTaskId: ''
     }
   },
 
@@ -173,26 +166,26 @@ export default {
     'stopTaskResponse',
     'startTaskResponse',
     'deleteTaskResponse'
-    ]),
+  ]),
   watch: {
     deleteTaskResponse: function(response) {
-      utils.notifyResponse(response,()=>{this.refreshTask()})
+      utils.notifyResponse(response, () => { this.refreshTask() })
     },
     stopTaskResponse: function(response) {
-      utils.notifyResponse(response,()=>{this.refreshTask()})
+      utils.notifyResponse(response, () => { this.refreshTask() })
     },
     startTaskResponse: function(response) {
-      utils.notifyResponse(response,()=>{this.refreshTask()})
-    },    
-    taskManageData:function(data){
-      if (data.result&&data.result.list) {
+      utils.notifyResponse(response, () => { this.refreshTask() })
+    },
+    taskManageData: function(data) {
+      if (data.result && data.result.list) {
         this.taskList = data.result.list
-        this.totalCount=data.result.count
+        this.totalCount = data.result.count
       }
     }
   },
   created() {
-        this.refreshTask();
+    this.refreshTask();
   },
   methods: {
     ...mapActions([
@@ -202,48 +195,48 @@ export default {
       'deleteTaskRequest'
     ]),
     //任务类型格式化
-    taskTypeFormatter(row, column, cellValue){
-      let result='';
+    taskTypeFormatter(row, column, cellValue) {
+      let result = '';
       switch (cellValue) {
         case 0:
-          result="中文分词"
+          result = "中文分词"
           break;
         case 1:
-          result="词性标注"
+          result = "词性标注"
           break;
         case 2:
-          result="实体识别"
+          result = "实体识别"
           break;
         case 3:
-          result="信息抽取"
+          result = "信息抽取"
           break;
         case 5:
-          result="企业名称标准化"
-          break;                          
+          result = "企业名称标准化"
+          break;
         default:
           break;
       }
       return result;
     },
     //任务状态格式化
-    taskStatusFormatter(row, column, cellValue){
-      let result='';
+    taskStatusFormatter(row, column, cellValue) {
+      let result = '';
       switch (cellValue) {
         case 0:
-          result="未开始"
+          result = "未开始"
           break;
         case 1:
-          result="正在执行"
+          result = "正在执行"
           break;
         case 2:
-          result="等待开始"
+          result = "等待开始"
           break;
         case 4:
-          result="已经结束"
-          break;   
+          result = "已经结束"
+          break;
         case 5:
-          result="非正常结束"
-          break;                                  
+          result = "非正常结束"
+          break;
         default:
           break;
       }
@@ -286,7 +279,7 @@ export default {
     showLogDisabled(status) {
       return this.notStart(status) || this.readyToStart(status);
     },
-      //计算时间 （最近时间范围）-》建立时间
+    //计算时间 （最近时间范围）-》建立时间
     computeCreateTime(timeRange) {
       let timeRange_ms = '';
       switch (timeRange) {
@@ -317,24 +310,24 @@ export default {
       this.latestSearch = this.clone(this.searchForm);
       this.refreshTaskTable(this.searchForm);
     },
-    refreshTaskTable(requirement){
+    refreshTaskTable(requirement) {
       let taskType = requirement.taskType;
       let taskStatus = requirement.taskStatus;
-      let currentPage= requirement.currentPage
-      let pageSize=requirement.pageSize
+      let currentPage = requirement.currentPage
+      let pageSize = requirement.pageSize
       //计算建立时间
       let createTime = this.computeCreateTime(requirement.timeRange);
       //查询参数
       let params = {};
-      if (taskType!=='') params.t = taskType;
-      if (taskStatus!=='') params.s = taskStatus;
-      if(currentPage!=='') params.p=currentPage
-      if(pageSize!=='') params.ps=pageSize
-      if(createTime!=='') params.bt=createTime
+      if (taskType !== '') params.t = taskType;
+      if (taskStatus !== '') params.s = taskStatus;
+      if (currentPage !== '') params.p = currentPage
+      if (pageSize !== '') params.ps = pageSize
+      if (createTime !== '') params.bt = createTime
       this.getTaskManageData(params);
-    },  
+    },
     //根据上一次查询条件刷新任务列表
-    refreshTask(){
+    refreshTask() {
       console.log(this.latestSearch)
       this.refreshTaskTable(this.latestSearch);
     },
@@ -350,32 +343,38 @@ export default {
       this.stopTaskRequest(row.id);
     },
     editTask(id) {
-      this.$router.push('/main/task-manage/edit/'+id)
+      this.$router.push('/main/task-manage/edit/' + id)
     },
     deleteTask(row) {
-      this.dialogVisible = true;
-      this.dialogTitle = "确认删除 " + row.name + " ?"
       this.toDeleteTaskId = row.id;
+      this.$confirm('删除后，该任务将无法正常执行。', '确认删除 ' + row.name + ' ?', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        this.deleteDialogConfirm()
+      }).catch(() => {
+
+      });
     },
     showTaskLog(id) {
       this.$router.push('/main/task-manage/log/' + id)
     },
     //对话框确认
     deleteDialogConfirm() {
-      this.dialogVisible = false;
       this.deleteTaskRequest(this.toDeleteTaskId);
     },
     //翻页组件操作
     currentPageChange(currentPage) {
       console.log(currentPage)
-      this.currentPage=currentPage
-      this.latestSearch.currentPage=currentPage-1
+      this.currentPage = currentPage
+      this.latestSearch.currentPage = currentPage - 1
       this.refreshTaskTable(this.latestSearch);
     },
     pageSizeChange(pageSize) {
       console.log(pageSize)
-      this.pageSize=pageSize
-      this.latestSearch.pageSize=pageSize
+      this.pageSize = pageSize
+      this.latestSearch.pageSize = pageSize
       this.refreshTaskTable(this.latestSearch);
     },
     //克隆对象

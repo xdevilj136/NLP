@@ -23,7 +23,6 @@
       <div v-if="dialogType==='deleteDialog'">
         <span>删除后，该用户需要重新注册才能使用平台。</span>
       </div>
-
       <div v-if="dialogType==='editDialog'">
         <el-form :model="editForm">
           <el-form-item label="权限：">

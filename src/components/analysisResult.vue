@@ -4,15 +4,15 @@
     <div class="analysis-content">
       <div class="analysis-content-less">
         <span v-for="(word, index) in data.Words" :key="index"
-        :style="{ background: color[type][data.Tags[index]].color }">
+        :style="{ background: (color[type][data.Tags[index]]?color[type][data.Tags[index]].color:color[type]['other'].color )}">
         {{word}}
         </span>
       </div>
       <div class="analysis-description">
         <p class="analysis-des-title">词性类别图示：</p>
         <span v-for="(tag, index) in data.newTags" :key="index"
-        :style="{ background: color[type][tag].color }">
-        {{color[type][tag].name}}
+        :style="{ background: (color[type][tag]?color[type][tag].color: color[type]['other'].color)}">
+        {{(color[type][tag]?color[type][tag].name: color[type]['other'].name)}}
         </span>
       </div>
     </div>

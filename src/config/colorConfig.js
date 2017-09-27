@@ -121,7 +121,12 @@ const ner_list = {
         color: '#D8D8D8',
         name: '非实体'
     },
-    'other': ['#FE8F8F', '#FF8FC5', '#6EE3E2', '#82DF6F', '#FEB935', '#FE9925']
+    'other': {
+        color:'#FE8F8F',
+        name:'自定义实体'
+}
+    // 'other': ['#FE8F8F', '#FF8FC5', '#6EE3E2', '#82DF6F', '#FEB935', '#FE9925']
+    
 }
 
 const seg_list = {

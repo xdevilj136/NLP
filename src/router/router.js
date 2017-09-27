@@ -10,6 +10,7 @@ export default [{
     }, {
         path: '/main',
         component: r => require.ensure([], () => r(require('../page/index')), 'main'),
+        redirect:'/main/task-manage',
         children: [{
             path: 'not-found',
             component : r => require.ensure([], () => r(require('../page/main/not-found')), 'not-found')

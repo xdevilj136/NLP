@@ -4,7 +4,7 @@ export default {
 
 	// loginCheck
 	loginCheck(data) {
-		ajax()
+		// ajax()
 		return true
 	},
 	// loginOut

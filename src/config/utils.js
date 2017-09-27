@@ -18,7 +18,7 @@ export default {
                 Notification({
                     message: response.errorMessage,
                     type: 'warnning',
-                    duration: 2000,
+                    duration: 1000,
                     offset: 200
                 });
                 if (errorCallback && isFunction(errorCallback)) {
@@ -29,7 +29,7 @@ export default {
                 Notification({
                     message: response.result,
                     type: 'success',
-                    duration: 2000,
+                    duration: 1000,
                     offset: 200
                 });
                 if (successCallback && isFunction(successCallback)) {

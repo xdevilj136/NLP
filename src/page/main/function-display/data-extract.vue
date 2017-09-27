@@ -73,7 +73,7 @@ export default {
           this.$notify({
             message: '抽取信息成功',
             type: 'success',
-            duration: 2000,
+            duration: 1000,
             offset: 200
           });
         }

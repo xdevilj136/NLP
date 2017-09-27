@@ -5,7 +5,7 @@
     </el-checkbox-group>
     <el-input class="mgt10 mgb10" type="textarea" :maxlength="1000" :autosize="{ minRows: 5, maxRows: 5}" placeholder="请输入要进行词法分析的内容" v-model="text.value">
     </el-input>
-        <p v-if="text.value.length>=1000" style="color:red;">超出最大长度限制1000</p>
+    <p v-if="text.value.length>=1000" style="color:red;">超出最大长度限制1000</p>
     <div class="submit-box">
       <el-button @click="submitTxt()" type="primary">提交文本</el-button>
     </div>
@@ -60,26 +60,37 @@ export default {
   computed: mapState(['analysisData']),
   watch: {
     analysisData: function(analysisData) {
-      //去重处理
-      let result = analysisData.result;
-			for (let key in result) {
-				let item = JSON.parse(result[key]);
-				let matchList = item.SegList || item.PosList || item.NerList;
-				if (matchList) {
-					if (matchList.Tags) {
-						matchList['newTags'] = utils.unique(matchList.Tags)
-					}
-				}
-				result[key] = item;
+      if (analysisData.result) {
+        //去重处理
+        let result = analysisData.result;
+        for (let key in result) {
+          let item = JSON.parse(result[key]);
+          let matchList = item.SegList || item.PosList || item.NerList;
+          if (matchList) {
+            if (matchList.Tags) {
+              matchList['newTags'] = utils.unique(matchList.Tags)
+            }
+          }
+          result[key] = item;
+        }
+        //解析赋值
+        let filterResult = analysisData.result;
+        if (filterResult) {
+          this.processedData.WordSegment = filterResult.WordSegment ? filterResult.WordSegment : '';
+          this.processedData.NamedIdentityRecognize = filterResult.NamedIdentityRecognize ? filterResult.NamedIdentityRecognize : '';
+          this.processedData.PosTag = filterResult.PosTag ? filterResult.PosTag : '';
+        }
       }
-      //解析赋值
-      let filterResult = analysisData.result;
-      if (filterResult) {
-        this.processedData.WordSegment = filterResult.WordSegment ? filterResult.WordSegment : '';
-        this.processedData.NamedIdentityRecognize = filterResult.NamedIdentityRecognize ? filterResult.NamedIdentityRecognize : '';
-        this.processedData.PosTag = filterResult.PosTag ? filterResult.PosTag : '';
+      else {
+        this.$notify({
+          message: analysisData.errorMessage,
+          type: 'warnning',
+          duration: 1000,
+          offset: 200
+        });
       }
     }
+
 
   },
   created() {
@@ -98,7 +109,7 @@ export default {
         });
         return;
       }
-      if(this.text.type.length==0){
+      if (this.text.type.length == 0) {
         this.$alert('请选择分析选项', '提示', {
           confirmButtonText: '确定',
           type: 'warning'

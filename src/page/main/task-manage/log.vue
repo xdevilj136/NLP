@@ -35,7 +35,7 @@ export default {
           this.$notify({
                     message: data.errorMessage,
                     type: 'warnning',
-                    duration: 2000,
+                    duration: 1000,
                     offset: 200
                 });
                 this.$router.go(-1);

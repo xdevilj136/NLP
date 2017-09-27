@@ -9,7 +9,7 @@ Vue.use(Vuex)
 
 const state = {
 	infoConfig: [],
-	isLogin: true,
+	isLogin: '',
 	createTaskResponse:{},
 	updateTaskResponse:{},
 	stopTaskResponse:{},

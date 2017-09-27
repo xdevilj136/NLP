@@ -28,40 +28,45 @@ export default {
           seg_list: seg_list,
           ner_list: ner_list,
           pos_list: pos_list
-        },
-        otherColorCount:0
+        }
       }
   },
   props:['headTitle', 'data', 'type'],
   created(){
   },
+  watch:{
+    data:function(data){
+      if(this.type=='ner_list'){
+        let self=this
+        let noMatchTags=data.newTags.filter(function(value){
+          return !self.color.ner_list[value]
+        });
+        for (var index = 0; index < noMatchTags.length; index++) {
+          var element = noMatchTags[index];
+          let newTag={
+            [element]:{
+              color:this.color.ner_list.other.color[index],
+              name:'自定义实体'+(index+1)
+            }
+          }
+          this.color.ner_list = Object.assign({}, this.color.ner_list, newTag)
+        }
+      }
+    }
+  },
   methods:{
     matchWordColor(index){
-      console.log('index'+index)
       let colorType=this.color[this.type]
       let tags=this.data.Tags
-      let num = this.otherColorCount
-      let matchColor=''
-      if(colorType[tags[index]]){
-        //tag存在颜色配置
-        matchColor=colorType[tags[index]].color
-      }
-      else{
-        //不存在tag的颜色配置, 从备选颜色中匹配
-        console.log(this.otherColorCount)
-        // this.otherColorCount= num + 1
-        
-        matchColor=colorType['other'].color[this.otherColorCount]
-      }
-      return matchColor
+      return colorType[tags[index]].color
     },
     matchTagColor(tag){
       let colorType=this.color[this.type]
-      return  (colorType[tag]?colorType[tag].color: colorType['other'].color[0])
+      return  colorType[tag].color
     },
     matchTagName(tag){
       let colorType=this.color[this.type]
-      return (colorType[tag]?colorType[tag].name: colorType['other'].name)
+      return colorType[tag].name
     }
   }
 }

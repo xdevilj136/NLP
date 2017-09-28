@@ -298,4 +298,11 @@ matchOneChange(){
 .action-box {
   margin: 0 0 30px 30px;
 }
+.CodeMirror{
+  height: auto!important;
+  .CodeMirror-scroll{
+    height: auto;
+    max-height: 180px;
+  }
+}
 </style>

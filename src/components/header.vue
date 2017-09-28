@@ -1,7 +1,7 @@
 <template>
 <div class="header-box">
   <img class="header-logo" src="../images/natural-language/haizhi-logo.png">
-  <div class="header-right-box fr" v-if="isLogin">
+  <div class="header-right-box fr" v-if="$route.path!=='/login'">
     <div class="fl">
       <img class="header-right-logo" src="../images/natural-language/question.png">
       <span>帮助</span>
@@ -20,7 +20,6 @@ export default {
   name: 'header',
   computed: mapState(['isLogin']),
   created(){
-    
   },
   methods: {
     ...mapActions([

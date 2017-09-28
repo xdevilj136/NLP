@@ -24,11 +24,9 @@ export default {
   name: 'analysisResult',
   data () {
       return {
-        color: {
           seg_list: seg_list,
           ner_list: ner_list,
           pos_list: pos_list
-        }
       }
   },
   props:['headTitle', 'data', 'type'],
@@ -38,34 +36,39 @@ export default {
     data:function(data){
       if(this.type=='ner_list'){
         let self=this
+        //找出没有匹配的自定义实体tag
         let noMatchTags=data.newTags.filter(function(value){
-          return !self.color.ner_list[value]
+          return !self.ner_list[value]
         });
-        for (var index = 0; index < noMatchTags.length; index++) {
+        for (var index = 0,colorNum=0; index < noMatchTags.length; index++,colorNum++) {
           var element = noMatchTags[index];
+          //超出备选颜色个数，重复顺序取值
+          if(colorNum==ner_list.other.color.length){
+            colorNum=0
+          }
           let newTag={
             [element]:{
-              color:this.color.ner_list.other.color[index],
+              color:this.ner_list.other.color[colorNum],
               name:'自定义实体'+(index+1)
             }
           }
-          this.color.ner_list = Object.assign({}, this.color.ner_list, newTag)
+          this.ner_list = Object.assign({}, this.ner_list, newTag)
         }
       }
     }
   },
   methods:{
     matchWordColor(index){
-      let colorType=this.color[this.type]
+      let colorType=this[this.type]
       let tags=this.data.Tags
       return colorType[tags[index]].color
     },
     matchTagColor(tag){
-      let colorType=this.color[this.type]
+      let colorType=this[this.type]
       return  colorType[tag].color
     },
     matchTagName(tag){
-      let colorType=this.color[this.type]
+      let colorType=this[this.type]
       return colorType[tag].name
     }
   }

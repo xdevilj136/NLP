@@ -42,9 +42,8 @@ export default (type='GET', url='', data={}, commitToken='',async=true) => {
 					if (typeof obj !== 'object') {
 						obj = JSON.parse(obj);
 					}
-					console.log(window.location)
 					if(window.location.hash!=='#/login'){
-						window.location.href="/login";
+						window.location.href='/';
 					}
 					Vue.prototype.$notify({
           				message: obj.errorMessage,

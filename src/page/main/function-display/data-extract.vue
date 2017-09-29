@@ -62,8 +62,6 @@ export default {
                 let list = []
                 for (var element_key in element) {
                   if (element.hasOwnProperty(element_key)) {
-                    console.log(element[element_key])
-
                     element[element_key].forEach(function(each) {
                       list.push({
                         name: element_key,
@@ -97,7 +95,6 @@ export default {
       'getInfoConfig'
     ]),
     submitTxt() {
-      console.log(this.data)
       if (this.data.value.trim() == '') {
         this.$alert('输入内容不能为空', '提示', {
           confirmButtonText: '确定',

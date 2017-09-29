@@ -1,14 +1,17 @@
 import service from './service'
 
 export default {
+	// loginCheck
+	loginCheck({ }, data) {
+		service.loginCheck(data)
+	},	
 	// login
-	loginCheck({ commit, state }, data) {
-		let check = service.loginCheck(data)
-		commit('LOGIN_CHECK', check)
+	logIn({ }, data) {
+		service.logIn(data)
 	},
-	loginOut({ commit, state }, data) {
-		let check = service.loginOut(data)
-		commit('LOGIN_CHECK', check)
+	// logout
+	logOut({}, data) {
+		service.logOut(data)
 	},
 
 	/*

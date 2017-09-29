@@ -1,15 +1,17 @@
 import ajax from '../config/ajax'
 
 export default {
-
 	// loginCheck
 	loginCheck(data) {
-		// ajax()
-		return true
+		ajax('GET', '/api/userInfo', {}, 'LOGIN_CHECK');
+	},
+	// login
+	logIn(data) {
+		ajax('POST', '/api/login', data, 'LOGIN');
 	},
 	// loginOut
-	loginOut(data) {
-		return false
+	logOut(data) {
+		ajax('GET', '/api/logout',  {},'LOGOUT');
 	},
 	/*
 		信心抽取配置

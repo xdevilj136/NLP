@@ -11,6 +11,8 @@ const AUTHORITY_MANAGE = 'AUTHORITY_MANAGE'
 const DATA_EXTRACT = 'DATA_EXTRACT'
 const ANALYSIS_GET = 'ANALYSIS_GET'
 const LOGIN_CHECK = 'LOGIN_CHECK'
+const LOGIN = 'LOGIN'
+const LOGOUT = 'LOGOUT'
 const DATA_SOURCE = 'DATA_SOURCE'
 const CREATE_RULE_REQUEST = 'CREATE_RULE_REQUEST'
 const UPDATE_RULE_REQUEST = 'UPDATE_RULE_REQUEST'
@@ -22,7 +24,15 @@ const CONFIG_RULE = 'CONFIG_RULE'
 export default {
 	//login
 	[LOGIN_CHECK](state, data) {
+		state.isCheck = data
+	},
+	//login
+	[LOGIN](state, data) {
 		state.isLogin = data
+	},
+	//logout
+	[LOGOUT](state, data) {
+		state.isLogout = data
 	},
 	// 获取信息抽取配置
 	[INFO_CONFIG](state, data) {

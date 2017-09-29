@@ -23,10 +23,10 @@ export default {
   },
   methods: {
     ...mapActions([
-      'loginOut'
+      'logOut'
     ]),
     logout () {
-      this.loginOut()
+      this.logOut()
       this.$router.push('/login')
     }
   }

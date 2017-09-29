@@ -19,14 +19,16 @@
         </div>
       </div>
     </div>
-    <analysisResult v-if="submit && processedData.NamedIdentityRecognize" type="ner_list" headTitle="实体识别" :data="processedData.NamedIdentityRecognize.NerList" />
-    <analysisResult v-if="submit && processedData.PosTag" type="pos_list" headTitle="词性标注" :data="processedData.PosTag.PosList" />
+    <analysisResult v-if="submit && processedData.PosTag" type="pos_list" :data="processedData.PosTag.PosList" />
+    <analysisResult v-if="submit && processedData.NamedIdentityRecognize" type="ner_list" :nerList="nerList" :data="processedData.NamedIdentityRecognize.NerList" />
   </div>
 </template>
 <script>
 import { mapActions, mapState } from 'vuex'
 import analysisResult from 'components/analysisResult';
 import utils from 'src/config/utils'
+import { ner_list } from 'src/config/colorConfig'
+
 
 export default {
   name: 'analysis',
@@ -51,7 +53,8 @@ export default {
         WordSegment: '',
         NamedIdentityRecognize: '',
         PosTag: ''
-      }
+      },
+      nerList:ner_list
     }
   },
   components: {
@@ -79,6 +82,28 @@ export default {
           this.processedData.WordSegment = filterResult.WordSegment ? filterResult.WordSegment : '';
           this.processedData.NamedIdentityRecognize = filterResult.NamedIdentityRecognize ? filterResult.NamedIdentityRecognize : '';
           this.processedData.PosTag = filterResult.PosTag ? filterResult.PosTag : '';
+        }
+/*
+  处理自定义实体颜色配置
+*/
+        let self=this
+        //找出没有匹配的自定义实体tag
+        let noMatchTags=this.processedData.NamedIdentityRecognize.NerList.newTags.filter(function(value){
+          return !self.nerList[value]
+        });
+        for (var index = 0,colorNum=0; index < noMatchTags.length; index++,colorNum++) {
+          var element = noMatchTags[index];
+          //超出备选颜色个数，重复顺序取值
+          if(colorNum==ner_list.other.color.length){
+            colorNum=0
+          }
+          let newTag={
+            [element]:{
+              color:this.nerList.other.color[colorNum],
+              name:'自定义实体'+(index+1)
+            }
+          }
+          this.nerList = Object.assign({}, this.nerList, newTag)
         }
       }
       else {

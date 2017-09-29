@@ -8,7 +8,7 @@
       </div>
       <el-form v-if="status==='login'" :model="login" :rules="loginRules" ref="login" label-width="100px" class="demo-ruleForm">
         <el-form-item prop="checkName">
-          <el-input size="large" class="login-input" v-model="login.name" placeholder="用户名"></el-input>
+          <el-input size="large" class="login-input" v-model="login.username" placeholder="用户名"></el-input>
         </el-form-item>
         <el-form-item prop="checkPass">
           <el-input size="large" class="login-input" type="password" v-model="login.password" placeholder="密码"></el-input>
@@ -20,7 +20,7 @@
 
       <el-form v-if="status==='register'" :model="register" :rules="registerRules" ref="register" label-width="100px" class="demo-ruleForm register-box">
         <el-form-item prop="checkRegisterName">
-          <el-input size="large" class="login-input" v-model="register.name" placeholder="用户名"></el-input>
+          <el-input size="large" class="login-input" v-model="register.username" placeholder="用户名"></el-input>
         </el-form-item>
         <p class="login-desc">6-20位中英文字符，区分大小写</p>
         <el-form-item prop="checkRegisterPass">
@@ -45,7 +45,7 @@ export default {
   name: 'loginCard',
   data() {
     var checkNameVal = (rule, value, callback) => {
-      if (!this.login.name || this.login.name.trim() === '') {
+      if (!this.login.username || this.login.username.trim() === '') {
         return callback(new Error('用户名不能为空'));
       } else {
         return callback()
@@ -59,7 +59,7 @@ export default {
       }
     };
     var checkRegisterNameVal = (rule, value, callback) => {
-      if (!this.register.name || this.register.name.trim() === '') {
+      if (!this.register.username || this.register.username.trim() === '') {
         return callback(new Error('用户名不能为空'));
       } else {
         return callback()
@@ -114,6 +114,7 @@ export default {
   computed: mapState(['isLogin']),
   watch: {
     isLogin: function(isLogin) {
+      console.log(isLogin)
       if (isLogin) {
         this.$router.push('/main')
       }
@@ -121,13 +122,13 @@ export default {
   },
   methods: {
     ...mapActions([
-      'loginCheck'
+      'logIn'
     ]),
     submitForm(formName) {
       let self = this;
       this.$refs[formName].validate((valid) => {
         if (valid) {
-          self.loginCheck(self[formName])
+          self.logIn(self[formName])
         } else {
           return false;
         }

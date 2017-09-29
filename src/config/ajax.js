@@ -1,4 +1,5 @@
 import store from 'src/store/'
+import Vue from 'vue'
 
 export default (type='GET', url='', data={}, commitToken='',async=true) => {
 		type = type.toUpperCase();
@@ -36,10 +37,18 @@ export default (type='GET', url='', data={}, commitToken='',async=true) => {
 						obj = JSON.parse(obj);
 					}
 					store.commit(commitToken, obj);
-					
-					
 				}else {
-					// window.location.href="/login";
+				    let obj = requestObj.response
+					if (typeof obj !== 'object') {
+						obj = JSON.parse(obj);
+					}
+					if(window.location.pathname!=='/login'){
+						window.location.href="/login";
+					}
+					// Vue.prototype.$notify({
+          			// 	message: obj.errorMessage,
+          			// 	type: 'warning'
+        			// });
 				}
 			}
 		}

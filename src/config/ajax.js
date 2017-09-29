@@ -45,10 +45,11 @@ export default (type='GET', url='', data={}, commitToken='',async=true) => {
 					if(window.location.pathname!=='/login'){
 						window.location.href="/login";
 					}
-					// Vue.prototype.$notify({
-          			// 	message: obj.errorMessage,
-          			// 	type: 'warning'
-        			// });
+					Vue.prototype.$notify({
+          				message: obj.errorMessage,
+						  type: 'warning',
+						  duration:1000
+        			});
 				}
 			}
 		}

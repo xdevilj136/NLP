@@ -11,9 +11,9 @@
       <el-button @click="submitTxt" type="primary">提交文本</el-button>
     </div>
     <el-table v-if="submit && extractSuccess" border style="width: 100%" class="mgt10 mgb10" :data="extractResult">
-      <el-table-column  min-width="100" prop="name" label="名称">
+      <el-table-column min-width="100" prop="name" label="名称">
       </el-table-column>
-      <el-table-column  min-width="500" prop="value" label="值">
+      <el-table-column min-width="500" prop="value" label="值">
       </el-table-column>
     </el-table>
   </div>
@@ -58,15 +58,22 @@ export default {
             let parsedData = JSON.parse(extractedData.result.DataExtract);
             for (let key in parsedData) {
               if (parsedData.hasOwnProperty(key)) {
-                let element = parsedData[key];
+                let element = parsedData[key]
+                let list = []
                 for (var element_key in element) {
                   if (element.hasOwnProperty(element_key)) {
-                    this.extractResult.push({
-                      name: element_key,
-                      value: element[element_key]
-                    });
+                    console.log(element[element_key])
+
+                    element[element_key].forEach(function(each) {
+                      list.push({
+                        name: element_key,
+                        value: each
+                      });
+                    }, this);
+
                   }
                 }
+                this.extractResult = list
               }
             }
           }
@@ -121,7 +128,8 @@ export default {
   text-align: right;
   margin-bottom: 50px;
 }
-.message{
-  top:160px;
+
+.message {
+  top: 160px;
 }
 </style>

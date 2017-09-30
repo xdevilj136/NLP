@@ -6,12 +6,12 @@
         <span>•</span>
         <span :class="['login-head',{'active':status==='register'}]" @click="loginStatus('register')">注册</span>
       </div>
-      <el-form v-if="status==='login'" :model="login" :rules="loginRules" ref="login" label-width="100px" class="demo-ruleForm">
+      <el-form v-if="status==='login'" :model="login" :rules="loginRules" ref="login" label-width="100px" class="demo-ruleForm" @keyup.enter.native="submitForm('login')">
         <el-form-item prop="checkName">
-          <el-input size="large" class="login-input" v-model="login.username" placeholder="用户名"></el-input>
+          <el-input size="large" class="login-input" v-model="login.username" placeholder="用户名" ></el-input>
         </el-form-item>
         <el-form-item prop="checkPass">
-          <el-input size="large" class="login-input" type="password" v-model="login.password" placeholder="密码"></el-input>
+          <el-input size="large" class="login-input" type="password" v-model="login.password" placeholder="密码" ></el-input>
         </el-form-item>
         <el-form-item>
           <el-button type="primary" class="login-submit" @click="submitForm('login')">登陆</el-button>
@@ -32,7 +32,7 @@
         </el-form-item>
         <p class="login-desc">6-20位字符，区分大小写</p>
         <el-form-item>
-          <el-button type="primary" class="login-submit" @click="submitForm('register')">注册</el-button>
+          <el-button type="primary" class="login-submit" @click="submitForm('register')" @keyup.up="submitForm('register')">注册</el-button>
         </el-form-item>
       </el-form>
     </div>
@@ -136,6 +136,9 @@ export default {
     },
     loginStatus(status) {
       this.status = status
+    },
+    show(event){
+      console.log('event')
     }
   }
 }

@@ -68,7 +68,6 @@ export default {
                         value: each
                       });
                     }, this);
-
                   }
                 }
                 this.extractResult = list

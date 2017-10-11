@@ -123,6 +123,9 @@ export default {
       }, {
         value: 2,
         label: '等待开始'
+      },{
+        value: 3,
+        label: '停止中'
       }, {
         value: 4,
         label: '已经结束'
@@ -231,6 +234,9 @@ export default {
         case 2:
           result = "等待开始"
           break;
+        case 3:
+          result = "停止中"
+          break;
         case 4:
           result = "已经结束"
           break;
@@ -254,6 +260,10 @@ export default {
     notStart(status) {
       //未开始
       return status == 0;
+    },
+    isPause(status) {
+      //停止中
+      return status == 3;
     },
     readyToStart(status) {
       //等待开始

@@ -5,7 +5,7 @@
     </div>
     <el-form :inline="true" :rules="rules" :model="ruleDiscription" ref="ruleDiscriptionForm" class="rule-discription-form" label-width="100px">
       <el-form-item label="规则名称：" prop="ruleName">
-        <el-input v-model="ruleDiscription.ruleName" placeholder="请输入" size="small"></el-input>
+        <span>{{ruleDiscription.ruleName}}</span>
       </el-form-item>
       <el-form-item label="设为公开：">
         <el-radio-group v-model="ruleDiscription.isPublic">
@@ -22,7 +22,7 @@
         <el-form :model="domain" ref="rulePropertyForm" :rules="rules" class="rule-property-form" label-width="100px">
           <div class="inline-form">
             <el-form-item label="属性名称：" prop="attribute">
-              <el-input v-model="domain.attribute" placeholder="请输入" size="small"></el-input>
+              <el-input v-model="domain.attribute" placeholder="请输入"></el-input>
             </el-form-item>
             <el-form-item label="只匹配一次："  prop="matchOne">
               <el-radio-group v-model="domain.matchOne">
@@ -36,8 +36,8 @@
           </el-form-item>
           <el-form-item label="匹配规则：" prop="matchRule">
             <codemirror v-model="domain.matchRule" :options="options" placeholder="请输入内容"></codemirror>
-            <p class="config-content-desc">*匹配规则与触发规则必填一项</p>
           </el-form-item>
+            <p class="config-content-desc">*匹配规则与触发规则必填一项</p>
         </el-form>
       </div>
       <el-button v-if="propertyDomains.length>1" @click="removePropertyDomain(domain)" class="inline-button" type="primary" icon="minus" size="small"></el-button>

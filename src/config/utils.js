@@ -17,7 +17,7 @@ export default {
             if (response.error) {
                 Notification({
                     message: response.errorMessage,
-                    type: 'warnning',
+                    type: 'warning',
                     duration: 1000,
                     offset: 200
                 });

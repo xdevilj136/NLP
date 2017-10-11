@@ -28,7 +28,7 @@
       </div>
     </div>
     <div class="clearfix mgt15">
-      <span class="detail-left-label">输入数据:</span>
+      <span class="detail-left-label">数据名称:</span>
       <div class="detail-right-content-box">
         <el-select v-model="task.inputSourceId" class="input" placeholder="请选择" size="small">
           <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value">
@@ -37,7 +37,7 @@
       </div>
     </div>
     <div class="clearfix mgt15">
-      <span class="detail-left-label">输出目标:</span>
+      <span class="detail-left-label">目标列:</span>
       <div class="detail-right-content-box">
         <el-select v-model="task.outputSourceId" class="input" placeholder="请选择" size="small">
           <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value">
@@ -167,7 +167,7 @@ export default {
           newTask.extractConfigId=this.task.extractConfigId;
         }
         newTask.inputSourceId=1;
-        newTask.outputSourceId=1;
+        newTask.inputConfig="{\"column\":2}";
         newTask.service=0;
 
         this.createTaskRequest(newTask);
@@ -188,7 +188,7 @@ export default {
           newTask.extractConfigId=1;
         }
         newTask.inputSourceId=1;
-        newTask.outputSourceId=1;
+        newTask.inputConfig="{\"column\":2}";
         newTask.service=0;
         newTask.id=Number(this.$route.params.id);
 

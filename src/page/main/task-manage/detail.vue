@@ -156,6 +156,9 @@ export default {
         case 2:
           result = "等待开始"
           break;
+        case 2:
+          result = "停止中"
+          break;
         case 4:
           result = "已经结束"
           break;

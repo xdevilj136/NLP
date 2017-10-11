@@ -13,7 +13,10 @@ export default {
 	logOut({}, data) {
 		service.logOut(data)
 	},
-
+	//修改密码
+	changePassword({}, data){
+		service.changePassword(data)
+	},
 	/*
 		信息抽取配置
 	*/

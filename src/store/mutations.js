@@ -13,6 +13,7 @@ const ANALYSIS_GET = 'ANALYSIS_GET'
 const LOGIN_CHECK = 'LOGIN_CHECK'
 const LOGIN = 'LOGIN'
 const LOGOUT = 'LOGOUT'
+const CHANGE_PASSWORD='CHANGE_PASSWORD'
 const DATA_SOURCE = 'DATA_SOURCE'
 const CREATE_RULE_REQUEST = 'CREATE_RULE_REQUEST'
 const UPDATE_RULE_REQUEST = 'UPDATE_RULE_REQUEST'
@@ -33,6 +34,10 @@ export default {
 	//logout
 	[LOGOUT](state, data) {
 		state.isLogout = data
+	},
+	//修改密码
+	[CHANGE_PASSWORD](state,data){
+		state.changePasswordResponse=data
 	},
 	// 获取信息抽取配置
 	[INFO_CONFIG](state, data) {

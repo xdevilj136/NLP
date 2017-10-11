@@ -13,6 +13,9 @@ export default {
 	logOut(data) {
 		ajax('GET', '/api/logout',  {},'LOGOUT');
 	},
+	changePassword(data){
+		ajax('POST', '/api/user/changePwd',  data,'CHANGE_PASSWORD');
+	},
 	/*
 		信心抽取配置
 	*/

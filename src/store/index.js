@@ -12,6 +12,7 @@ const state = {
 	isCheck:'',
 	isLogin: '',
 	isLogout: '',
+	changePasswordResponse:{},
 	createTaskResponse:{},
 	updateTaskResponse:{},
 	stopTaskResponse:{},

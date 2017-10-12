@@ -35,6 +35,9 @@ export default [{
             path: 'data-source-config',
             component : r => require.ensure([], () => r(require('../page/main/data-source-config/index')), 'data-source-config')
         },{
+            path: 'data-source-config/create',
+            component : r => require.ensure([], () => r(require('../page/main/data-source-config/create')), 'data-source-config-create')
+        },{
             path: 'authority-manage',
             component : r => require.ensure([], () => r(require('../page/main/authority-manage/index')), 'authority-manage')
         }, {

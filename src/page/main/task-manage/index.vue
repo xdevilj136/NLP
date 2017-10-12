@@ -35,7 +35,7 @@
         <el-button type="primary" @click="createTask" size="small">新增任务</el-button>
       </div>
     </div>
-    <el-table :data="taskList" border class="data-table" :default-sort="{prop: 'time', order: 'descending'}">
+    <el-table :data="taskList" border class="data-table" :default-sort="{prop: 'ctime', order: 'descending'}">
       <el-table-column prop="name" label="任务名称" min-width="230px">
         <template scope="scope">
           <router-link :to="'/main/task-manage/detail/' + scope.row.id">{{ scope.row.name }}</router-link>

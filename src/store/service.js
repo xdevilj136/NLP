@@ -124,13 +124,13 @@ export default {
 		var data = [
 			{
 				name: 'oracle审批意见表',
-				type: '192.1.1.1',
-				information: '50051'
+				type: 'excel',
+				ctime: '2016-09-21'
 			},
 			{
 				name: 'sql审批意见表',
-				type: '192.1.1.1',
-				information: '50051'
+				type: 'txt',
+				ctime: '2016-09-20'
 			}
 		]
 		return data;

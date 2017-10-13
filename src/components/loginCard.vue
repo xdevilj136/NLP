@@ -3,8 +3,8 @@
     <div class="login-content-box">
       <div class="login-title">
         <span :class="['login-head',{'active':status==='login'}]" @click="loginStatus('login')">登陆</span>
-        <span>•</span>
-        <span :class="['login-head',{'active':status==='register'}]" @click="loginStatus('register')">注册</span>
+        <!-- <span>•</span> -->
+        <!-- <span :class="['login-head',{'active':status==='register'}]" @click="loginStatus('register')">注册</span> -->
       </div>
       <el-form v-if="status==='login'" :model="login" :rules="loginRules" ref="login" label-width="100px" class="demo-ruleForm" @keyup.enter.native="submitForm('login')">
         <el-form-item prop="checkName">
@@ -18,7 +18,7 @@
         </el-form-item>
       </el-form>
 
-      <el-form v-if="status==='register'" :model="register" :rules="registerRules" ref="register" label-width="100px" class="demo-ruleForm register-box">
+      <!-- <el-form v-if="status==='register'" :model="register" :rules="registerRules" ref="register" label-width="100px" class="demo-ruleForm register-box">
         <el-form-item prop="checkRegisterName">
           <el-input size="large" class="login-input" v-model="register.username" placeholder="用户名"></el-input>
         </el-form-item>
@@ -34,7 +34,7 @@
         <el-form-item>
           <el-button type="primary" class="login-submit" @click="submitForm('register')" @keyup.up="submitForm('register')">注册</el-button>
         </el-form-item>
-      </el-form>
+      </el-form> -->
     </div>
   </div>
 </template>

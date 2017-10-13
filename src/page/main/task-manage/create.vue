@@ -215,11 +215,11 @@ export default {
     height: 36px;
     line-height: 36px;
     float: left;
-    width: 80px;
+    width: 100px;
   }
   .detail-right-content-box {
     float: left;
-    width: calc(~"100% - 80px");
+    width: calc(~"100% - 100px");
     .input {
       width: 250px;
     }

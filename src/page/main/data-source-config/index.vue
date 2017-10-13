@@ -29,10 +29,10 @@
 		</div>
 
 		<el-table :data="dataSource" class="data-table" border :default-sort="{prop: 'ctime', order: 'descending'}">
-			<el-table-column prop="name" label="数据名称"></el-table-column>
-			<el-table-column prop="type" label="数据源类型"></el-table-column>
+			<el-table-column prop="name" label="数据名称" min-width="200px"></el-table-column>
+			<el-table-column prop="type" label="数据源类型" min-width="100px"></el-table-column>
 			<el-table-column prop="ctime" label="创建日期" :sortable="true" min-width="200px"></el-table-column>
-			<el-table-column label="操作" min-width="230px">
+			<el-table-column label="操作" min-width="130px">
 				<template scope="scope">
 					<div class="toolbar">
 						<el-button type="text" @click="editSource(scope.row.id)">编辑</el-button>

@@ -134,6 +134,14 @@ export default {
 			}
 		]
 		return data;
+	},
+	//创建数据源
+	createDataSourceWithUpload(data){
+		ajax('POST', '/api/inputSource/createWithUpload', data, 'CREATE_DATA_SOURCE');
+	},
+	//预览数据源
+	previewDataSource(data){
+		ajax('POST', '/api/inputSource/overview', data, 'PREVIEW_DATA_SOURCE');
 	}
 };
 // 去重操作

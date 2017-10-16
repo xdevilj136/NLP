@@ -88,6 +88,14 @@ export default {
 		let data = service.dataSource()
 		commit('DATA_SOURCE', data)
 	},
+	//创建数据源
+	createDataSourceWithUpload({},data){
+		service.createDataSourceWithUpload(data)
+	},
+	//预览数据源
+	previewDataSource({},data){
+		service.previewDataSource(data)
+	},
 
 	/*
 		功能展示接口

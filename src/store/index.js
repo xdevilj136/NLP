@@ -31,7 +31,9 @@ const state = {
 	companyStd:{},//机构名标准化
 	companySegment:{},//机构名识别
 	analysisData: {}, // 词法分析数据
-	createRuleResponse:{}//创建规则响应
+	createRuleResponse:{},//创建规则响应
+	createDataSourceResponse:{},//创建数据源响应
+	previewDataSourceResponse:{}//预览数据源响应
 }
 
 export default new Vuex.Store({

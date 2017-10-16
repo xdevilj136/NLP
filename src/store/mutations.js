@@ -21,6 +21,8 @@ const PROCESS_COMPANY_SEGMENT = 'PROCESS_COMPANY_SEGMENT'
 const PROCESS_COMPANY_STD = 'PROCESS_COMPANY_STD'
 const DELETE_CONFIG_RULE = 'DELETE_CONFIG_RULE'
 const CONFIG_RULE = 'CONFIG_RULE'
+const CREATE_DATA_SOURCE='CREATE_DATA_SOURCE'
+const PREVIEW_DATA_SOURCE='PREVIEW_DATA_SOURCE'
 
 export default {
 	//login
@@ -114,6 +116,15 @@ export default {
 	//机构名识别
 	[PROCESS_COMPANY_SEGMENT](state, data) {
 		state.companySegment = data
-	}
+	},
+	//创建数据源
+	[CREATE_DATA_SOURCE](state, data) {
+		state.createDataSourceResponse = data
+	},
+	//预览数据源
+	[PREVIEW_DATA_SOURCE](state, data) {
+		state.previewDataSourceResponse = data
+	},
+	
 
 }

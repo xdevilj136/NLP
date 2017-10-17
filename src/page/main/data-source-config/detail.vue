@@ -3,7 +3,7 @@
         <div class="title-show-box">
             <el-breadcrumb class="breadcrumb" separator="/">
                 <el-breadcrumb-item :to="{ path: '/main/data-source-config' }">数据源配置</el-breadcrumb-item>
-                <el-breadcrumb-item>配置数据</el-breadcrumb-item>
+                <el-breadcrumb-item>数据详情</el-breadcrumb-item>
             </el-breadcrumb>
         </div>
         <div class="clearfix mgt15">
@@ -149,23 +149,22 @@ export default {
     },
     computed: {
         ...mapState([
-            'createDataSourceResponse',
-            'previewDataSourceResponse'
+            'singleDataSource'
         ])
     },
     watch: {
-
-        // updateTaskResponse: function(response) {
-        //   utils.notifyResponse(response,()=>this.$router.go(-1))
-        // },
-
+        singleDataSource: function(singleDataSource) {
+            if (singleDataSource.result) {
+                this.detail = Object.assign({}, singleDataSource.result)
+            }
+        }
     },
     created() {
+        this.queryDataSourceById(this.$route.params.id)
     },
     methods: {
         ...mapActions([
-            'createDataSourceWithUpload',
-            'previewDataSource'
+            'queryDataSourceById'
         ]),
         goBack() {
             this.$router.go(-1)

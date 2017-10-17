@@ -13,16 +13,17 @@ const ANALYSIS_GET = 'ANALYSIS_GET'
 const LOGIN_CHECK = 'LOGIN_CHECK'
 const LOGIN = 'LOGIN'
 const LOGOUT = 'LOGOUT'
-const CHANGE_PASSWORD='CHANGE_PASSWORD'
+const CHANGE_PASSWORD = 'CHANGE_PASSWORD'
 const DATA_SOURCE = 'DATA_SOURCE'
+const SINGLE_DATA_SOURCE = 'SINGLE_DATA_SOURCE'
 const CREATE_RULE_REQUEST = 'CREATE_RULE_REQUEST'
 const UPDATE_RULE_REQUEST = 'UPDATE_RULE_REQUEST'
 const PROCESS_COMPANY_SEGMENT = 'PROCESS_COMPANY_SEGMENT'
 const PROCESS_COMPANY_STD = 'PROCESS_COMPANY_STD'
 const DELETE_CONFIG_RULE = 'DELETE_CONFIG_RULE'
 const CONFIG_RULE = 'CONFIG_RULE'
-const CREATE_DATA_SOURCE='CREATE_DATA_SOURCE'
-const PREVIEW_DATA_SOURCE='PREVIEW_DATA_SOURCE'
+const CREATE_DATA_SOURCE = 'CREATE_DATA_SOURCE'
+const PREVIEW_DATA_SOURCE = 'PREVIEW_DATA_SOURCE'
 
 export default {
 	//login
@@ -38,8 +39,8 @@ export default {
 		state.isLogout = data
 	},
 	//修改密码
-	[CHANGE_PASSWORD](state,data){
-		state.changePasswordResponse=data
+	[CHANGE_PASSWORD](state, data) {
+		state.changePasswordResponse = data
 	},
 	// 获取信息抽取配置
 	[INFO_CONFIG](state, data) {
@@ -97,10 +98,7 @@ export default {
 	[AUTHORITY_MANAGE](state, data) {
 		state.authorityManage = data
 	},
-	//获取数据源
-	[DATA_SOURCE](state, data) {
-		state.dataSource = data
-	},
+
 	// 信息抽取处理
 	[DATA_EXTRACT](state, data) {
 		state.extractedData = data
@@ -121,10 +119,18 @@ export default {
 	[CREATE_DATA_SOURCE](state, data) {
 		state.createDataSourceResponse = data
 	},
+	//获取数据源
+	[DATA_SOURCE](state, data) {
+		state.dataSource = data
+	},
+	//查询单个数据源配置
+	[SINGLE_DATA_SOURCE](state, data) {
+		state.singleDataSource = data
+	},
 	//预览数据源
 	[PREVIEW_DATA_SOURCE](state, data) {
 		state.previewDataSourceResponse = data
 	},
-	
+
 
 }

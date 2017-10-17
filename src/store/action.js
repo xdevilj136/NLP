@@ -83,10 +83,12 @@ export default {
 		let data = service.authorityManage()
 		commit('AUTHORITY_MANAGE', data)
 	},
+	/*
+		数据源配置
+	*/
 	//获取数据源
-	getDataSource({ commit, state }) {
-		let data = service.dataSource()
-		commit('DATA_SOURCE', data)
+	getDataSource({ },params) {
+		service.dataSource(params)
 	},
 	//创建数据源
 	createDataSourceWithUpload({},data){
@@ -95,6 +97,10 @@ export default {
 	//预览数据源
 	previewDataSource({},data){
 		service.previewDataSource(data)
+	},
+	//根据id查询单个数据源配置
+	queryDataSourceById({},id){
+		service.queryDataSourceById(id)
 	},
 
 	/*

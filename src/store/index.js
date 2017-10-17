@@ -23,6 +23,7 @@ const state = {
 	taskLog:{},
 	authorityManage:[],
 	dataSource:[],
+	singleDataSource:{},
 	configList: [], // 配置list
 	configRule:{},
 	deleteRuleResponse:{},

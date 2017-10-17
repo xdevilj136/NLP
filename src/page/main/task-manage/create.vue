@@ -30,17 +30,17 @@
     <div class="clearfix mgt15">
       <span class="detail-left-label">数据名称:</span>
       <div class="detail-right-content-box">
-        <el-select v-model="task.inputSourceId" class="input" placeholder="请选择" size="small">
-          <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value">
+        <el-select v-model="task.dataSourceIndex" class="input" placeholder="请选择" size="small">
+          <el-option v-for="(item,index) in DataSourceOptions" :key="index" :label="item.name" :value="index">
           </el-option>
         </el-select>
       </div>
     </div>
-    <div class="clearfix mgt15">
+    <div v-if="targetColumnShow" class="clearfix mgt15">
       <span class="detail-left-label">目标列:</span>
       <div class="detail-right-content-box">
-        <el-select v-model="task.outputSourceId" class="input" placeholder="请选择" size="small">
-          <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value">
+        <el-select v-model="task.targetColumn" class="input" placeholder="请选择" size="small">
+          <el-option v-for="item in columnOptions" :key="item.value" :label="item.label" :value="item.value">
           </el-option>
         </el-select>
       </div>
@@ -64,29 +64,27 @@ export default {
         name: '',
         type: '',
         extractConfigId: '',
-        input: '',
-        output: ''
+        dataSourceIndex: '',
+        targetColumn: ''
       },
-      options: [{
-        value: '选项1',
-        label: '黄金糕'
+      //目标列
+      columnOptions: [{
+        value: 1,
+        label: 1
       }, {
-        value: '选项2',
-        label: '双皮奶'
+        value: 2,
+        label: 2
       }, {
-        value: '选项3',
-        label: '蚵仔煎'
+        value: 3,
+        label: 3
       }, {
-        value: '选项4',
-        label: '龙须面'
+        value: 4,
+        label: 4
       }, {
-        value: '选项5',
-        label: '北京烤鸭'
+        value: 5,
+        label: 5
       }],
       taskTypeOptions: [{
-        value: 3,
-        label: '信息抽取'
-      }, {
         value: 0,
         label: '中文分词'
       }, {
@@ -96,80 +94,122 @@ export default {
         value: 2,
         label: '实体识别'
       }, {
+        value: 3,
+        label: '信息抽取'
+      }, {
+        value: 4,
+        label: '机构名识别'
+      }, {
         value: 5,
         label: '机构名标准化'
       }, {
-        value: '机构名识别',
-        label: '机构名识别'
-      }, {
-        value: '未选中项目',
-        label: '未选中项目'
+        value: 9,
+        label: '招行授信报告解析'
       }],
-      ruleList:[]
+      //可选数据源（数据名称）
+      DataSourceOptions: [],
+      ruleList: []
     }
   },
-    computed: mapState([
-    'createTaskResponse',
-    'updateTaskResponse',
-    'configList',
-    'singleTask'
-  ]),
+  computed: {
+    ...mapState([
+      'createTaskResponse',
+      'updateTaskResponse',
+      'configList',
+      'singleTask',
+      'dataSource'
+    ]),
+    targetColumnShow: function() {
+      let selectedDataSource = this.DataSourceOptions[this.task.dataSourceIndex]
+      if (selectedDataSource && selectedDataSource.config) {
+        if (JSON.parse(selectedDataSource.config).inputType !== 'txt') {
+          return true
+        }
+      }
+      return false
+    }
+  },
   watch: {
     createTaskResponse: function(response) {
-      utils.notifyResponse(response,()=>this.$router.go(-1))
+      utils.notifyResponse(response, () => this.$router.go(-1))
     },
     updateTaskResponse: function(response) {
-      utils.notifyResponse(response,()=>this.$router.go(-1))
+      utils.notifyResponse(response, () => this.$router.go(-1))
     },
     configList: function(configList) {
-      if (configList.result&&configList.result.list) {
+      if (configList.result && configList.result.list) {
         this.ruleList = this.configList.result.list
       }
     },
-    singleTask:function(singleTask){
+    singleTask: function(singleTask) {
       if (singleTask.result) {
-        this.task = Object.assign({}, this.singleTask.result);
+        this.task = Object.assign(this.task, this.singleTask.result);
+        this.DataSourceOptions.forEach(function(element, index) {
+          if (element.id == this.task.inputSourceId) {
+            this.task.dataSourceIndex = index
+          }
+        }, this);
+        if (this.task.inputConfig) {
+          this.task.targetColumn = JSON.parse(this.task.inputConfig).column
+        }
+      }
+    },
+    dataSource: function(data) {
+      if (data.result && data.result.list) {
+        this.DataSourceOptions = data.result.list
+        if (this.$route.name == 'task-manage-edit') {
+          this.queryTaskById(this.$route.params.id)
+        }
       }
     }
   },
   created() {
-    this.getInfoConfig();
-    if (this.$route.name == 'task-manage-edit') {
-      this.queryTaskById(this.$route.params.id);
-    }
+    this.getDataSource()
+    this.getInfoConfig()
   },
   methods: {
     ...mapActions([
       'createTaskRequest',
       'updateTaskRequest',
       'getInfoConfig',
-      'queryTaskById'
-      ]),
+      'queryTaskById',
+      'getDataSource'
+    ]),
     goBack() {
       this.$router.go(-1)
     },
-    submitValidate(){
-      let valid=true;
-      if(this.task.name===''||this.task.type===''||this.task.inputSourceId===''||this.task.inputSourceId===''){
-        valid=false;
+    submitValidate() {
+      let valid = true;
+      if (this.task.name === '' || this.task.type === '' || this.task.dataSourceIndex === '') {
+        valid = false;
       }
-      if(this.task.type&&this.task.extractConfigId===''){
-        valid=false;
+      if (this.task.type == 3 && this.task.extractConfigId === '') {
+        valid = false;
+      }
+      if (this.targetColumnShow && this.task.targetColumn == '') {
+        valid = false
       }
       return valid;
     },
-    createTask(){
+    generateNewTask() {
+      let newTask = {};
+      newTask.name = this.task.name.trim();
+      newTask.type = this.task.type;
+      if (newTask.type == 3) {
+        newTask.extractConfigId = this.task.extractConfigId;
+      }
+      newTask.inputSourceId = this.DataSourceOptions[this.task.dataSourceIndex].id;
+      if (this.targetColumnShow) {
+        newTask.inputConfig = JSON.stringify({
+          column: this.task.targetColumn
+        })
+      }
+      newTask.service = 0;
+      return newTask
+    },
+    createTask() {
       if (this.submitValidate()) {
-        var newTask={};
-        newTask.name=this.task.name.trim();
-        newTask.type=this.task.type;
-        if(newTask.type==3){
-          newTask.extractConfigId=this.task.extractConfigId;
-        }
-        newTask.inputSourceId=1;
-        newTask.inputConfig="{\"column\":2}";
-        newTask.service=0;
-
+        let newTask = this.generateNewTask()
         this.createTaskRequest(newTask);
       } else {
         this.$alert('请输入或选择数据', '提示', {
@@ -181,17 +221,8 @@ export default {
     },
     saveTask() {
       if (this.submitValidate()) {
-        var newTask={};
-        newTask.name=this.task.name.trim();
-        newTask.type=this.task.type;
-        if(newTask.type==3){
-          newTask.extractConfigId=1;
-        }
-        newTask.inputSourceId=1;
-        newTask.inputConfig="{\"column\":2}";
-        newTask.service=0;
-        newTask.id=Number(this.$route.params.id);
-
+        let newTask = this.generateNewTask()
+        newTask.id = Number(this.$route.params.id);
         this.updateTaskRequest(newTask);
       } else {
         this.$alert('请输入或选择数据', '提示', {

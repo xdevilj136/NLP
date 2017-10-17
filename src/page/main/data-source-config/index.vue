@@ -28,45 +28,25 @@
 			</div>
 		</div>
 
-		<el-table :data="dataSource" class="data-table" border :default-sort="{prop: 'ctime', order: 'descending'}">
-			<el-table-column prop="name" label="数据名称" min-width="200px"></el-table-column>
-			<el-table-column prop="type" label="数据源类型" min-width="100px"></el-table-column>
-			<el-table-column prop="ctime" label="创建日期" :sortable="true" min-width="200px"></el-table-column>
+		<el-table :data="dataSourceList" class="data-table" border :default-sort="{prop: 'ctime', order: 'descending'}">
+			<el-table-column prop="name" label="数据名称" min-width="200px">
+
+	<template scope="scope">
+		<router-link :to="'/main/data-source-config/detail/' + scope.row.id">{{ scope.row.name }}</router-link>
+	</template>
+
+			</el-table-column>
+			<el-table-column prop="inputType" label="数据源类型" min-width="100px"></el-table-column>
+			<el-table-column prop="utime" label="创建日期" :sortable="true" min-width="200px"></el-table-column>
 			<el-table-column label="操作" min-width="130px">
 				<template scope="scope">
 					<div class="toolbar">
-						<el-button type="text" @click="editSource(scope.row.id)">编辑</el-button>
+						<el-button type="text" :disabled="!scope.row.editable" @click="editSource(scope.row.id)">编辑</el-button>
 						<el-button type="text" @click="deleteSource(scope.row)">删除</el-button>
 					</div>
 				</template>
 			</el-table-column>
 		</el-table>
-		<!-- <div class="sub-title">
-					<span>新增数据源</span>
-				</div>
-				<div class="image-card-container">
-					<el-card  :body-style="{ padding: '0' }" class="image-card">
-						<img src="../../../images/natural-language/mysql.png" class="image">
-					</el-card>
-					<el-card :body-style="{ padding: '0' }" class="image-card">
-						<img src="../../../images/natural-language/excel.png" class="image">
-					</el-card>
-					<el-card  :body-style="{ padding: '0' }" class="image-card">
-						<img src="../../../images/natural-language/oracle.png" class="image">
-					</el-card>
-					<el-card  :body-style="{ padding: '0' }" class="image-card">
-						<img src="../../../images/natural-language/csv.png" class="image">
-					</el-card>
-					<el-card :body-style="{ padding: '0' }" class="image-card">
-						<img src="../../../images/natural-language/hive.png" class="image">
-					</el-card>
-					<el-card  :body-style="{ padding: '0' }" class="image-card">
-						<img src="../../../images/natural-language/sqlserver.png" class="image">
-					</el-card>
-					<el-card  :body-style="{ padding: '0' }" class="image-card">
-						<img src="../../../images/natural-language/postgreSOL.png" class="image">
-					</el-card>
-				</div> -->
 	</div>
 </template>
 <script type="text/javascript">
@@ -83,6 +63,7 @@ export default {
 				currentPage: '',
 				pageSize: ''
 			},
+			dataSourceList:[],
 			//查询条件
 			timeRangeOptions: [{
 				value: 'oneMonth',
@@ -117,22 +98,17 @@ export default {
 				label: 'CSV'
 			}
 			]
-			// newDataSource: [
-			// 	{
-			// 		id: 1,
-			// 		imageLocation: '/../../../images/natural-language/mysql.png'
-			// 	}, {
-			// 		id: 2,
-			// 		imageLocation: '../../../images/natural-language/excel.png'
-			// 	}, {
-			// 		id: 3,
-			// 		imageLocation: '../../../images/natural-language/oracle.png'
-			// 	}
-			// ]
-
 		}
 	},
 	computed: mapState(['dataSource']),
+	watch:{
+		dataSource: function(data) {
+			if (data.result && data.result.list) {
+				this.dataSourceList = data.result.list
+				// this.totalCount = data.result.count
+			}
+		}
+	},
 	methods: {
 		...mapActions([
 			'getDataSource'

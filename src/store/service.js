@@ -68,7 +68,7 @@ export default {
 	},
 	//修改任务
 	updateTaskRequest(task) {
-		ajax('POST', '/api/task/edit', task, 'DELETE_TASK_REQUEST');
+		ajax('POST', '/api/task/edit', task, 'UPDATE_TASK_REQUEST');
 	},
 	//开始任务
 	startTaskRequest(id) {
@@ -119,21 +119,14 @@ export default {
 		}];
 		return data;
 	},
-	//获取数据源
-	dataSource() {
-		var data = [
-			{
-				name: 'oracle审批意见表',
-				type: 'Excel',
-				ctime: '2016-09-21 08:30:10'
-			},
-			{
-				name: 'sql审批意见表',
-				type: '文本文件',
-				ctime: '2016-09-20 08:30:10'
-			}
-		]
-		return data;
+	//获取数据源列表
+	dataSource(params) {
+		ajax('GET', '/api/inputSource/query', params, 'DATA_SOURCE');
+		
+	},
+	//查询单个数据源配置
+	queryDataSourceById(id){
+		ajax('GET', '/api/inputSource/queryById', {id:id}, 'SINGLE_DATA_SOURCE');
 	},
 	//创建数据源
 	createDataSourceWithUpload(data){

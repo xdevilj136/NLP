@@ -116,7 +116,7 @@ export default {
     isLogin: function(isLogin) {
       console.log(isLogin)
       if (isLogin) {
-        this.$router.push('/main')
+        this.$router.push('/main',this.login.name)
       }
     }
   },

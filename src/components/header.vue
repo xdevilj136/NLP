@@ -59,14 +59,16 @@ export default {
     }
   },
   data(){
-        return {
+    return {
       dialogVisible: false,
       oldPassword: '',
-      newPassword:'',
-      confirmNewPassword:''
-        }
+      newPassword: '',
+      confirmNewPassword: ''
+    }
   },
   created() {
+    console.log('head')
+    console.log(this.$route)
   },
   methods: {
     ...mapActions([

@@ -5,7 +5,7 @@
     </div>
     <el-form :inline="true" :rules="rules" :model="ruleDiscription" ref="ruleDiscriptionForm" class="rule-discription-form" label-width="100px">
       <el-form-item label="规则名称：" prop="ruleName">
-        <span>{{ruleDiscription.ruleName}}</span>
+          <el-input v-model="ruleDiscription.ruleName" :disabled="$route.name=='info-extra-edit'" placeholder="请输入"></el-input>
       </el-form-item>
       <el-form-item label="设为公开：">
         <el-radio-group v-model="ruleDiscription.isPublic">

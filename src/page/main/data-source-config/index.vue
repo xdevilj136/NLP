@@ -210,10 +210,6 @@ export default {
 			this.$router.push('/main/data-source-config/create')
 		},
 		//翻页控件
-		pageSizeChange() {
-
-		},
-
 		currentPageChange(currentPage) {
 			this.currentPage = currentPage
 			this.latestSearch.currentPage = currentPage - 1

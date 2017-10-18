@@ -78,10 +78,9 @@ export default {
 	},
 	/*
 	*/
-	//获取权限管理数据
-	getAuthorityManage({ commit, state }) {
-		let data = service.authorityManage()
-		commit('AUTHORITY_MANAGE', data)
+	//获取用户列表数据
+	getAuthorityManage({},params) {
+		service.authorityManage(params)
 	},
 	/*
 		数据源配置

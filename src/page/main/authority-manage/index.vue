@@ -1,7 +1,7 @@
 <template>
   <div class="right-content">
     <div class="title-show-box">用户与权限管理</div>
-    <el-table :data="authorityManage" border class="data-table">
+    <el-table :data="userList" border class="data-table">
       <el-table-column prop="username" label="用户名">
       </el-table-column>
       <el-table-column prop="authority" label="权限">
@@ -15,10 +15,10 @@
         </template>
       </el-table-column>
     </el-table>
-    <div class="block">
-      <el-pagination layout="prev, pager, next" @current-change="handleCurrentChange" :total="1000">
-      </el-pagination>
-    </div>
+		<div class="block">
+			<el-pagination @size-change="pageSizeChange" @current-change="currentPageChange" :current-page="currentPage" :page-sizes="[5, 10,50, 100]" :page-size="pageSize" :total="totalCount" layout=" prev, pager, next, sizes, jumper">
+			</el-pagination>
+		</div>
     <el-dialog :title="dialogTitle" :visible.sync="dialogVisible" size="tiny" :modal="true" :modal-append-to-body="false">
       <div v-if="dialogType==='deleteDialog'">
         <span>删除后，该用户需要重新注册才能使用平台。</span>
@@ -55,7 +55,7 @@ export default {
   name: 'authority-manage',
   data() {
     return {
-      authorityManageData: this.getAuthorityManage(),
+      userList:[],
       dialogVisible: false,
       dialogTitle: "",
       //编辑对话框、删除对话框
@@ -65,15 +65,26 @@ export default {
         statusRadio: ""
       },
       //操作表格行索引
-      operateRowIndex: ""
+      operateRowIndex: "",
+      //翻页相关
+			currentPage: 1,
+			pageSize: 10,
+			totalCount: 10,
     }
   },
   computed: mapState(['authorityManage']),
 
   watch: {
+    authorityManage:function(data){
+      if (data.result && data.result.list) {
+				this.userList = data.result.list
+				this.totalCount = data.result.count
+			}
+    }
 
   },
   created() {
+    this.getAuthorityManage()
   },
   methods: {
         ...mapActions([
@@ -93,22 +104,31 @@ export default {
       this.editForm.statusRadio = row.status == "已激活" ? "active" : "notActive";
       this.operateRowIndex = index;
     },
-    handleCurrentChange(page) {
-    },
     //编辑对话框确认
     dialogConfirm() {
       if (this.dialogType == "deleteDialog") {
-        this.authorityManage.splice(this.operateRowIndex, 1);
+        this.userList.splice(this.operateRowIndex, 1);
       }
       else if (this.dialogType == "editDialog") {
-        let operateRow = this.authorityManage[this.operateRowIndex];
+        let operateRow = this.userList[this.operateRowIndex];
         let authority = this.editForm.authorityRadio == "admin" ? "管理员" : "普通用户";
         let status = this.editForm.statusRadio == "active" ? "已激活" : "未激活";
         operateRow.authority = authority;
         operateRow.status = status;
       }
       this.dialogVisible = false;
-    }
+    },
+    		//翻页控件
+		currentPageChange(currentPage) {
+			// this.currentPage = currentPage
+			// this.latestSearch.currentPage = currentPage - 1
+			// this.refreshDataSource()
+		},
+		pageSizeChange(pageSize) {
+			// this.pageSize = pageSize
+			// this.latestSearch.pageSize = pageSize
+			// this.refreshDataSource()
+		},
   }
 }
 </script>
@@ -119,11 +139,49 @@ export default {
 }
 
 .right-content {
-  padding: 40px;
-  .block {
-    text-align: right;
-    margin-top: 30px
-  }
+	.searchBar {
+		& .el-select {
+			width: 150px;
+		}
+	}
+	.block {
+		text-align: right;
+		margin-top: 30px;
+	}
+	.el-pagination {
+		button,
+		input {
+			border: 1px solid #d1dbe5;
+			border-radius: 5px;
+		}
+		.el-input {
+			input {
+				border-radius: 5px;
+			}
+		}
+		.btn-next {
+			margin: 0 10px;
+		}
+		.el-pager {
+			li {
+				margin-left: 10px;
+				border: 1px solid #d1dbe5;
+				border-radius: 5px;
+			}
+		}
+	}
+	.toolbar {
+		button {
+			margin: 0;
+			&:after {
+				content: " |";
+				display: inline;
+			}
+			&:last-child:after {
+				display: none;
+			}
+		}
+	}
 }
 </style>
 

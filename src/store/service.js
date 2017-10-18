@@ -99,25 +99,26 @@ export default {
 	
 	*/
 	//获取权限管理数据
-	authorityManage() {
-		var data = [{
-			username: '张三',
-			authority: '管理员',
-			status: '已激活'
-		}, {
-			username: '李四',
-			authority: '普通用户',
-			status: '未激活'
-		}, {
-			username: '王五',
-			authority: '管理员',
-			status: '已激活'
-		}, {
-			username: '赵六',
-			authority: '普通用户',
-			status: '未激活'
-		}];
-		return data;
+	authorityManage(params) {
+		// var data = [{
+		// 	username: '张三',
+		// 	authority: '管理员',
+		// 	status: '已激活'
+		// }, {
+		// 	username: '李四',
+		// 	authority: '普通用户',
+		// 	status: '未激活'
+		// }, {
+		// 	username: '王五',
+		// 	authority: '管理员',
+		// 	status: '已激活'
+		// }, {
+		// 	username: '赵六',
+		// 	authority: '普通用户',
+		// 	status: '未激活'
+		// }];
+		// return data;
+		ajax('GET', '/api/user/viewUserList', params, 'AUTHORITY_MANAGE');
 	},
 	/**
 	 *	数据源配置

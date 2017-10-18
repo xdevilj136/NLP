@@ -68,23 +68,9 @@ export default {
         targetColumn: ''
       },
       //目标列
-      columnOptions: [{
-        value: 1,
-        label: 1
-      }, {
-        value: 2,
-        label: 2
-      }, {
-        value: 3,
-        label: 3
-      }, {
-        value: 4,
-        label: 4
-      }, {
-        value: 5,
-        label: 5
-      }],
-      taskTypeOptions: [{
+      columnOptions: [],
+      taskTypeOptions: [
+      {
         value: 0,
         label: '中文分词'
       }, {
@@ -97,12 +83,12 @@ export default {
         value: 3,
         label: '信息抽取'
       }, {
-        value: 4,
-        label: '机构名识别'
-      }, {
         value: 5,
         label: '机构名标准化'
-      }, {
+      },{
+        value: 6,
+        label: '机构名识别'
+      },{
         value: 9,
         label: '招行授信报告解析'
       }],
@@ -123,6 +109,14 @@ export default {
       let selectedDataSource = this.DataSourceOptions[this.task.dataSourceIndex]
       if (selectedDataSource && selectedDataSource.config) {
         if (JSON.parse(selectedDataSource.config).inputType !== 'txt') {
+          let cols=JSON.parse(selectedDataSource.overview).cols
+          this.columnOptions=[]
+          for (var index = 0; index < cols; index++) {
+            this.columnOptions.push({
+              label:index+1,
+              value:index+1
+              })
+          }
           return true
         }
       }

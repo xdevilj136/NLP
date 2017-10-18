@@ -23,6 +23,8 @@ const PROCESS_COMPANY_STD = 'PROCESS_COMPANY_STD'
 const DELETE_CONFIG_RULE = 'DELETE_CONFIG_RULE'
 const CONFIG_RULE = 'CONFIG_RULE'
 const CREATE_DATA_SOURCE = 'CREATE_DATA_SOURCE'
+const UPDATE_DATA_SOURCE = 'UPDATE_DATA_SOURCE'
+const DELETE_DATA_SOURCE='DELETE_DATA_SOURCE'
 const PREVIEW_DATA_SOURCE = 'PREVIEW_DATA_SOURCE'
 
 export default {
@@ -118,6 +120,14 @@ export default {
 	//创建数据源
 	[CREATE_DATA_SOURCE](state, data) {
 		state.createDataSourceResponse = data
+	},
+	//修改数据源配置
+	[UPDATE_DATA_SOURCE](state, data) {
+		state.updateDataSourceResponse = data
+	},
+	//删除数据源配置
+	[DELETE_DATA_SOURCE](state, data) {
+		state.deleteDataSourceResponse = data
 	},
 	//获取数据源
 	[DATA_SOURCE](state, data) {

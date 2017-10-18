@@ -8,7 +8,7 @@
       </div>
       <div class="header-right-end fl">
         <img class="header-right-logo" src="../images/natural-language/head-logo.png">
-        <span>admin</span>
+        <span>{{username}}</span>
         <div class="user-menu">
           <i class="up-trig"></i>
           <li class="menu-item" @click="resetPassword">修改密码</li>
@@ -44,7 +44,7 @@ import utils from 'src/config/utils'
 export default {
   name: 'header',
   computed: {
-    ...mapState(['isLogin','changePasswordResponse']),
+    ...mapState(['isCheck','changePasswordResponse']),
     confirmError:function(){
       let result=false;
       if(this.newPassword.trim()&&this.confirmNewPassword.trim()&&this.newPassword!==this.confirmNewPassword){
@@ -56,10 +56,19 @@ export default {
   watch:{
     changePasswordResponse:function(response){
       utils.notifyResponse(response,()=>{this.dialogVisible=false})
+    },
+    isCheck:function(isCheck){
+      if(isCheck.error){
+        utils.notifyResponse(isCheck,()=>{},()=>{this.$route.push('/login')})
+      }
+      else if(isCheck.result){
+        this.username=isCheck.result.username
+      }
     }
   },
   data(){
     return {
+      username:'',
       dialogVisible: false,
       oldPassword: '',
       newPassword: '',
@@ -67,13 +76,15 @@ export default {
     }
   },
   created() {
-    console.log('head')
-    console.log(this.$route)
+      if(this.$route.path.indexOf('/main')!==-1){
+        this.loginCheck()
+      }
   },
   methods: {
     ...mapActions([
       'logOut',
-      'changePassword'
+      'changePassword',
+      'loginCheck'
     ]),
     logout() {
       this.logOut()

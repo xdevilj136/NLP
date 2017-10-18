@@ -119,6 +119,9 @@ export default {
 		}];
 		return data;
 	},
+	/**
+	 *	数据源配置
+	 */
 	//获取数据源列表
 	dataSource(params) {
 		ajax('GET', '/api/inputSource/query', params, 'DATA_SOURCE');
@@ -131,6 +134,12 @@ export default {
 	//创建数据源
 	createDataSourceWithUpload(data){
 		ajax('POST', '/api/inputSource/createWithUpload', data, 'CREATE_DATA_SOURCE');
+	},
+	updateDataSource(data){
+		ajax('POST', '/api/inputSource/edit', data, 'UPDATE_DATA_SOURCE');
+	},
+	deleteDataSource(id){
+		ajax('GET', '/api/inputSource/delete', {id:id}, 'DELETE_DATA_SOURCE');
 	},
 	//预览数据源
 	previewDataSource(data){

@@ -22,18 +22,18 @@
       <el-form-item label="总记录数：">
         <span class="detail-right-label">{{detail.outputCount}}</span>
       </el-form-item>
-      <el-form-item label="输出位置：">
-        <span class="detail-right-label">{{detail.outputPath}}</span>
+      <el-form-item >
+        <a class="common_a" href="javascript:void(0);" @click="download">下载输出文件</a>
       </el-form-item>
-    </el-form>
-
-    <div class="toolbar">
+          <div class="toolbar">
       <el-button v-if="indexMethods.canStart(detail.status)" :disabled="indexMethods.startDisabled(detail.status)" type="text" @click="startTask(detail.id)">开始</el-button>
       <el-button v-if="indexMethods.canStop(detail.status)" type="text" @click="stopTask(detail.id)">终止</el-button>
       <el-button type="text" :disabled="indexMethods.editDisabled(detail.status)" @click="editTask(detail.id)">编辑</el-button>
       <el-button type="text" @click="deleteTask(detail.name,detail.id)">删除</el-button>
       <el-button type="text" :disabled="indexMethods.showLogDisabled(detail.status)" @click="showTaskLog(detail.id)">查看日志</el-button>
     </div>
+    
+    </el-form>
   </div>
 </template>
 <script>
@@ -118,6 +118,10 @@ export default {
     },
     deleteDialogConfirm() {
       this.deleteTaskRequest(this.toDeleteTaskId);
+    },
+    //下载文件
+    download(){
+      window.open('api/task/output?id='+this.$route.params.id)
     }
   },
   filters: {
@@ -137,8 +141,15 @@ export default {
           result = "信息抽取"
           break;
         case 5:
-          result = "企业名称标准化"
+          result = "机构名标准化"
           break;
+        case 6:
+          result = "机构名识别"
+          break;
+        case 9:
+          result = "招行授信报告解析"
+          break;
+
         default:
           break;
       }
@@ -188,15 +199,17 @@ export default {
 </script>
 
 <style lang="less" scoped>
+.common_a{
+  text-decoration: underline;
+  color:#20a0ff;
+}
 .right-content {
   .breadcrumb {
     font-size: 16px;
     line-height: inherit;
   }
   .detail-form {
-    & .el-form-item {
-      margin: 0;
-    }
+    position: relative;
   }
   .detail-left-label {
     height: 36px;
@@ -209,10 +222,9 @@ export default {
     color: grey;
   }
   .toolbar {
-    position: absolute;
-    right: 40px;
-    top: 40px;
-    margin-top: 32px;
+      position: absolute;
+      right: 40px;
+      top: 5px;
     button {
       margin: 0;
       &:after {

@@ -17,18 +17,15 @@ export default {
         loginCard
     },
     created() {
-        this.loginCheck()
+        // this.loginCheck()
     },
     watch: {
-        isCheck: function(isCheck) {
-            if (isCheck) {
-                this.$router.push('/main')
-            }
-        }
-    },
-    computed: mapState(['isCheck']),
-    methods: {
-        ...mapActions(['loginCheck'])
+        // isCheck: function(isCheck) {
+        //     console.log(isCheck)
+        //     if (isCheck) {
+        //         this.$router.push('/main')
+        //     }
+        // }
     }
 
 }

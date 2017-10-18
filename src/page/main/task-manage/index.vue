@@ -91,25 +91,28 @@ export default {
         value: 'beyondOneYear',
         label: '一年以上'
       }],
-      taskTypeOptions: [{
+      taskTypeOptions: [
+      {
         value: 0,
         label: '中文分词'
-      },
-      {
+      }, {
         value: 1,
         label: '词性标注'
-      },
-      {
+      }, {
         value: 2,
         label: '实体识别'
-      },
-      {
+      }, {
         value: 3,
         label: '信息抽取'
-      },
-      {
+      }, {
         value: 5,
-        label: '企业名称标准化'
+        label: '机构名标准化'
+      },{
+        value: 6,
+        label: '机构名识别'
+      },{
+        value: 9,
+        label: '招行授信报告解析'
       }],
       taskStatusOptions: [{
         value: '',
@@ -214,8 +217,15 @@ export default {
           result = "信息抽取"
           break;
         case 5:
-          result = "企业名称标准化"
+          result = "机构名标准化"
           break;
+        case 6:
+          result = "机构名识别"
+          break;
+        case 9:
+          result = "招行授信报告解析"
+          break;
+
         default:
           break;
       }
@@ -338,7 +348,6 @@ export default {
     },
     //根据上一次查询条件刷新任务列表
     refreshTask() {
-      console.log(this.latestSearch)
       this.refreshTaskTable(this.latestSearch);
     },
     //新增任务
@@ -376,13 +385,11 @@ export default {
     },
     //翻页组件操作
     currentPageChange(currentPage) {
-      console.log(currentPage)
       this.currentPage = currentPage
       this.latestSearch.currentPage = currentPage - 1
       this.refreshTaskTable(this.latestSearch);
     },
     pageSizeChange(pageSize) {
-      console.log(pageSize)
       this.pageSize = pageSize
       this.latestSearch.pageSize = pageSize
       this.refreshTaskTable(this.latestSearch);

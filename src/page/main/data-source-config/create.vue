@@ -9,25 +9,25 @@
         <div class="clearfix mgt15">
             <span class="detail-left-label">数据名称:</span>
             <div class="detail-right-content-box">
-                <el-input v-model="dataSource.name" class="input" placeholder="请输入" size="small"></el-input>
+                <el-input :disabled="$route.name=='data-source-config-edit'" v-model="dataSource.name" class="input" placeholder="请输入" size="small"></el-input>
             </div>
         </div>
         <div class="clearfix mgt15">
             <span class="detail-left-label">数据源格式:</span>
             <div class="detail-right-content-box">
                 <div>
-                    <el-select v-model="dataSource.type" @change="dataSourceTypeChange" class="input" size="small">
+                    <el-select :disabled="$route.name=='data-source-config-edit'" v-model="dataSource.type" @change="dataSourceTypeChange" class="input" size="small">
                         <el-option v-for="item in dataTypeOptions" :key="item.value" :label="item.label" :value="item.value">
                         </el-option>
                     </el-select>
                 </div>
             </div>
         </div>
-        <div class="clearfix mgt15" style="position:relative;">
+        <div v-if="$route.name=='data-source-config-create'" class="clearfix mgt15" style="position:relative;">
             <span class="detail-left-label">数据源文件:</span>
             <div class="detail-right-content-box">
-                <el-upload :disabled="isUploading" class="upload-demo" action="/api/inputSource/upload" :before-upload="beforeUpload" :on-progress="uploading" :on-success="uploadSuccess" :on-error="uploadError" :show-file-list="false">
-                    <el-input v-model="uploadDataName" readonly class="input" placeholder="浏览..." size="small"></el-input>
+                <el-upload :disabled="isUploading||$route.name=='data-source-config-edit'" class="upload-demo" action="/api/inputSource/upload" :before-upload="beforeUpload" :on-progress="uploading" :on-success="uploadSuccess" :on-error="uploadError" :show-file-list="false">
+                    <el-input :disabled="$route.name=='data-source-config-edit'" v-model="uploadDataName" readonly class="input" placeholder="浏览..." size="small"></el-input>
                 </el-upload>
             </div>
             <el-progress v-if="isUploading" class="uploading-progress" type="circle" :width="50" :percentage="uploadingPercent" :status="uploadingStatus"></el-progress>
@@ -35,16 +35,16 @@
         <div v-if="targetSheetShow" class="clearfix mgt15">
             <span class="detail-left-label">目标表:</span>
             <div class="detail-right-content-box">
-                <el-select :disabled="!dataLoaded" v-model="dataSource.targetSheet" placeholder="- -" class="input" size="small">
+                <el-select :disabled="!dataLoaded" v-model="dataSource.targetSheet" @change="targetSheetChange" placeholder="- -" class="input" size="small">
                     <el-option v-for="item in sheetOptions" :key="item.value" :label="item.label" :value="item.value">
                     </el-option>
                 </el-select>
             </div>
         </div>
-        <div v-if="encodeShow" class="clearfix mgt15">
+        <div class="clearfix mgt15">
             <span class="detail-left-label">编码格式:</span>
             <div class="detail-right-content-box">
-                <el-select :disabled="!dataLoaded" v-model="dataSource.encode" class="input" placeholder="- -" size="small">
+                <el-select :disabled="!dataLoaded" v-model="dataSource.encode" @change="encodeChange" class="input" placeholder="- -" size="small">
                     <el-option v-for="item in encodeOptions" :key="item.value" :label="item.label" :value="item.value">
                     </el-option>
                 </el-select>
@@ -59,7 +59,7 @@
         <div v-if="topRowIsTitleShow" class="clearfix mgt15">
             <span class="detail-left-label">首行标题行:</span>
             <div class="detail-right-content-box mgt10">
-                <el-radio-group v-model="dataSource.topRowIsTitle">
+                <el-radio-group @change="topRowIsTitleChange" v-model="dataSource.topRowIsTitle">
                     <el-radio :label="true">是</el-radio>
                     <el-radio :label="false">否</el-radio>
                 </el-radio-group>
@@ -111,6 +111,7 @@
             <span slot="footer" class="dialog-footer">
                 <el-button @click="symbolsModalVisible = false">取 消</el-button>
                 <el-button type="primary" :disabled="validateSymbolEmpty()" @click.native.prevent="symbolsModalConfirm">确 定</el-button>
+
             </span>
         </el-dialog>
     </div>
@@ -133,7 +134,6 @@ export default {
             uploadedPath: '',
             //不同数据源格式，显示不同控件
             targetSheetShow: true,
-            encodeShow: true,
             topRowIsTitleShow: true,
             symbolShow: false,
             symbolsModalVisible: false,
@@ -165,7 +165,7 @@ export default {
             },
             dataTypeOptions: [
                 { label: 'Excel', value: 'excel' },
-                { label: 'Csv', value: 'csv' },
+                // { label: 'Csv', value: 'csv' },
                 { label: '文本文件', value: 'txt' }
             ],
             encodeOptions: [
@@ -186,18 +186,22 @@ export default {
     computed: {
         ...mapState([
             'createDataSourceResponse',
-            'previewDataSourceResponse'
+            'updateDataSourceResponse',
+            'previewDataSourceResponse',
+            'singleDataSource'
         ])
     },
     watch: {
-
         createDataSourceResponse: function(response) {
+            utils.notifyResponse(response, () => this.$router.go(-1))
+        },
+        updateDataSourceResponse: function(response) {
             utils.notifyResponse(response, () => this.$router.go(-1))
         },
         previewDataSourceResponse: function(response) {
             if (!response.error) {
                 if (this.dataSource.type == "txt") {
-                    this.textIsOnPreview=true
+                    this.textIsOnPreview = true
                     let combinedTxt = ''
                     let resultData = response.result.data
                     for (var index = 0; index < resultData.length; index++) {
@@ -206,10 +210,10 @@ export default {
                     this.previewTxt = combinedTxt
                 }
                 else {
-                    this.tableIsOnPreview=true
+                    this.tableIsOnPreview = true
                     let resultData = response.result.data
-                    this.previewTableHeaders=[]
-                    this.previewTableData=[]
+                    this.previewTableHeaders = []
+                    this.previewTableData = []
                     if (resultData[0]) {
                         this.previewTableHeaders = resultData[0]
                         for (let index = 1; index < resultData.length; index++) {
@@ -230,22 +234,57 @@ export default {
             else {
                 utils.notifyResponse(response)
             }
-
+        },
+        singleDataSource: function(singleDataSource) {
+            if (singleDataSource.result) {
+                this.dataLoaded = true
+                this.dataSource.name = singleDataSource.result.name
+                this.dataSource.type = singleDataSource.result.inputType
+                let config = JSON.parse(singleDataSource.result.config)
+                this.uploadedPath=config.path
+                this.dataSource.encode = config.extraConfig.encoding
+                if (this.dataSource.type !== 'txt') {
+                    this.targetSheetShow = true
+                    this.topRowIsTitleShow = true
+                    this.dataSource.targetSheet = config.extraConfig.sheet
+                    this.dataSource.topRowIsTitle = config.extraConfig.titleRow
+                }
+                else {
+                    this.targetSheetShow = false
+                    this.topRowIsTitleShow = false
+                }
+            }
         }
-        // updateTaskResponse: function(response) {
-        //   utils.notifyResponse(response,()=>this.$router.go(-1))
-        // },
-
     },
     created() {
+        if (this.$route.params.id) {
+            this.queryDataSourceById(this.$route.params.id)
+        }
     },
     methods: {
         ...mapActions([
             'createDataSourceWithUpload',
-            'previewDataSource'
+            'previewDataSource',
+            'queryDataSourceById',
+            'updateDataSource'
         ]),
         goBack() {
             this.$router.go(-1)
+        },
+        //编码格式切换
+        encodeChange(value){
+            this.tableIsOnPreview = false
+            this.textIsOnPreview = false
+        },
+        //目标表切换
+        targetSheetChange(value){
+            this.tableIsOnPreview = false
+            this.textIsOnPreview = false
+        },
+        //首行标题行切换
+        topRowIsTitleChange(value){
+            this.tableIsOnPreview = false
+            this.textIsOnPreview = false
         },
         generateExtraConfig() {
             let extraConfig = {}
@@ -276,34 +315,33 @@ export default {
         },
 
         dataSourceTypeChange(value) {
-            this.uploadDataName = ''
-            this.dataLoaded = false
-            this.tableIsOnPreview=false
-            this.textIsOnPreview=false  
-            switch (value) {
-                case 'excel':
-                    this.targetSheetShow = true
-                    this.encodeShow = true
-                    this.topRowIsTitleShow = true
-                    this.symbolShow = false
-                    this.uploadTypeLimit = 'excel'
-                    break;
-                case 'csv':
-                    this.targetSheetShow = false
-                    this.encodeShow = true
-                    this.topRowIsTitleShow = true
-                    this.symbolShow = true
-                    this.uploadTypeLimit = 'csv'
-                    break;
-                case 'txt':
-                    this.targetSheetShow = false
-                    this.encodeShow = true
-                    this.topRowIsTitleShow = false
-                    this.symbolShow = false
-                    this.uploadTypeLimit = 'txt'
-                    break;
-                default:
-                    break;
+            if (this.$route.name == 'data-source-config-create') {
+                this.uploadDataName = ''
+                this.dataLoaded = false
+                this.tableIsOnPreview = false
+                this.textIsOnPreview = false
+                switch (value) {
+                    case 'excel':
+                        this.targetSheetShow = true
+                        this.topRowIsTitleShow = true
+                        this.symbolShow = false
+                        this.uploadTypeLimit = 'excel'
+                        break;
+                    case 'csv':
+                        this.targetSheetShow = false
+                        this.topRowIsTitleShow = true
+                        this.symbolShow = true
+                        this.uploadTypeLimit = 'csv'
+                        break;
+                    case 'txt':
+                        this.targetSheetShow = false
+                        this.topRowIsTitleShow = false
+                        this.symbolShow = false
+                        this.uploadTypeLimit = 'txt'
+                        break;
+                    default:
+                        break;
+                }
             }
         },
         beforeUpload(file) {
@@ -351,8 +389,8 @@ export default {
             }, 1000);
             this.uploadDataName = file.name
             this.dataLoaded = true
-            this.tableIsOnPreview=false
-            this.textIsOnPreview=false  
+            this.tableIsOnPreview = false
+            this.textIsOnPreview = false
         },
         uploadError(err, file) {
             console.log(err)
@@ -380,8 +418,8 @@ export default {
 
         },
         previewUploaded() {
-            this.tableIsOnPreview=false
-            this.textIsOnPreview=false            
+            this.tableIsOnPreview = false
+            this.textIsOnPreview = false
             let extraConfig = this.generateExtraConfig()
             let config = {
                 path: this.uploadedPath,
@@ -414,7 +452,13 @@ export default {
             }
             this.createDataSourceWithUpload(createData)
         },
+        //保存修改
         saveDataSource() {
+            let extraConfig = this.generateExtraConfig()
+            this.updateDataSource({
+                id: parseInt(this.$route.params.id),
+                extraConfig: JSON.stringify(extraConfig)
+            })
         }
     }
 }

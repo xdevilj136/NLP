@@ -44,6 +44,10 @@
         </template>
       </el-table-column>
     </el-table>
+        <div class="block">
+      <el-pagination @size-change="pageSizeChange" @current-change="currentPageChange" :current-page="currentPage" :page-sizes="[5, 10,50, 100]" :page-size="pageSize" :total="totalCount" layout=" prev, pager, next, sizes, jumper">
+      </el-pagination>
+    </div>
   </div>
 </template>
 <script>
@@ -51,9 +55,13 @@ import { mapActions, mapState } from 'vuex'
 import utils from 'src/config/utils'
 
 export default {
-  name: 'info-extra-detail',
+  name: 'info-extra-list',
   data() {
     return {
+      //翻页组件
+      currentPage: 1,
+      pageSize: 10,
+      totalCount: 10,
       nameOptions: [{
         value: 'JAY',
         label: 'JAY'
@@ -91,19 +99,23 @@ export default {
       //查询条件
       searchForm: {
         name: '',
-        timeRange: ''
+        timeRange: '',
+        currentPage: '',
+        pageSize: '',
       },
       //最近一次查询条件
-      lastSearch:{
+      latestSearch:{
         name: '',
-        timeRange: ''
+        timeRange: '',
+        currentPage: '',
+        pageSize: ''
       },
       //删除规则id
       toDeleteRuleId: ''
     }
   },
   created(){
-    this.refreshRuleTable(this.lastSearch);
+    this.refreshRuleTable(this.latestSearch);
   },
   computed: mapState(['configList', 'deleteRuleResponse']),
   watch: {
@@ -113,7 +125,7 @@ export default {
       }
     },
     deleteRuleResponse: function(response) {
-      utils.notifyResponse(response,()=>{this.refreshRuleTable(this.lastSearch);})
+      utils.notifyResponse(response,()=>{this.refreshRuleTable(this.latestSearch);})
     }
   },
   methods: {
@@ -144,8 +156,8 @@ export default {
       return (timeRange_ms ? new Date(Date.now() - timeRange_ms).toLocaleDateString() : '').replace(/\//g, '-');
     },
     searchSubmit() {
-      this.lastSearch.name=this.searchForm.name;
-      this.lastSearch.timeRange=this.searchForm.timeRange;
+      this.latestSearch.name=this.searchForm.name;
+      this.latestSearch.timeRange=this.searchForm.timeRange;
       this.refreshRuleTable(this.searchForm);
     },
     refreshRuleTable(requirement){
@@ -156,6 +168,8 @@ export default {
       let params = {};
       if (creator) params.fu = creator;
       if (createTime) params.bt = createTime
+      if(requirement.pageSize) params.ps=requirement.pageSize
+      if(requirement.currentPage) params.p=requirement.currentPage
       this.getInfoConfig(params);
     },  
     gotoNext(path) {
@@ -178,13 +192,69 @@ export default {
     },
     deleteDialogConfirm() {
       this.deleteConfigRule(this.toDeleteRuleId);
-    }
+    },
+    //翻页组件操作
+    currentPageChange(page) {
+      this.currentPage = page
+      this.latestSearch.currentPage = page - 1
+      this.refreshRuleTable(this.latestSearch);
+    },
+    pageSizeChange(size) {
+      this.pageSize = size
+      this.latestSearch.pageSize = size
+      this.refreshRuleTable(this.latestSearch);
+    },
   }
 }
 </script>
-<style>
+<style lang="less">
 .search-btn {
   top: 3px;
   position: relative
+}
+.right-content {
+  .searchBar {
+    & .el-select {
+      width: 150px;
+    }
+  }
+  .block {
+    text-align: right;
+    margin-top: 30px;
+  }
+  .el-pagination {
+    button,
+    input {
+      border: 1px solid #d1dbe5;
+      border-radius: 5px;
+    }
+    .el-input {
+      input {
+        border-radius: 5px;
+      }
+    }
+    .btn-next {
+      margin: 0 10px;
+    }
+    .el-pager {
+      li {
+        margin-left: 10px;
+        border: 1px solid #d1dbe5;
+        border-radius: 5px;
+      }
+    }
+  }
+  .toolbar {
+    button {
+      margin: 0;
+      &:after {
+        content: " |";
+        display: inline;
+      }
+      &:last-child:after {
+        display: none;
+      }
+    }
+  }
 }
 </style>

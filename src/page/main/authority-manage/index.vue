@@ -94,7 +94,6 @@ export default {
       this.operateRowIndex = index;
     },
     handleCurrentChange(page) {
-      console.log(page)
     },
     //编辑对话框确认
     dialogConfirm() {

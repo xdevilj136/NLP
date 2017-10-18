@@ -7,25 +7,22 @@
             </el-breadcrumb>
         </div>
         <el-form class="detail-form" label-position="right" label-width="100px">
-            <el-form-item label="数据名称：">
+            <el-form-item  label="数据名称：">
                 <span class="detail-right-label">{{detail.name}}</span>
             </el-form-item>
-            <el-form-item label="数据源格式：">
+            <el-form-item  label="数据源格式：">
                 <span class="detail-right-label">{{detail.inputType}}</span>
             </el-form-item>
-            <el-form-item label="数据源文件：">
-                <span class="detail-right-label">{{detail.uploadDataName}}</span>
-            </el-form-item>
-            <el-form-item v-if="targetSheetShow" label="目标表：">
+            <el-form-item  v-if="targetSheetShow" label="目标表：">
                 <span class="detail-right-label">{{detail.targetSheet | targetSheetFilter}}</span>
             </el-form-item>
-            <el-form-item v-if="encodeShow" label="编码格式：">
+            <el-form-item label="编码格式：">
                 <span class="detail-right-label">{{detail.encode}}</span>
             </el-form-item>
-            <el-form-item v-if="symbolShow" label="分隔符：">
+            <el-form-item  v-if="symbolShow" label="分隔符：">
                 <span class="detail-right-label">{{detail.splitSymbols}}</span>
             </el-form-item>
-            <el-form-item v-if="topRowIsTitleShow" label="首行标题行：">
+            <el-form-item  v-if="topRowIsTitleShow" label="首行标题行：">
                 <span class="detail-right-label">{{detail.topRowIsTitle}}</span>
             </el-form-item>
             <el-form-item label="数据源预览：">
@@ -35,12 +32,11 @@
                     </el-table-column>
                 </el-table>
             </el-form-item>
+            <div class="right-toolbar">
+                <el-button :disabled="!detail.editable" @click="editDataSource(detail.id)" type="primary" size="small">编辑</el-button>
+                <el-button @click="deleteSource(detail.id)" size="small">删除</el-button>
+            </div>
         </el-form>
-        <div class="toolbar">
-            <el-button v-if="$route.name=='data-source-config-create'" @click="createDataSource" type="primary" size="small">创建</el-button>
-            <el-button v-if="$route.name=='data-source-config-edit'" @click="saveDataSource" type="primary" size="small">保存</el-button>
-            <el-button @click="goBack" size="small">取消</el-button>
-        </div>
     </div>
 </template>
 <script>
@@ -51,9 +47,9 @@ export default {
     name: 'data-source-config-create',
     data() {
         return {
+            toDeleteSourceId:'',
             //不同数据源格式，显示不同控件
             targetSheetShow: true,
-            encodeShow: true,
             topRowIsTitleShow: true,
             symbolShow: false,
             symbolsModalVisible: false,
@@ -63,29 +59,64 @@ export default {
             previewTxt: '',
             previewTableData: [],
             previewTableHeaders: [],
-
-            //数据源配置
-            dataSource: {
-                name: '',
-                type: 'excel',
-                encode: 'utf8',
-                targetSheet: 0,
-                splitSymbols: '',
-                topRowIsTitle: true
-            },
-            detail:{}
+            //详情数据
+            detail: {}
         }
     },
     computed: {
         ...mapState([
-            'singleDataSource'
+            'singleDataSource',
+            'deleteDataSourceResponse'
         ])
     },
     watch: {
         singleDataSource: function(singleDataSource) {
             if (singleDataSource.result) {
                 this.detail = Object.assign({}, singleDataSource.result)
+                let config = JSON.parse(this.detail.config)
+                this.detail.encode = config.extraConfig.encoding
+
+                if(config.inputType!=='txt'){
+         
+                    this.tableIsOnPreview = true
+                    let resultData=JSON.parse(this.detail.overview).data         
+                    this.previewTableHeaders = []
+                    this.previewTableData = []
+                    if (resultData[0]) {
+                        this.previewTableHeaders = resultData[0]
+                        for (let index = 1; index < resultData.length; index++) {
+                            let element = resultData[index]
+                            let processed = {}
+                            element.forEach(function(value, num) {
+                                let key = this.previewTableHeaders[num]
+                                let add = {
+                                    key: value
+                                }
+                                processed[key] = value
+                            }, this);
+                            this.previewTableData.push(processed)
+                        }
+                    }
+                    this.targetSheetShow=true
+                    this.topRowIsTitleShow=true
+                    this.detail.targetSheet = config.extraConfig.sheet
+                    this.detail.topRowIsTitle = config.extraConfig.titleRow ? '是' : '否'
+                }
+                else{
+                    this.textIsOnPreview = true
+                    let combinedTxt = ''
+                    let resultData=JSON.parse(this.detail.overview).data         
+                    for (let index = 0; index < resultData.length; index++) {
+                        combinedTxt += resultData[index] + '\n'
+                    }
+                    this.previewTxt = combinedTxt  
+                    this.targetSheetShow=false
+                    this.topRowIsTitleShow=false
+                }
             }
+        },
+        deleteDataSourceResponse:function(response){
+            utils.notifyResponse(response, () => this.$router.go(-1))
         }
     },
     created() {
@@ -93,18 +124,58 @@ export default {
     },
     methods: {
         ...mapActions([
-            'queryDataSourceById'
+            'queryDataSourceById',
+            'deleteDataSource'
         ]),
         goBack() {
             this.$router.go(-1)
+        },
+        editDataSource(id) {
+            this.$router.push('/main/data-source-config/edit/' + id)
+        },
+        deleteSource(id) {
+			this.toDeleteSourceId = id;
+			this.$confirm('删除后，数据源配置将全部失效。', '确认删除 ' + this.detail.name + ' 数据?', {
+				confirmButtonText: '确定',
+				cancelButtonText: '取消',
+				type: 'warning'
+			}).then(() => {
+				this.deleteDialogConfirm()
+			}).catch(() => {
+
+			});
+        },
+        deleteDialogConfirm(){
+            this.deleteDataSource(this.toDeleteSourceId)
         }
     },
-      filters: {
+    filters: {
 
-    targetSheetFilter:function(value){
+        targetSheetFilter: function(value) {
+            let result = ''
+            switch (value) {
+                case 0:
+                    result = 'sheet1'
+                    break;
+                case 1:
+                    result = 'sheet2'
+                    break;
+                case 2:
+                    result = 'sheet3'
+                    break;
+                case 3:
+                    result = 'sheet4'
+                    break;
+                case 4:
+                    result = 'sheet5'
+                    break;
 
+                default:
+                    break;
+            }
+            return result
+        }
     }
-  }
 }
 </script>
 
@@ -115,9 +186,7 @@ export default {
         line-height: inherit;
     }
     .detail-form {
-        & .el-form-item {
-            margin: 0;
-        }
+        position: relative;
     }
     .detail-left-label {
         height: 36px;
@@ -129,21 +198,10 @@ export default {
         width: auto;
         color: grey;
     }
-    .toolbar {
+    .right-toolbar {
         position: absolute;
         right: 40px;
-        top: 40px;
-        margin-top: 32px;
-        button {
-            margin: 0;
-            &:after {
-                content: " |";
-                display: inline;
-            }
-            &:last-child:after {
-                display: none;
-            }
-        }
+        top: 5px;
     }
 }
 </style>

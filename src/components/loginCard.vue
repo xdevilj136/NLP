@@ -114,9 +114,8 @@ export default {
   computed: mapState(['isLogin']),
   watch: {
     isLogin: function(isLogin) {
-      console.log(isLogin)
       if (isLogin) {
-        this.$router.push('/main',this.login.name)
+        this.$router.push('/main')
       }
     }
   },
@@ -138,7 +137,6 @@ export default {
       this.status = status
     },
     show(event){
-      console.log('event')
     }
   }
 }

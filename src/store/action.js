@@ -90,18 +90,27 @@ export default {
 	getDataSource({ },params) {
 		service.dataSource(params)
 	},
+		//根据id查询单个数据源配置
+		queryDataSourceById({},id){
+			service.queryDataSourceById(id)
+		},
 	//创建数据源
 	createDataSourceWithUpload({},data){
 		service.createDataSourceWithUpload(data)
+	},
+	//修改数据源配置
+	updateDataSource({ }, data) {
+		service.updateDataSource(data)
+	},
+	//删除数据源
+	deleteDataSource({ }, id) {
+		service.deleteDataSource(id)
 	},
 	//预览数据源
 	previewDataSource({},data){
 		service.previewDataSource(data)
 	},
-	//根据id查询单个数据源配置
-	queryDataSourceById({},id){
-		service.queryDataSourceById(id)
-	},
+
 
 	/*
 		功能展示接口

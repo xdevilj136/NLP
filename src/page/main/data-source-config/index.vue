@@ -22,7 +22,7 @@
 		</el-form>
 
 		<div style="overflow:hidden;">
-			<span class="lightFont">共搜索到{{dataSource.length?dataSource.length:0}}条数据</span>
+			<span class="lightFont">共搜索到{{totalCount?totalCount:0}}条数据</span>
 			<div class="fr">
 				<el-button type="primary" @click="createDataSource" size="small">创建</el-button>
 			</div>
@@ -31,9 +31,9 @@
 		<el-table :data="dataSourceList" class="data-table" border :default-sort="{prop: 'ctime', order: 'descending'}">
 			<el-table-column prop="name" label="数据名称" min-width="200px">
 
-	<template scope="scope">
-		<router-link :to="'/main/data-source-config/detail/' + scope.row.id">{{ scope.row.name }}</router-link>
-	</template>
+				<template scope="scope">
+					<router-link :to="'/main/data-source-config/detail/' + scope.row.id">{{ scope.row.name }}</router-link>
+				</template>
 
 			</el-table-column>
 			<el-table-column prop="inputType" label="数据源类型" min-width="100px"></el-table-column>
@@ -47,23 +47,41 @@
 				</template>
 			</el-table-column>
 		</el-table>
+		<div class="block">
+			<el-pagination @size-change="pageSizeChange" @current-change="currentPageChange" :current-page="currentPage" :page-sizes="[5, 10,50, 100]" :page-size="pageSize" :total="totalCount" layout=" prev, pager, next, sizes, jumper">
+			</el-pagination>
+		</div>
 	</div>
 </template>
 <script type="text/javascript">
 import { mapActions, mapState } from 'vuex'
+import utils from 'src/config/utils'
 
 export default {
 	name: 'data-source-config',
 	data() {
 		return {
-			data: this.getDataSource(),
+			//待删除数据源id
+			toDeleteSourceId: '',
+			//查询表单
 			searchForm: {
 				dataSourceType: '',
 				timeRange: '',
 				currentPage: '',
 				pageSize: ''
 			},
-			dataSourceList:[],
+			//最近一次查询条件
+			latestSearch: {
+				dataSourceType: '',
+				timeRange: '',
+				currentPage: '',
+				pageSize: ''
+			},
+			dataSourceList: [],
+			//翻页相关
+			currentPage: 1,
+			pageSize: 10,
+			totalCount: 10,
 			//查询条件
 			timeRangeOptions: [{
 				value: 'oneMonth',
@@ -100,18 +118,28 @@ export default {
 			]
 		}
 	},
-	computed: mapState(['dataSource']),
-	watch:{
+	computed: mapState([
+		'dataSource',
+		'deleteDataSourceResponse'
+	]),
+	watch: {
 		dataSource: function(data) {
 			if (data.result && data.result.list) {
 				this.dataSourceList = data.result.list
-				// this.totalCount = data.result.count
+				this.totalCount = data.result.count
 			}
+		},
+		deleteDataSourceResponse: function(response) {
+			utils.notifyResponse(response, () => { this.refreshDataSource() })
 		}
+	},
+	created() {
+		this.refreshDataSource()
 	},
 	methods: {
 		...mapActions([
-			'getDataSource'
+			'getDataSource',
+			'deleteDataSource'
 		]),
 		//计算时间 （最近时间范围）-》建立时间
 		computeCreateTime(timeRange) {
@@ -136,51 +164,135 @@ export default {
 			return (timeRange_ms ? (new Date(Date.now() - timeRange_ms).toLocaleDateString()) : '').replace(/\//g, '-');
 		},
 		editSource(id) {
-
+			this.$router.push('/main/data-source-config/edit/' + id)
 		},
 		deleteSource(row) {
+			this.toDeleteSourceId = row.id;
+			this.$confirm('删除后，数据源配置将全部失效。', '确认删除 ' + row.name + ' 数据?', {
+				confirmButtonText: '确定',
+				cancelButtonText: '取消',
+				type: 'warning'
+			}).then(() => {
+				this.deleteDialogConfirm()
+			}).catch(() => {
 
+			});
 		},
 		//查询确认
 		searchSubmit() {
-			this.refreshTaskTable(this.searchForm);
+			this.latestSearch = Object.assign({}, this.searchForm)
+			this.refreshSourceTable(this.searchForm)
 		},
-
-		refreshTaskTable(requirement) {
+		//根据上一次查询条件刷新数据源列表
+		refreshDataSource() {
+			this.refreshSourceTable(this.latestSearch);
+		},
+		//刷新数据源表格
+		refreshSourceTable(requirement) {
 			let dataSourceType = requirement.dataSourceType;
 			let currentPage = requirement.currentPage
 			let pageSize = requirement.pageSize
 			//计算建立时间
-			let createTime = this.computeCreateTime(requirement.timeRange);
+			let createTime = this.computeCreateTime(requirement.timeRange)
 			//查询参数
 			let params = {};
 			if (dataSourceType !== '') params.t = dataSourceType;
 			if (currentPage !== '') params.p = currentPage
 			if (pageSize !== '') params.ps = pageSize
 			if (createTime !== '') params.bt = createTime
-			this.getDataSource(params);
+			this.getDataSource(params)
 		},
+		deleteDialogConfirm() {
+			this.deleteDataSource(this.toDeleteSourceId)
+		},
+
 		createDataSource() {
 			this.$router.push('/main/data-source-config/create')
-		}
+		},
+		//翻页控件
+		pageSizeChange() {
+
+		},
+
+		currentPageChange(currentPage) {
+			this.currentPage = currentPage
+			this.latestSearch.currentPage = currentPage - 1
+			this.refreshDataSource()
+		},
+		pageSizeChange(pageSize) {
+			this.pageSize = pageSize
+			this.latestSearch.pageSize = pageSize
+			this.refreshDataSource()
+		},
+
+
 	},
 
 }
 </script>
 
-<style lang="less" scoped>
+<style lang="less">
+.right-content {
+	.searchBar {
+		& .el-select {
+			width: 150px;
+		}
+	}
+	.block {
+		text-align: right;
+		margin-top: 30px;
+	}
+	.el-pagination {
+		button,
+		input {
+			border: 1px solid #d1dbe5;
+			border-radius: 5px;
+		}
+		.el-input {
+			input {
+				border-radius: 5px;
+			}
+		}
+		.btn-next {
+			margin: 0 10px;
+		}
+		.el-pager {
+			li {
+				margin-left: 10px;
+				border: 1px solid #d1dbe5;
+				border-radius: 5px;
+			}
+		}
+	}
+	.toolbar {
+		button {
+			margin: 0;
+			&:after {
+				content: " |";
+				display: inline;
+			}
+			&:last-child:after {
+				display: none;
+			}
+		}
+	}
+}
+
 .sub-title {
 	margin: 20px 0;
 }
+
 .lightFont {
-  color: gray;
+	color: gray;
 }
 
-  .searchBar {
-    & .el-select {
-      width: 150px;
+
+.searchBar {
+	& .el-select {
+		width: 150px;
 	}
-  }
+}
+
 .image-card-container {
 	display: flex;
 	flex-wrap: wrap;
@@ -196,16 +308,16 @@ export default {
 	}
 }
 
-  .toolbar {
-    button {
-      margin: 0;
-      &:after {
-        content: " |";
-        display: inline;
-      }
-      &:last-child:after {
-        display: none;
-      }
-    }
-  }
+.toolbar {
+	button {
+		margin: 0;
+		&:after {
+			content: " |";
+			display: inline;
+		}
+		&:last-child:after {
+			display: none;
+		}
+	}
+}
 </style>

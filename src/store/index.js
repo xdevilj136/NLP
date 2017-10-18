@@ -34,6 +34,8 @@ const state = {
 	analysisData: {}, // 词法分析数据
 	createRuleResponse:{},//创建规则响应
 	createDataSourceResponse:{},//创建数据源响应
+	updateDataSourceResponse:{},
+	deleteDataSourceResponse:{},
 	previewDataSourceResponse:{}//预览数据源响应
 }
 

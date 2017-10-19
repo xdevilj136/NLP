@@ -71,8 +71,8 @@
             <div class="detail-right-content-box  mgt10">
                 <el-button v-if="!textIsOnPreview&&!tableIsOnPreview" type="text" :disabled="!dataLoaded" class="normal_a" @click="previewUploaded">预览</el-button>
                 <el-input v-if="textIsOnPreview" type="textarea" v-model="previewTxt" :rows="10" resize="none" readonly></el-input>
-                <el-table :data="previewTableData" v-if="tableIsOnPreview" :height="280" :border="true">
-                    <el-table-column v-for="(head,index) in previewTableHeaders" :key="index" :prop="head" :label="head">
+                <el-table :data="previewTableData" v-if="tableIsOnPreview" :style="tableWidth" :height="280" :border="true">
+                    <el-table-column v-for="(head,index) in previewTableHeaders" :width="columnWidth" :key="index" :prop="head" :label="head" :resizable="false">
                     </el-table-column>
                 </el-table>
             </div>
@@ -144,6 +144,8 @@ export default {
             previewTxt: '',
             previewTableData: [],
             previewTableHeaders: [],
+            tableWidth:'',
+            columnWidth:310,
             //分隔符选择
             symbolsList: ["制表符"],
             otherSymbol: '',
@@ -218,6 +220,7 @@ export default {
                     this.previewTableData = []
                     if (resultData[0]) {
                         this.previewTableHeaders = resultData[0]
+                        this.tableWidth="width:"+(this.previewTableHeaders.length*this.columnWidth)+'px'
                         for (let index = 1; index < resultData.length; index++) {
                             let element = resultData[index]
                             let processed = {}
@@ -468,6 +471,10 @@ export default {
 </script>
 
 <style lang="less">
+.el-table{
+    width: auto;
+    min-width: 600px;
+}
 .lightFont {
     color: gray;
 }
@@ -528,6 +535,11 @@ export default {
             margin-top: 15px;
             margin-left: 0;
             width: 100px;
+        }
+    }
+        .el-table{
+        .cell{
+            white-space: nowrap;
         }
     }
 }

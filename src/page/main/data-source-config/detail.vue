@@ -27,8 +27,8 @@
             </el-form-item>
             <el-form-item label="数据源预览：">
                 <el-input v-if="textIsOnPreview" type="textarea" v-model="previewTxt" :rows="10" resize="none" readonly></el-input>
-                <el-table :data="previewTableData" v-if="tableIsOnPreview" :height="280" :border="true">
-                    <el-table-column v-for="(head,index) in previewTableHeaders" :key="index" :prop="head" :label="head">
+                <el-table :data="previewTableData" v-if="tableIsOnPreview" :style="tableWidth" :height="280" :border="true">
+                    <el-table-column v-for="(head,index) in previewTableHeaders" :width="columnWidth" :key="index" :prop="head" :label="head">
                     </el-table-column>
                 </el-table>
             </el-form-item>
@@ -59,6 +59,8 @@ export default {
             previewTxt: '',
             previewTableData: [],
             previewTableHeaders: [],
+            tableWidth:'',
+            columnWidth:310,
             //详情数据
             detail: {}
         }
@@ -84,6 +86,7 @@ export default {
                     this.previewTableData = []
                     if (resultData[0]) {
                         this.previewTableHeaders = resultData[0]
+                        this.tableWidth="width:"+(this.previewTableHeaders.length*this.columnWidth)+'px'
                         for (let index = 1; index < resultData.length; index++) {
                             let element = resultData[index]
                             let processed = {}
@@ -202,6 +205,11 @@ export default {
         position: absolute;
         right: 40px;
         top: 5px;
+    }
+    .el-table{
+        .cell{
+            white-space: nowrap;
+        }
     }
 }
 </style>

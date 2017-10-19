@@ -100,7 +100,7 @@ export default {
           let newTag={
             [element]:{
               color:this.nerList.other.color[colorNum],
-              name:'自定义实体'+(index+1)
+              name:element
             }
           }
           this.nerList = Object.assign({}, this.nerList, newTag)

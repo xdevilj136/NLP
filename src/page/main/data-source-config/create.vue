@@ -26,7 +26,8 @@
         <div v-if="$route.name=='data-source-config-create'" class="clearfix mgt15" style="position:relative;">
             <span class="detail-left-label">数据源文件:</span>
             <div class="detail-right-content-box">
-                <el-upload :disabled="isUploading||$route.name=='data-source-config-edit'" class="upload-demo" action="/api/inputSource/upload" :before-upload="beforeUpload" :on-progress="uploading" :on-success="uploadSuccess" :on-error="uploadError" :show-file-list="false">
+                <el-upload :disabled="isUploading||$route.name=='data-source-config-edit'" class="upload-demo" action="/api/inputSource/upload" 
+                :data="uploadPostParams" :before-upload="beforeUpload" :on-progress="uploading" :on-success="uploadSuccess" :on-error="uploadError" :show-file-list="false">
                     <el-input :disabled="$route.name=='data-source-config-edit'" v-model="uploadDataName" readonly class="input" placeholder="浏览..." size="small"></el-input>
                 </el-upload>
             </div>
@@ -36,7 +37,7 @@
             <span class="detail-left-label">目标表:</span>
             <div class="detail-right-content-box">
                 <el-select :disabled="!dataLoaded" v-model="dataSource.targetSheet" @change="targetSheetChange" placeholder="- -" class="input" size="small">
-                    <el-option v-for="item in sheetOptions" :key="item.value" :label="item.label" :value="item.value">
+                    <el-option v-for="(value,key) in sheetOptions" :key="key" :label="value" :value="key">
                     </el-option>
                 </el-select>
             </div>
@@ -159,7 +160,7 @@ export default {
                 name: '',
                 type: 'excel',
                 encode: 'utf8',
-                targetSheet: 0,
+                targetSheet: '',
                 splitSymbols: '',
                 topRowIsTitle: true
             },
@@ -174,13 +175,8 @@ export default {
                 { label: 'GBK', value: 'gbk' },
                 { label: 'GB18030', value: 'gb18030' }
             ],
-            sheetOptions: [
-                { label: 'sheet1', value: 0 },
-                { label: 'sheet2', value: 1 },
-                { label: 'sheet3', value: 2 },
-                { label: 'sheet4', value: 3 },
-                { label: 'sheet5', value: 4 }
-            ]
+            sheetOptions: {}
+            
         }
     },
     computed: {
@@ -189,7 +185,13 @@ export default {
             'updateDataSourceResponse',
             'previewDataSourceResponse',
             'singleDataSource'
-        ])
+        ]),
+        //上传文件附带参数
+        uploadPostParams:function(){
+            return {
+                inputType:this.dataSource.type
+            }
+        }
     },
     watch: {
         createDataSourceResponse: function(response) {
@@ -293,7 +295,7 @@ export default {
                     extraConfig = {
                         titleRow: this.dataSource.topRowIsTitle,
                         encoding: this.dataSource.encode,
-                        sheet: this.dataSource.targetSheet
+                        sheet: parseInt(this.dataSource.targetSheet)
                     }
                     break;
                 case 'txt':
@@ -381,8 +383,12 @@ export default {
 
         },
         uploadSuccess(res, file) {
+            console.log(res)
+            if(res.result.tables){
+                this.sheetOptions=res.result.tables
+            }
             this.uploadingStatus = 'success'
-            this.uploadedPath = res.result
+            this.uploadedPath = res.result.path
             setTimeout(() => {
                 this.isUploading = false
                 this.uploadingStatus = ''
@@ -432,9 +438,6 @@ export default {
                 config: JSON.stringify(config)
             }
             this.previewDataSource(previewData)
-        },
-        submitValidate() {
-
         },
         //创建数据源
         createDataSource() {

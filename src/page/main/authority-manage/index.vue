@@ -4,9 +4,15 @@
     <el-table :data="userList" border class="data-table">
       <el-table-column prop="username" label="用户名">
       </el-table-column>
-      <el-table-column prop="authority" label="权限">
+      <el-table-column prop="roleId" label="权限">
+        <template scope="scope">
+          <span>{{ scope.row.roleId | roleFilter }}</span>
+        </template>
       </el-table-column>
       <el-table-column prop="status" label="状态">
+        <template scope="scope">
+          <span>{{ scope.row.status | statusFilter}}</span>
+        </template>
       </el-table-column>
       <el-table-column label="操作">
         <template scope="scope">
@@ -15,10 +21,10 @@
         </template>
       </el-table-column>
     </el-table>
-		<div class="block">
-			<el-pagination @size-change="pageSizeChange" @current-change="currentPageChange" :current-page="currentPage" :page-sizes="[5, 10,50, 100]" :page-size="pageSize" :total="totalCount" layout=" prev, pager, next, sizes, jumper">
-			</el-pagination>
-		</div>
+    <div class="block">
+      <el-pagination @size-change="pageSizeChange" @current-change="currentPageChange" :current-page="currentPage" :page-sizes="[5, 10,50, 100]" :page-size="pageSize" :total="totalCount" layout=" prev, pager, next, sizes, jumper">
+      </el-pagination>
+    </div>
     <el-dialog :title="dialogTitle" :visible.sync="dialogVisible" size="tiny" :modal="true" :modal-append-to-body="false">
       <div v-if="dialogType==='deleteDialog'">
         <span>删除后，该用户需要重新注册才能使用平台。</span>
@@ -55,7 +61,7 @@ export default {
   name: 'authority-manage',
   data() {
     return {
-      userList:[],
+      userList: [],
       dialogVisible: false,
       dialogTitle: "",
       //编辑对话框、删除对话框
@@ -67,19 +73,19 @@ export default {
       //操作表格行索引
       operateRowIndex: "",
       //翻页相关
-			currentPage: 1,
-			pageSize: 10,
-			totalCount: 10,
+      currentPage: 1,
+      pageSize: 10,
+      totalCount: 10,
     }
   },
   computed: mapState(['authorityManage']),
 
   watch: {
-    authorityManage:function(data){
+    authorityManage: function(data) {
       if (data.result && data.result.list) {
-				this.userList = data.result.list
-				this.totalCount = data.result.count
-			}
+        this.userList = data.result.list
+        this.totalCount = data.result.count
+      }
     }
 
   },
@@ -87,7 +93,7 @@ export default {
     this.getAuthorityManage()
   },
   methods: {
-        ...mapActions([
+    ...mapActions([
       'getAuthorityManage'
     ]),
     handleDeleteClick(index, row) {
@@ -100,8 +106,8 @@ export default {
       this.dialogVisible = true;
       this.dialogTitle = "编辑用户";
       this.dialogType = "editDialog";
-      this.editForm.authorityRadio = row.authority == "管理员" ? "admin" : "user";
-      this.editForm.statusRadio = row.status == "已激活" ? "active" : "notActive";
+      this.editForm.authorityRadio = row.roleId == 1 ? "admin" : "user";
+      this.editForm.statusRadio = row.status == 1 ? "active" : "notActive";
       this.operateRowIndex = index;
     },
     //编辑对话框确认
@@ -111,24 +117,54 @@ export default {
       }
       else if (this.dialogType == "editDialog") {
         let operateRow = this.userList[this.operateRowIndex];
-        let authority = this.editForm.authorityRadio == "admin" ? "管理员" : "普通用户";
-        let status = this.editForm.statusRadio == "active" ? "已激活" : "未激活";
-        operateRow.authority = authority;
+        let authority = this.editForm.authorityRadio == "admin" ? 1 : 0;
+        let status = this.editForm.statusRadio == "active" ? 1 : 0;
+        operateRow.roleId = authority;
         operateRow.status = status;
       }
       this.dialogVisible = false;
     },
-    		//翻页控件
-		currentPageChange(currentPage) {
-			// this.currentPage = currentPage
-			// this.latestSearch.currentPage = currentPage - 1
-			// this.refreshDataSource()
-		},
-		pageSizeChange(pageSize) {
-			// this.pageSize = pageSize
-			// this.latestSearch.pageSize = pageSize
-			// this.refreshDataSource()
-		},
+    //翻页控件
+    currentPageChange(currentPage) {
+      // this.currentPage = currentPage
+      // this.latestSearch.currentPage = currentPage - 1
+      // this.refreshDataSource()
+    },
+    pageSizeChange(pageSize) {
+      // this.pageSize = pageSize
+      // this.latestSearch.pageSize = pageSize
+      // this.refreshDataSource()
+    },
+  },
+  filters: {
+    roleFilter: function(value) {
+      let result = ''
+      switch (value) {
+        case 1:
+          result = "管理员"
+          break;
+        case 0:
+          result = "普通用户"
+          break;
+        default:
+          break;
+      }
+      return result
+    },
+    statusFilter: function(value) {
+      let result = ''
+      switch (value) {
+        case 1:
+          result = "已激活"
+          break;
+        case 0:
+          result = "未激活"
+          break;
+        default:
+          break;
+      }
+      return result
+    }
   }
 }
 </script>
@@ -139,49 +175,49 @@ export default {
 }
 
 .right-content {
-	.searchBar {
-		& .el-select {
-			width: 150px;
-		}
-	}
-	.block {
-		text-align: right;
-		margin-top: 30px;
-	}
-	.el-pagination {
-		button,
-		input {
-			border: 1px solid #d1dbe5;
-			border-radius: 5px;
-		}
-		.el-input {
-			input {
-				border-radius: 5px;
-			}
-		}
-		.btn-next {
-			margin: 0 10px;
-		}
-		.el-pager {
-			li {
-				margin-left: 10px;
-				border: 1px solid #d1dbe5;
-				border-radius: 5px;
-			}
-		}
-	}
-	.toolbar {
-		button {
-			margin: 0;
-			&:after {
-				content: " |";
-				display: inline;
-			}
-			&:last-child:after {
-				display: none;
-			}
-		}
-	}
+  .searchBar {
+    & .el-select {
+      width: 150px;
+    }
+  }
+  .block {
+    text-align: right;
+    margin-top: 30px;
+  }
+  .el-pagination {
+    button,
+    input {
+      border: 1px solid #d1dbe5;
+      border-radius: 5px;
+    }
+    .el-input {
+      input {
+        border-radius: 5px;
+      }
+    }
+    .btn-next {
+      margin: 0 10px;
+    }
+    .el-pager {
+      li {
+        margin-left: 10px;
+        border: 1px solid #d1dbe5;
+        border-radius: 5px;
+      }
+    }
+  }
+  .toolbar {
+    button {
+      margin: 0;
+      &:after {
+        content: " |";
+        display: inline;
+      }
+      &:last-child:after {
+        display: none;
+      }
+    }
+  }
 }
 </style>
 

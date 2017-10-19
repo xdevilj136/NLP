@@ -39,10 +39,12 @@ export default {
                 label: '机构名识别',
                 value: 'function-display/machanism-ident'
             }]
-          },{
-            label: '用户与权限管理',
-            value: 'authority-manage'
-          }],
+          },
+          // {
+          //   label: '用户与权限管理',
+          //   value: 'authority-manage'
+          // }
+          ],
           defaultProps: {
             children: 'children',
             label: 'label',

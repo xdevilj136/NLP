@@ -23,7 +23,7 @@
         <span class="detail-right-label">{{detail.outputCount}}</span>
       </el-form-item>
       <el-form-item >
-        <a class="common_a" href="javascript:void(0);" @click="download">下载输出文件</a>
+        <el-button :disabled="!indexMethods.hasCompleted(detail.status)" type="text" class="common_a" @click="download">下载输出文件</el-button>
       </el-form-item>
           <div class="toolbar">
       <el-button v-if="indexMethods.canStart(detail.status)" :disabled="indexMethods.startDisabled(detail.status)" type="text" @click="startTask(detail.id)">开始</el-button>
@@ -200,8 +200,9 @@ export default {
 
 <style lang="less" scoped>
 .common_a{
-  text-decoration: underline;
-  color:#20a0ff;
+  &:hover{
+    text-decoration: underline;
+  }
 }
 .right-content {
   .breadcrumb {

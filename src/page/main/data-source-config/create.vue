@@ -26,8 +26,7 @@
         <div v-if="$route.name=='data-source-config-create'" class="clearfix mgt15" style="position:relative;">
             <span class="detail-left-label">数据源文件:</span>
             <div class="detail-right-content-box">
-                <el-upload :disabled="isUploading||$route.name=='data-source-config-edit'" class="upload-demo" action="/api/inputSource/upload" 
-                :data="uploadPostParams" :before-upload="beforeUpload" :on-progress="uploading" :on-success="uploadSuccess" :on-error="uploadError" :show-file-list="false">
+                <el-upload :disabled="isUploading||$route.name=='data-source-config-edit'" class="upload-demo" action="/api/inputSource/upload" :data="uploadPostParams" :before-upload="beforeUpload" :on-progress="uploading" :on-success="uploadSuccess" :on-error="uploadError" :show-file-list="false">
                     <el-input :disabled="$route.name=='data-source-config-edit'" v-model="uploadDataName" readonly class="input" placeholder="浏览..." size="small"></el-input>
                 </el-upload>
             </div>
@@ -37,7 +36,7 @@
             <span class="detail-left-label">目标表:</span>
             <div class="detail-right-content-box">
                 <el-select :disabled="!dataLoaded" v-model="dataSource.targetSheet" @change="targetSheetChange" placeholder="- -" class="input" size="small">
-                    <el-option v-for="(value,key) in sheetOptions" :key="key" :label="value" :value="key">
+                    <el-option v-for="(value,index) in sheetOptions" :key="index" :label="value" :value="index">
                     </el-option>
                 </el-select>
             </div>
@@ -144,8 +143,8 @@ export default {
             previewTxt: '',
             previewTableData: [],
             previewTableHeaders: [],
-            tableWidth:'',
-            columnWidth:310,
+            tableWidth: '',
+            columnWidth: 310,
             //分隔符选择
             symbolsList: ["制表符"],
             otherSymbol: '',
@@ -177,8 +176,8 @@ export default {
                 { label: 'GBK', value: 'gbk' },
                 { label: 'GB18030', value: 'gb18030' }
             ],
-            sheetOptions: {}
-            
+            sheetOptions: []
+
         }
     },
     computed: {
@@ -189,9 +188,9 @@ export default {
             'singleDataSource'
         ]),
         //上传文件附带参数
-        uploadPostParams:function(){
+        uploadPostParams: function() {
             return {
-                inputType:this.dataSource.type
+                inputType: this.dataSource.type
             }
         }
     },
@@ -220,7 +219,7 @@ export default {
                     this.previewTableData = []
                     if (resultData[0]) {
                         this.previewTableHeaders = resultData[0]
-                        this.tableWidth="width:"+(this.previewTableHeaders.length*this.columnWidth)+'px'
+                        this.tableWidth = "width:" + (this.previewTableHeaders.length * this.columnWidth) + 'px'
                         for (let index = 1; index < resultData.length; index++) {
                             let element = resultData[index]
                             let processed = {}
@@ -246,9 +245,19 @@ export default {
                 this.dataSource.name = singleDataSource.result.name
                 this.dataSource.type = singleDataSource.result.inputType
                 let config = JSON.parse(singleDataSource.result.config)
-                this.uploadedPath=config.path
+                this.uploadedPath = config.path
                 this.dataSource.encode = config.extraConfig.encoding
                 if (this.dataSource.type !== 'txt') {
+                    if (singleDataSource.result.overview) {
+                        let tables = JSON.parse(singleDataSource.result.overview).tables
+                        let convertArray = []
+                        for (var key in tables) {
+                            if (tables.hasOwnProperty(key)) {
+                                convertArray[key] = tables[key]
+                            }
+                        }
+                        this.sheetOptions = convertArray
+                    }
                     this.targetSheetShow = true
                     this.topRowIsTitleShow = true
                     this.dataSource.targetSheet = config.extraConfig.sheet
@@ -277,17 +286,17 @@ export default {
             this.$router.go(-1)
         },
         //编码格式切换
-        encodeChange(value){
+        encodeChange(value) {
             this.tableIsOnPreview = false
             this.textIsOnPreview = false
         },
         //目标表切换
-        targetSheetChange(value){
+        targetSheetChange(value) {
             this.tableIsOnPreview = false
             this.textIsOnPreview = false
         },
         //首行标题行切换
-        topRowIsTitleChange(value){
+        topRowIsTitleChange(value) {
             this.tableIsOnPreview = false
             this.textIsOnPreview = false
         },
@@ -386,9 +395,15 @@ export default {
 
         },
         uploadSuccess(res, file) {
-            console.log(res)
-            if(res.result.tables){
-                this.sheetOptions=res.result.tables
+            if (res.result.tables) {
+                let convertArray = []
+                for (var key in res.result.tables) {
+                    if (res.result.tables.hasOwnProperty(key)) {
+                        convertArray[key] = res.result.tables[key]
+                    }
+                }
+                this.sheetOptions = convertArray
+                this.dataSource.targetSheet=0
             }
             this.uploadingStatus = 'success'
             this.uploadedPath = res.result.path
@@ -471,10 +486,11 @@ export default {
 </script>
 
 <style lang="less">
-.el-table{
+.el-table {
     width: auto;
     min-width: 600px;
 }
+
 .lightFont {
     color: gray;
 }
@@ -537,8 +553,8 @@ export default {
             width: 100px;
         }
     }
-        .el-table{
-        .cell{
+    .el-table {
+        .cell {
             white-space: nowrap;
         }
     }

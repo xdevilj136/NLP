@@ -2,7 +2,7 @@
   <div>
     <div class="info-extra-list-head-box">
       <el-form :inline="true" :model="searchForm" class="searchBar">
-        <el-form-item label="创建人">
+        <el-form-item style="display:none;" label="创建人">
           <!-- <el-select v-model="searchForm.name" placeholder="请选择" size="small" filterable>
                 <el-option v-for="item in nameOptions" :key="item.value" :label="item.label" :value="item.value">
                 </el-option>

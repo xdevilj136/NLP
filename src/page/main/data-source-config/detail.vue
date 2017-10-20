@@ -14,7 +14,7 @@
                 <span class="detail-right-label">{{detail.inputType}}</span>
             </el-form-item>
             <el-form-item  v-if="targetSheetShow" label="目标表：">
-                <span class="detail-right-label">{{detail.targetSheet | targetSheetFilter}}</span>
+                <span class="detail-right-label">{{detail.targetSheet}}</span>
             </el-form-item>
             <el-form-item label="编码格式：">
                 <span class="detail-right-label">{{detail.encode}}</span>
@@ -102,7 +102,8 @@ export default {
                     }
                     this.targetSheetShow=true
                     this.topRowIsTitleShow=true
-                    this.detail.targetSheet = config.extraConfig.sheet
+                    let sheetIndex=config.extraConfig.sheet
+                    this.detail.targetSheet=JSON.parse(this.detail.overview).tables[sheetIndex]
                     this.detail.topRowIsTitle = config.extraConfig.titleRow ? '是' : '否'
                 }
                 else{
@@ -150,33 +151,6 @@ export default {
         },
         deleteDialogConfirm(){
             this.deleteDataSource(this.toDeleteSourceId)
-        }
-    },
-    filters: {
-
-        targetSheetFilter: function(value) {
-            let result = ''
-            switch (value) {
-                case 0:
-                    result = 'sheet1'
-                    break;
-                case 1:
-                    result = 'sheet2'
-                    break;
-                case 2:
-                    result = 'sheet3'
-                    break;
-                case 3:
-                    result = 'sheet4'
-                    break;
-                case 4:
-                    result = 'sheet5'
-                    break;
-
-                default:
-                    break;
-            }
-            return result
         }
     }
 }

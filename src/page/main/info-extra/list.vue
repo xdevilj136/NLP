@@ -3,10 +3,6 @@
     <div class="info-extra-list-head-box">
       <el-form :inline="true" :model="searchForm" class="searchBar">
         <el-form-item style="display:none;" label="创建人">
-          <!-- <el-select v-model="searchForm.name" placeholder="请选择" size="small" filterable>
-                <el-option v-for="item in nameOptions" :key="item.value" :label="item.label" :value="item.value">
-                </el-option>
-              </el-select> -->
           <el-input v-model="searchForm.name" placeholder="请输入" size="small"></el-input>
         </el-form-item>
         <el-form-item label="建立日期：">

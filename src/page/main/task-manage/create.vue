@@ -144,7 +144,7 @@ export default {
           }
         }, this);
         if (this.task.inputConfig) {
-          this.task.targetColumn = JSON.parse(this.task.inputConfig).column
+          this.task.targetColumn = JSON.parse(this.task.inputConfig).column+1
         }
       }
     },
@@ -195,7 +195,7 @@ export default {
       newTask.inputSourceId = this.DataSourceOptions[this.task.dataSourceIndex].id;
       if (this.targetColumnShow) {
         newTask.inputConfig = JSON.stringify({
-          column: this.task.targetColumn
+          column: this.task.targetColumn-1
         })
       }
       newTask.service = 0;

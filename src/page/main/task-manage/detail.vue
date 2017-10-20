@@ -23,7 +23,7 @@
         <span class="detail-right-label">{{detail.outputCount}}</span>
       </el-form-item>
       <el-form-item >
-        <el-button :disabled="!indexMethods.hasCompleted(detail.status)" type="text" class="common_a" @click="download">下载输出文件</el-button>
+        <el-button v-if="indexMethods.hasCompleted(detail.status)" type="text" class="common_a" @click="download">下载输出文件</el-button>
       </el-form-item>
           <div class="toolbar">
       <el-button v-if="indexMethods.canStart(detail.status)" :disabled="indexMethods.startDisabled(detail.status)" type="text" @click="startTask(detail.id)">开始</el-button>
@@ -183,16 +183,20 @@ export default {
     },
     taskDurationFilter: function(value_ms) {
       if (typeof value_ms == 'number') {
-        let days = parseInt(value_ms / (1000 * 60 * 60 * 24))
-        let hours = parseInt((value_ms % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60))
-        let minutes = parseInt((value_ms % (1000 * 60 * 60)) / (1000 * 60))
-        let seconds = parseInt((value_ms % (1000 * 60)) / 1000)
+        if(value_ms<=0){
+          return '未开始'
+        }
+        let days = Math.round(value_ms / (1000 * 60 * 60 * 24))
+        let hours = Math.round((value_ms % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60))
+        let minutes = Math.round((value_ms % (1000 * 60 * 60)) / (1000 * 60))
+        let seconds = ((value_ms % (1000 * 60)) / 1000)
         let daysStr = (days == 0) ? '' : days + '天'
         let hoursStr = (hours == 0) ? '' : hours + '小时'
         let minutesStr = (minutes == 0) ? '' : minutes + '分'
-        let secondsStr = (seconds == 0) ? '' : seconds + '秒'
+        let secondsStr = seconds + '秒'
         return (daysStr + hoursStr + minutesStr + secondsStr) || 0
       }
+
     }
   }
 }

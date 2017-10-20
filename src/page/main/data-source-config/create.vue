@@ -217,21 +217,30 @@ export default {
                     let resultData = response.result.data
                     this.previewTableHeaders = []
                     this.previewTableData = []
-                    if (resultData[0]) {
-                        this.previewTableHeaders = resultData[0]
-                        this.tableWidth = "width:" + (this.previewTableHeaders.length * this.columnWidth) + 'px'
-                        for (let index = 1; index < resultData.length; index++) {
-                            let element = resultData[index]
-                            let processed = {}
-                            element.forEach(function(value, num) {
-                                let key = this.previewTableHeaders[num]
-                                let add = {
-                                    key: value
-                                }
-                                processed[key] = value
-                            }, this);
-                            this.previewTableData.push(processed)
+                    let startRowIndex=0
+                    if (this.dataSource.topRowIsTitle) {
+                        if (resultData[0]) {
+                            this.previewTableHeaders = resultData[0]
+                            startRowIndex=1
                         }
+                    }
+                    else {
+                        for (var index = 0; index < response.result.cols; index++) {
+                            this.previewTableHeaders.push('第' + (index+1) + '列')
+                        }
+                    }
+                    this.tableWidth = "width:" + (this.previewTableHeaders.length * this.columnWidth) + 'px'
+                    for (let index = startRowIndex; index < resultData.length; index++) {
+                        let element = resultData[index]
+                        let processed = {}
+                        element.forEach(function(value, num) {
+                            let key = this.previewTableHeaders[num]
+                            let add = {
+                                key: value
+                            }
+                            processed[key] = value
+                        }, this);
+                        this.previewTableData.push(processed)
                     }
                 }
             }
@@ -315,7 +324,7 @@ export default {
                         encoding: this.dataSource.encode
                     }
                     break;
-                //         case 'csv':
+                // case 'csv':
                 // extraConfig={
                 //     titleRow: this.dataSource.topRowIsTitle,
                 //     encoding: this.dataSource.encode,
@@ -385,6 +394,10 @@ export default {
                 default:
                     break;
             }
+            if (file.size / (1024 * 1024) > 200) {
+                this.$message.error('上传文件超出最大限制200M');
+                return false;
+            }
             return;
         },
         uploading(event, file) {
@@ -403,7 +416,7 @@ export default {
                     }
                 }
                 this.sheetOptions = convertArray
-                this.dataSource.targetSheet=0
+                this.dataSource.targetSheet = 0
             }
             this.uploadingStatus = 'success'
             this.uploadedPath = res.result.path

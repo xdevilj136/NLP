@@ -291,7 +291,7 @@ export default {
       return this.readyToStart(status) || this.isRunning(status);
     },
     startDisabled(status) {
-      return this.hasCompleted(status) || this.errorCompleted(status);
+      return this.hasCompleted(status);
     },
     editDisabled(status) {
       return this.isRunning(status) || this.readyToStart(status) || this.hasCompleted(status);

@@ -13,6 +13,12 @@
       <el-form-item label="类型：">
         <span class="detail-right-label">{{detail.type | taskTypeFilter}}</span>
       </el-form-item>
+            <el-form-item label="数据名称：">
+        <span class="detail-right-label">{{detail.dataSourceName }}</span>
+      </el-form-item>
+            <el-form-item label="目标列：">
+        <span class="detail-right-label">{{detail.targetColumn }}</span>
+      </el-form-item>
       <el-form-item label="完成状态：">
         <span class="detail-right-label">{{detail.status | taskStatusFilter}}</span>
       </el-form-item>
@@ -60,8 +66,22 @@ export default {
   watch: {
     singleTask: function(singleTask) {
       if (singleTask.result) {
-        this.detail = Object.assign({}, singleTask.result)
+        this.detail = Object.assign({}, singleTask.result);
+        this.DataSourceOptions.forEach(function(element, index) {
+          if (element.id == this.detail.inputSourceId) {
+            this.detail.dataSourceName = element.name
+          }
+        }, this);
+        if (this.detail.inputConfig) {
+          this.detail.targetColumn = JSON.parse(this.detail.inputConfig).column + 1
+        }
       }
+    },
+    dataSource: function(data) {
+      if (data.result && data.result.list) {
+        this.DataSourceOptions = data.result.list
+      }
+      this.queryTaskById(this.$route.params.id)
     },
     deleteTaskResponse: function(response) {
       utils.notifyResponse(response, () => { this.$router.go(-1) })
@@ -78,18 +98,21 @@ export default {
     'singleTask',
     'stopTaskResponse',
     'startTaskResponse',
-    'deleteTaskResponse'
+    'deleteTaskResponse',
+    'dataSource'
   ]),
 
   created() {
-    this.queryTaskById(this.$route.params.id)
+    this.getDataSource()
   },
   methods: {
     ...mapActions([
       'queryTaskById',
       'deleteTaskRequest',
       'startTaskRequest',
-      'stopTaskRequest'
+      'stopTaskRequest',
+    'getDataSource'
+      
     ]),
     //操作菜单
     startTask(id) {

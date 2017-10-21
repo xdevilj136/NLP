@@ -26,6 +26,9 @@
         <el-form-item>
           <el-button type="primary" @click="searchSubmit" size="small">查询</el-button>
         </el-form-item>
+        <el-form-item>
+          <el-button type="normal" @click="resetSearchTerms" size="small">重置</el-button>
+        </el-form-item>
       </el-form>
     </div>
     <div style="overflow:hidden;">
@@ -329,6 +332,12 @@ export default {
     searchSubmit() {
       this.latestSearch = this.clone(this.searchForm);
       this.refreshTaskTable(this.searchForm);
+    },
+    //重置查询条件
+    resetSearchTerms(){
+            this.searchForm.taskType=''
+            this.searchForm.taskStatus=''
+            this.searchForm.timeRange=''
     },
     refreshTaskTable(requirement) {
       let taskType = requirement.taskType;

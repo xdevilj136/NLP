@@ -19,6 +19,9 @@
 			<el-form-item>
 				<el-button type="primary" @click="searchSubmit" size="small">查询</el-button>
 			</el-form-item>
+			<el-form-item>
+				<el-button type="normal" @click="resetSearchTerms" size="small">重置</el-button>
+			</el-form-item>
 		</el-form>
 
 		<div style="overflow:hidden;">
@@ -111,10 +114,10 @@ export default {
 				value: 'excel',
 				label: 'Excel'
 			},
-			{
-				value: 'csv',
-				label: 'CSV'
-			}
+			// {
+			// 	value: 'csv',
+			// 	label: 'CSV'
+			// }
 			]
 		}
 	},
@@ -182,6 +185,11 @@ export default {
 		searchSubmit() {
 			this.latestSearch = Object.assign({}, this.searchForm)
 			this.refreshSourceTable(this.searchForm)
+		},
+		//重置查询条件
+		resetSearchTerms() {
+			this.searchForm.dataSourceType = ''
+			this.searchForm.timeRange = ''
 		},
 		//根据上一次查询条件刷新数据源列表
 		refreshDataSource() {

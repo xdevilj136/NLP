@@ -11,7 +11,10 @@
             </el-option>
           </el-select>
         </el-form-item>
-        <el-button type="primary" class="search-btn" @click="searchSubmit" size="small">查询</el-button>
+          <el-button type="primary" class="search-btn" @click="searchSubmit" size="small">查询</el-button>
+        </el-form-item>
+        </el-form-item>
+          <el-button type="normal" class="search-btn" @click="resetSearchTerms" size="small">重置</el-button>
         </el-form-item>
       </el-form>
     </div>
@@ -156,6 +159,10 @@ export default {
       this.latestSearch.timeRange=this.searchForm.timeRange;
       this.refreshRuleTable(this.searchForm);
     },
+    //重置查询条件
+		resetSearchTerms() {
+			this.searchForm.timeRange = ''
+		},
     refreshRuleTable(requirement){
       let creator = requirement.name.trim();
       //计算建立时间

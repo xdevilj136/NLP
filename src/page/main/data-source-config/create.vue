@@ -27,7 +27,7 @@
             <span class="detail-left-label">数据源文件:</span>
             <div class="detail-right-content-box">
                 <el-upload :disabled="isUploading||$route.name=='data-source-config-edit'" class="upload-demo" action="/api/inputSource/upload" :data="uploadPostParams" :before-upload="beforeUpload" :on-progress="uploading" :on-success="uploadSuccess" :on-error="uploadError" :show-file-list="false">
-                    <el-input :disabled="$route.name=='data-source-config-edit'" v-model="uploadDataName" readonly class="input" placeholder="浏览..." size="small"></el-input>
+                    <el-input :disabled="$route.name=='data-source-config-edit'" v-model="uploadDataName" class="input" placeholder="浏览..." size="small" readonly></el-input>
                 </el-upload>
             </div>
             <el-progress v-if="isUploading" class="uploading-progress" type="circle" :width="50" :percentage="uploadingPercent" :status="uploadingStatus"></el-progress>
@@ -403,11 +403,10 @@ export default {
         uploading(event, file) {
             this.isUploading = true
             let percent = Number.parseInt(event.percent)
-            console.log(percent)
             this.uploadingPercent = percent
 
         },
-        uploadSuccess(res, file) {
+        uploadSuccess(res, file,fileList) {
             if (res.result.tables) {
                 let convertArray = []
                 for (var key in res.result.tables) {

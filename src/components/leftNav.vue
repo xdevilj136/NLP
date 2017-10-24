@@ -38,6 +38,10 @@ export default {
             }, {
                 label: '机构名识别',
                 value: 'function-display/machanism-ident'
+            },
+            {
+                label: '招行授信解析',
+                value: 'function-display/zsbank-credit'
             }]
           },
           // {

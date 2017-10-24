@@ -9,6 +9,7 @@ const SINGLE_TASK = 'SINGLE_TASK'
 const TASK_LOG = 'TASK_LOG'
 const AUTHORITY_MANAGE = 'AUTHORITY_MANAGE'
 const DATA_EXTRACT = 'DATA_EXTRACT'
+const ZSBANK_CREDIT='ZSBANK_CREDIT'
 const ANALYSIS_GET = 'ANALYSIS_GET'
 const LOGIN_CHECK = 'LOGIN_CHECK'
 const LOGIN = 'LOGIN'
@@ -104,6 +105,10 @@ export default {
 	// 信息抽取处理
 	[DATA_EXTRACT](state, data) {
 		state.extractedData = data
+	},
+	//招行授信解析
+	[ZSBANK_CREDIT](state,data){
+		state.zsbankCreditResult=data
 	},
 	//词法分析
 	[ANALYSIS_GET](state, data) {

@@ -118,6 +118,10 @@ export default {
 	dataExtract({ }, data) {
 		service.dataExtract(data);
 	},
+	//招行授信解析
+	zsbankAnalysis({},data){
+		service.zsbankAnalysis(data);
+	},
 	//提交词法分析
 	analysisGet({ }, json) {
 		service.analysisGet(json);

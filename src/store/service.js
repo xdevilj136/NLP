@@ -46,6 +46,10 @@ export default {
 	dataExtract(data) {
 		ajax('POST', '/api/functions/dataExtract', data, 'DATA_EXTRACT');
 	},
+	//招行授信解析
+	zsbankAnalysis(data){
+		ajax('POST', '/api/functions/zhaohangCredit', data, 'ZSBANK_CREDIT');
+	},
 	//词法分析
 	analysisGet(json) {
 		ajax('POST', '/api/functions/grammarParse', json, 'ANALYSIS_GET');
@@ -100,24 +104,7 @@ export default {
 	*/
 	//获取权限管理数据
 	authorityManage(params) {
-		// var data = [{
-		// 	username: '张三',
-		// 	authority: '管理员',
-		// 	status: '已激活'
-		// }, {
-		// 	username: '李四',
-		// 	authority: '普通用户',
-		// 	status: '未激活'
-		// }, {
-		// 	username: '王五',
-		// 	authority: '管理员',
-		// 	status: '已激活'
-		// }, {
-		// 	username: '赵六',
-		// 	authority: '普通用户',
-		// 	status: '未激活'
-		// }];
-		// return data;
+
 		ajax('GET', '/api/user/viewUserList', params, 'AUTHORITY_MANAGE');
 	},
 	/**

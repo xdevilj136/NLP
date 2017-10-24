@@ -80,6 +80,9 @@ export default [{
             }, {
                 path: 'data-extract',
                 component : r => require.ensure([], () => r(require('../page/main/function-display/data-extract')), 'data-extract'),
+            },{
+                path: 'zsbank-credit',
+                component : r => require.ensure([], () => r(require('../page/main/function-display/zsbank-credit')), 'zsbank-credit'),
             }]
         }, {
             path: '*',

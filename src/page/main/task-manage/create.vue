@@ -9,7 +9,7 @@
     <div class="clearfix mgt15">
       <span class="detail-left-label">任务名称:</span>
       <div class="detail-right-content-box">
-        <el-input v-model="task.name" class="input" placeholder="请输入任务名称" size="small"></el-input>
+        <el-input :disabled="$route.name=='task-manage-edit'" v-model="task.name" class="input" placeholder="请输入任务名称" size="small"></el-input>
       </div>
     </div>
     <div class="clearfix mgt15">

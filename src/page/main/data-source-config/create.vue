@@ -220,7 +220,10 @@ export default {
                     let startRowIndex=0
                     if (this.dataSource.topRowIsTitle) {
                         if (resultData[0]) {
-                            this.previewTableHeaders = resultData[0]
+                            resultData[0].forEach(function(element) {
+                                element=element.replace(/\./g,',')
+                                this.previewTableHeaders.push(element)
+                            }, this);
                             startRowIndex=1
                         }
                     }
@@ -235,13 +238,12 @@ export default {
                         let processed = {}
                         element.forEach(function(value, num) {
                             let key = this.previewTableHeaders[num]
-                            let add = {
-                                key: value
-                            }
                             processed[key] = value
                         }, this);
                         this.previewTableData.push(processed)
                     }
+                    console.log(this.previewTableHeaders)
+                    console.log(this.previewTableData)
                 }
             }
             else {
@@ -277,6 +279,7 @@ export default {
                     this.topRowIsTitleShow = false
                 }
             }
+
         }
     },
     created() {
@@ -368,6 +371,7 @@ export default {
             }
         },
         beforeUpload(file) {
+            console.log(file)
             const isCsv = file.type === 'text/csv';
             const isTxt = file.type === 'text/plain';
             const isExcel = (file.type === 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet') || file.name.endsWith('.xls');
@@ -407,6 +411,7 @@ export default {
 
         },
         uploadSuccess(res, file,fileList) {
+            console.log(file)
             if (res.result.tables) {
                 let convertArray = []
                 for (var key in res.result.tables) {

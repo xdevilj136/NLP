@@ -70,15 +70,15 @@ export default {
 			searchForm: {
 				dataSourceType: '',
 				timeRange: '',
-				currentPage: '',
-				pageSize: ''
+				currentPage: 0,
+				pageSize: 10
 			},
 			//最近一次查询条件
 			latestSearch: {
 				dataSourceType: '',
 				timeRange: '',
-				currentPage: '',
-				pageSize: ''
+				currentPage: 0,
+				pageSize: 10
 			},
 			dataSourceList: [],
 			//翻页相关
@@ -228,8 +228,6 @@ export default {
 			this.latestSearch.pageSize = pageSize
 			this.refreshDataSource()
 		},
-
-
 	},
 
 }

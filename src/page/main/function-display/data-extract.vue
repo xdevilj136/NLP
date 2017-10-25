@@ -56,10 +56,10 @@ export default {
           if (extractedData.result.DataExtract) {
             this.extractSuccess = true;
             let parsedData = JSON.parse(extractedData.result.DataExtract);
+            let list = []
             for (let key in parsedData) {
               if (parsedData.hasOwnProperty(key)) {
                 let element = parsedData[key]
-                let list = []
                 for (var element_key in element) {
                   if (element.hasOwnProperty(element_key)) {
                     element[element_key].forEach(function(each) {
@@ -70,9 +70,9 @@ export default {
                     }, this);
                   }
                 }
-                this.extractResult = list
               }
             }
+            this.extractResult = list
           }
           this.$notify({
             message: '抽取信息成功',

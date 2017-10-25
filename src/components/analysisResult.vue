@@ -43,6 +43,9 @@ export default {
       else if(this.type=='ner_list'){
         title='实体识别'
       }
+      else if(this.type=='seg_list'){
+        title='分析结果'
+      }
       return title
     },
     desTitle:function(){
@@ -52,6 +55,9 @@ export default {
       }
       else if(this.type=='ner_list'){
         title='实体类别图示：'
+      }
+      else if(this.type=='seg_list'){
+        title='词性类别图示：'
       }
       return title
     }

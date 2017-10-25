@@ -88,6 +88,9 @@ export default {
 */
         let self=this
         //找出没有匹配的自定义实体tag
+        let NamedIdentityRecognize=this.processedData.NamedIdentityRecognize
+        if(NamedIdentityRecognize.NerList&&NamedIdentityRecognize.NerList.newTags){
+
         let noMatchTags=this.processedData.NamedIdentityRecognize.NerList.newTags.filter(function(value){
           return !self.nerList[value]
         });
@@ -104,6 +107,7 @@ export default {
             }
           }
           this.nerList = Object.assign({}, this.nerList, newTag)
+        }
         }
       }
       else {

@@ -32,7 +32,7 @@
       </el-form>
     </div>
     <div style="overflow:hidden;">
-      <span class="lightFont">共搜索到{{taskList.length?taskList.length:0}}条数据</span>
+      <span class="lightFont">共搜索到{{totalCount?totalCount:0}}条数据</span>
       <div class="fr">
         <el-button @click="refreshTask" size="small">刷新</el-button>
         <el-button type="primary" @click="createTask" size="small">新增任务</el-button>

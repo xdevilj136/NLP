@@ -230,8 +230,6 @@ export default {
                         }, this);
                         this.previewTableData.push(processed)
                     }
-                    console.log(this.previewTableHeaders)
-                    console.log(this.previewTableData)
                 }
             }
             else {

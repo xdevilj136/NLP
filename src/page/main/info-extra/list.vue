@@ -19,7 +19,7 @@
       </el-form>
     </div>
     <div style="overflow:hidden;">
-      <span class="lightFont">共搜索到{{ruleList.length?ruleList.length:0}}条数据</span>
+      <span class="lightFont">共搜索到{{totalCount?totalCount:0}}条数据</span>
       <div class="fr">
         <el-button type="primary" @click="gotoNext('/main/info-extra/add')" size="small">新增配置</el-button>
       </div>
@@ -99,15 +99,15 @@ export default {
       searchForm: {
         name: '',
         timeRange: '',
-        currentPage: '',
-        pageSize: '',
+        currentPage: 0,
+        pageSize: 10,
       },
       //最近一次查询条件
       latestSearch:{
         name: '',
         timeRange: '',
-        currentPage: '',
-        pageSize: ''
+        currentPage: 0,
+        pageSize: 10
       },
       //删除规则id
       toDeleteRuleId: ''
@@ -121,6 +121,7 @@ export default {
     configList: function(configList) {
       if (configList.result&&configList.result.list) {
         this.ruleList = this.configList.result.list
+        this.totalCount=this.configList.result.count
       }
     },
     deleteRuleResponse: function(response) {
@@ -169,10 +170,11 @@ export default {
       let createTime = this.computeCreateTime(requirement.timeRange);
       //查询参数
       let params = {};
-      if (creator) params.fu = creator;
-      if (createTime) params.bt = createTime
-      if(requirement.pageSize) params.ps=requirement.pageSize
-      if(requirement.currentPage) params.p=requirement.currentPage
+      
+      if (creator!=='') params.fu = creator;
+      if (createTime!=='') params.bt = createTime
+      if(requirement.pageSize!=='') params.ps=requirement.pageSize
+      if(requirement.currentPage!=='') params.p=requirement.currentPage
       this.getInfoConfig(params);
     },  
     gotoNext(path) {

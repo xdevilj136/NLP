@@ -73,13 +73,12 @@ export default {
                     }, this);
                   }
                 }
-                  if(key=='Relation'){
-                
+                if(key=='Relation'){
                 this.relationResult = list
-              }
-              else if(key=='Attention'){
+                }
+                else if(key=='Attention'){
                   this.attentionResult=list
-              }
+                }
             }
             }
           }

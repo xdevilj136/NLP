@@ -70,7 +70,7 @@
             <div class="detail-right-content-box  mgt10">
                 <el-button v-if="!textIsOnPreview&&!tableIsOnPreview" type="text" :disabled="!dataLoaded" class="normal_a" @click="previewUploaded">预览</el-button>
                 <el-input v-if="textIsOnPreview" type="textarea" v-model="previewTxt" :rows="10" resize="none" readonly></el-input>
-                <el-table :data="previewTableData" v-if="tableIsOnPreview" :style="tableWidth" :height="280" :border="true">
+                <el-table :data="previewTableData" v-if="tableIsOnPreview" :class="{ headerClass: dataSource.topRowIsTitle }" :style="tableWidth" max-height="280px" :border="true">
                     <el-table-column v-for="(head,index) in previewTableHeaders" :width="columnWidth" :key="index" :prop="head" :label="head" :resizable="false">
                     </el-table-column>
                 </el-table>
@@ -217,23 +217,11 @@ export default {
                     let resultData = response.result.data
                     this.previewTableHeaders = []
                     this.previewTableData = []
-                    let startRowIndex=0
-                    if (this.dataSource.topRowIsTitle) {
-                        if (resultData[0]) {
-                            resultData[0].forEach(function(element) {
-                                element=element.replace(/\./g,',')
-                                this.previewTableHeaders.push(element)
-                            }, this);
-                            startRowIndex=1
-                        }
-                    }
-                    else {
-                        for (var index = 0; index < response.result.cols; index++) {
-                            this.previewTableHeaders.push('第' + (index+1) + '列')
-                        }
+                    for (var index = 0; index < response.result.cols; index++) {
+                        this.previewTableHeaders.push('第' + (index+1) + '列')
                     }
                     this.tableWidth = "width:" + (this.previewTableHeaders.length * this.columnWidth) + 'px'
-                    for (let index = startRowIndex; index < resultData.length; index++) {
+                    for (let index = 0; index < resultData.length; index++) {
                         let element = resultData[index]
                         let processed = {}
                         element.forEach(function(value, num) {
@@ -507,7 +495,14 @@ export default {
     width: auto;
     min-width: 600px;
 }
-
+.headerClass{
+    & thead{
+    display: none;
+    }
+    & tbody>tr:first-child{
+        background: #eef1f6
+    }
+}
 .lightFont {
     color: gray;
 }

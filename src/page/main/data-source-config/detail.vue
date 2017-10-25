@@ -27,7 +27,7 @@
             </el-form-item>
             <el-form-item label="数据源预览：">
                 <el-input v-if="textIsOnPreview" type="textarea" v-model="previewTxt" :rows="10" resize="none" readonly></el-input>
-                <el-table :data="previewTableData" v-if="tableIsOnPreview" :style="tableWidth" :height="280" :border="true">
+                <el-table :data="previewTableData" v-if="tableIsOnPreview" :class="{ headerClass: topRowIsTitle }" :style="tableWidth" max-height="280px" :border="true">
                     <el-table-column v-for="(head,index) in previewTableHeaders" :width="columnWidth" :key="index" :prop="head" :label="head">
                     </el-table-column>
                 </el-table>
@@ -61,6 +61,7 @@ export default {
             previewTableHeaders: [],
             tableWidth:'',
             columnWidth:310,
+            topRowIsTitle:false,
             //详情数据
             detail: {}
         }
@@ -82,29 +83,28 @@ export default {
          
                     this.tableIsOnPreview = true
                     let resultData=JSON.parse(this.detail.overview).data         
+                    let cols=JSON.parse(this.detail.overview).cols
                     this.previewTableHeaders = []
                     this.previewTableData = []
-                    if (resultData[0]) {
-                        this.previewTableHeaders = resultData[0]
-                        this.tableWidth="width:"+(this.previewTableHeaders.length*this.columnWidth)+'px'
-                        for (let index = 1; index < resultData.length; index++) {
-                            let element = resultData[index]
-                            let processed = {}
-                            element.forEach(function(value, num) {
-                                let key = this.previewTableHeaders[num]
-                                let add = {
-                                    key: value
-                                }
-                                processed[key] = value
-                            }, this);
-                            this.previewTableData.push(processed)
-                        }
+                    for (var index = 0; index < cols; index++) {
+                        this.previewTableHeaders.push('第' + (index+1) + '列')
+                    }
+                    this.tableWidth = "width:" + (this.previewTableHeaders.length * this.columnWidth) + 'px'
+                    for (let index = 0; index < resultData.length; index++) {
+                        let element = resultData[index]
+                        let processed = {}
+                        element.forEach(function(value, num) {
+                            let key = this.previewTableHeaders[num]
+                            processed[key] = value
+                        }, this);
+                        this.previewTableData.push(processed)
                     }
                     this.targetSheetShow=true
                     this.topRowIsTitleShow=true
                     let sheetIndex=config.extraConfig.sheet
                     this.detail.targetSheet=JSON.parse(this.detail.overview).tables[sheetIndex]
                     this.detail.topRowIsTitle = config.extraConfig.titleRow ? '是' : '否'
+                    this.topRowIsTitle=config.extraConfig.titleRow
                 }
                 else{
                     this.textIsOnPreview = true
@@ -157,6 +157,14 @@ export default {
 </script>
 
 <style lang="less">
+.headerClass{
+    & thead{
+    display: none;
+    }
+    & tbody>tr:first-child{
+        background: #eef1f6
+    }
+}
 .right-content {
     .breadcrumb {
         font-size: 16px;

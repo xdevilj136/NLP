@@ -27,64 +27,66 @@
   </div>
 </template>
 <script>
-import { mapActions, mapState } from 'vuex'
+import { mapActions, mapState } from "vuex";
 export default {
-  name: 'data-extract',
+  name: "data-extract",
   data() {
     return {
       ruleList: [],
       data: {
-        value: ''
+        value: ""
       },
       //解析后抽取信息结果
       relationResult: [],
-      attentionResult:[],
+      attentionResult: [],
       submit: false,
       extractSuccess: false
-    }
+    };
   },
   watch: {
-
     zsbankCreditResult: function(zsbankCreditResult) {
-      if ('result' in zsbankCreditResult && 'error' in zsbankCreditResult) {
+      if ("result" in zsbankCreditResult && "error" in zsbankCreditResult) {
         if (zsbankCreditResult.error) {
           this.extractSuccess = false;
-          this.$alert(zsbankCreditResult.errorMessage, '提示', {
-            confirmButtonText: '确定',
-            type: 'warning'
+          this.$alert(zsbankCreditResult.errorMessage, "提示", {
+            confirmButtonText: "确定",
+            type: "warning"
           });
           return;
-        }
-        else {
+        } else {
           if (zsbankCreditResult.result.ZhaohangCredit) {
             this.extractSuccess = true;
-            let parsedData = JSON.parse(zsbankCreditResult.result.ZhaohangCredit);
+            let parsedData = JSON.parse(
+              zsbankCreditResult.result.ZhaohangCredit
+            );
             for (let key in parsedData.ZhaohangCredit) {
               if (parsedData.ZhaohangCredit.hasOwnProperty(key)) {
-                let element = parsedData.ZhaohangCredit[key]
-                let list = []
-                for (var element_key in element) {
-                  if (element.hasOwnProperty(element_key)) {
-                    element[element_key].forEach(function(each) {
-                      list.push({
-                        name: element_key,
-                        value: each
-                      });
-                    }, this);
+                let keyEle = parsedData.ZhaohangCredit[key];
+                let list = [];
+                for (var index = 0; index < keyEle.length; index++) {
+                  var element = keyEle[index];
+                  for (var element_key in element) {
+                    if (element.hasOwnProperty(element_key)) {
+                      element[element_key].forEach(function(each) {
+                        list.push({
+                          name: element_key,
+                          value: each
+                        });
+                      }, this);
+                    }
                   }
                 }
-                if(key=='Relation'){
-                this.relationResult = list
+                if (key == "Relation") {
+                  this.relationResult = list;
+                } else if (key == "Attention") {
+                  this.attentionResult = list;
                 }
-                else if(key=='Attention'){
-                  this.attentionResult=list
-                }
-            }
+              }
             }
           }
           this.$notify({
-            message: '解析成功',
-            type: 'success',
+            message: "解析成功",
+            type: "success",
             duration: 1000,
             offset: 200
           });
@@ -92,30 +94,28 @@ export default {
       }
     }
   },
-  computed: mapState(['zsbankCreditResult']),
-  created() {
-  },
+  computed: mapState(["zsbankCreditResult"]),
+  created() {},
   methods: {
-    ...mapActions([
-      'zsbankAnalysis'
-    ]),
+    ...mapActions(["zsbankAnalysis"]),
     submitTxt() {
-      if (this.data.value.trim() == '') {
-        this.$alert('输入内容不能为空', '提示', {
-          confirmButtonText: '确定',
-          type: 'warning'
+      // this.zsbankCreditResult={"error":false,"result":{"ZhaohangCredit":"{\"ZhaohangCredit\":{\"Relation\":[{\"R1\":[\"A\",\"B\"]},{\"R2\":[\"C\",\"D\"]}],\"Attention\":[{\"T1\":[\"A\"]},{\"T2\":[\"C\"]},{\"T1\":[\"B\"]}]}}"}};
+      if (this.data.value.trim() == "") {
+        this.$alert("输入内容不能为空", "提示", {
+          confirmButtonText: "确定",
+          type: "warning"
         });
         return;
       }
-      this.submit = true
+      this.submit = true;
       let requestData = {
-        functions:["ZhaohangCredit"],
+        functions: ["ZhaohangCredit"],
         data: this.data.value
       };
-      this.zsbankAnalysis(requestData)
+      this.zsbankAnalysis(requestData);
     }
   }
-}
+};
 </script>
 
 <style lang="less">
@@ -123,8 +123,8 @@ export default {
   text-align: right;
   margin-bottom: 50px;
 }
-.mgt40{
-    margin-top: 40px;
+.mgt40 {
+  margin-top: 40px;
 }
 .message {
   top: 160px;

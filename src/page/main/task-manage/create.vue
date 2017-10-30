@@ -16,7 +16,7 @@
       <span class="detail-left-label">任务类型:</span>
       <div class="detail-right-content-box">
         <div>
-          <el-select v-model="task.type" class="input" placeholder="请选择" size="small">
+          <el-select v-model="task.type" @change="resetSecondSelect" class="input" placeholder="请选择" size="small">
             <el-option v-for="item in taskTypeOptions" :key="item.value" :label="item.label" :value="item.value">
             </el-option>
           </el-select>
@@ -172,12 +172,15 @@ export default {
     goBack() {
       this.$router.go(-1)
     },
+    resetSecondSelect(){
+      this.task.extractConfigId=''
+    },
     submitValidate() {
       let valid = true;
       if (this.task.name === '' || this.task.type === '' || this.task.dataSourceIndex === '') {
         valid = false;
       }
-      if (this.task.type == 3 && this.task.extractConfigId === '') {
+      if (this.task.type == 3 && (this.task.extractConfigId === ''||this.task.extractConfigId==null)) {
         valid = false;
       }
       if (this.targetColumnShow && this.task.targetColumn == '') {

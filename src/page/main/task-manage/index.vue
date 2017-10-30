@@ -147,16 +147,16 @@ export default {
         taskType: '',
         taskStatus: '',
         timeRange: '',
-        currentPage: '',
-        pageSize: ''
+        currentPage: 0,
+        pageSize: 10
       },
       //最近查询条件记录
       latestSearch: {
         taskType: '',
         taskStatus: '',
         timeRange: '',
-        currentPage: '',
-        pageSize: ''
+        currentPage: 0,
+        pageSize: 10
       },
       //对话框
       dialogTitle: '',
@@ -331,13 +331,16 @@ export default {
     //查询确认
     searchSubmit() {
       this.latestSearch = this.clone(this.searchForm);
-      this.refreshTaskTable(this.searchForm);
+      this.currentPage=this.latestSearch.currentPage+1
+      this.pageSize=this.latestSearch.pageSize
+      this.refreshTaskTable(this.latestSearch);
     },
     //重置查询条件
     resetSearchTerms(){
             this.searchForm.taskType=''
             this.searchForm.taskStatus=''
             this.searchForm.timeRange=''
+            this.searchSubmit();
     },
     refreshTaskTable(requirement) {
       let taskType = requirement.taskType;

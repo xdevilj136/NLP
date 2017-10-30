@@ -158,11 +158,14 @@ export default {
     searchSubmit() {
       this.latestSearch.name=this.searchForm.name;
       this.latestSearch.timeRange=this.searchForm.timeRange;
+      this.currentPage=this.searchForm.currentPage
+      this.pageSize=this.searchForm.pageSize
       this.refreshRuleTable(this.searchForm);
     },
     //重置查询条件
 		resetSearchTerms() {
 			this.searchForm.timeRange = ''
+      this.searchSubmit()
 		},
     refreshRuleTable(requirement){
       let creator = requirement.name.trim();

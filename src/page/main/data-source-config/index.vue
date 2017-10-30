@@ -184,12 +184,15 @@ export default {
 		//查询确认
 		searchSubmit() {
 			this.latestSearch = Object.assign({}, this.searchForm)
-			this.refreshSourceTable(this.searchForm)
+			this.currentPage=this.latestSearch.currentPage+1
+			this.pageSize=this.latestSearch.pageSize
+			this.refreshSourceTable(this.latestSearch)
 		},
 		//重置查询条件
 		resetSearchTerms() {
 			this.searchForm.dataSourceType = ''
 			this.searchForm.timeRange = ''
+			this.searchSubmit()
 		},
 		//根据上一次查询条件刷新数据源列表
 		refreshDataSource() {

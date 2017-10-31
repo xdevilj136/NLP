@@ -45,8 +45,8 @@ export default {
         value: 'NamedIdentityRecognize'
       }],
       text: {
-        type: [],
-        value: ''
+        type: ['WordSegment','PosTag','NamedIdentityRecognize'],
+        value: '海致网络技术（北京）有限公司成立于2013年，注册资本：4,500.00万美元，是一个开发企业数据管理与分析平台服务的公司。'
       },
       submit: false,
       processedData: {
@@ -123,6 +123,7 @@ export default {
 
   },
   created() {
+      this.submitTxt()
   },
   methods: {
     ...mapActions([

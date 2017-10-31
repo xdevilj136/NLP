@@ -34,8 +34,8 @@ export default {
   data() {
     return {
       data: {
-        toStdName: '',
-        toAnalysisName: '',
+        toStdName: '海致网络',
+        toAnalysisName: '海致网络技术(北京)有限公司',
         fullName: ''
       },
       processedCompanySeg:{}
@@ -66,6 +66,8 @@ export default {
   },
   computed: mapState(['companyStd', 'companySegment']),
   created() {
+    this.submitTxt('companyStd')
+    this.submitTxt('companySegment')
   },
   methods: {
     ...mapActions([

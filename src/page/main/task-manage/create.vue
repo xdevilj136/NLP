@@ -201,6 +201,9 @@ export default {
           column: this.task.targetColumn-1
         })
       }
+      else{
+        newTask.inputConfig="{}"
+      }
       newTask.service = 0;
       return newTask
     },

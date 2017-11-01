@@ -4,30 +4,36 @@
     </el-input>
     <p v-if="data.value.length>=1000" style="color:red;">超出最大长度限制1000</p>
     <div class="submit-box">
-      <el-button @click="submitTxt" type="primary">提交文本</el-button>
+      <el-button @click="replaceTxt" type="normal">替换文本</el-button>
+      <el-button @click="submitTxt" type="primary">解析文本</el-button>
     </div>
-    <div v-if="submit && extractSuccess">
-    <p>关联关系</p>
-    <el-table  border style="width: 100%" class="mgt10 mgb10" :data="relationResult">
-      <el-table-column min-width="100" prop="name" label="名称">
-      </el-table-column>
-      <el-table-column min-width="500" prop="value" label="值">
-      </el-table-column>
-    </el-table>
-    </div>
-    <div v-if="submit && extractSuccess" class="mgt40">
-    <p>关注点</p>
-    <el-table  border style="width: 100%" class="mgt10 mgb10" :data="attentionResult">
-      <el-table-column min-width="100" prop="name" label="名称">
-      </el-table-column>
-      <el-table-column min-width="500" prop="value" label="值">
-      </el-table-column>
-    </el-table>
+    <div class="extract-result" v-if="submit && extractSuccess">
+      <p>关联关系</p>
+      <el-table  border style="width: 100%" class="mgt10 mgb10" :data="relationResult">
+        <el-table-column min-width="100" prop="name" label="名称">
+        </el-table-column>
+        <el-table-column min-width="500" prop="value" label="值">
+        </el-table-column>
+      </el-table>
+      <div class="mgt40">
+      <div class="top-bar">
+      <p>关注点</p>
+      <el-button v-if="!merged" @click="mergeResult" type="primary" size="small">合并结果</el-button>
+      <el-button v-if="merged" @click="revertMerge" type="normal" size="small">取消合并</el-button>
+      </div>
+      <el-table  border style="width: 100%" class="mgt10 mgb10" :data="attentionResult">
+        <el-table-column min-width="100" prop="name" label="名称">
+        </el-table-column>
+        <el-table-column min-width="500" prop="value" label="值">
+        </el-table-column>
+      </el-table>
+      </div>
     </div>
   </div>
 </template>
 <script>
 import { mapActions, mapState } from "vuex";
+import {zsbankCreditSamples} from "src/config/zsbankCreditSamples";
 export default {
   name: "data-extract",
   data() {
@@ -47,8 +53,11 @@ export default {
       //解析后抽取信息结果
       relationResult: [],
       attentionResult: [],
+      attentionResultSave:[],
       submit: false,
-      extractSuccess: false
+      extractSuccess: false,
+      merged:false,
+      sampleIndex:0
     };
   },
   watch: {
@@ -97,11 +106,16 @@ export default {
     }
   },
   computed: mapState(["zsbankCreditResult"]),
-  created() {
-    this.submitTxt();
-  },
+  created() {},
   methods: {
     ...mapActions(["zsbankAnalysis"]),
+    replaceTxt() {
+      this.data.value=zsbankCreditSamples[this.sampleIndex]
+      this.sampleIndex++
+      if(this.sampleIndex>=zsbankCreditSamples.length){
+        this.sampleIndex=0
+      }
+    },
     submitTxt() {
       if (this.data.value.trim() == "") {
         this.$alert("输入内容不能为空", "提示", {
@@ -116,12 +130,55 @@ export default {
         data: this.data.value
       };
       this.zsbankAnalysis(requestData);
+    },
+    mergeResult() {
+      this.merged=true
+      this.attentionResultSave=Object.assign([], this.attentionResult)
+      let attentionResultCopy = Object.assign([], this.attentionResult)
+      let mergeResult = [];
+      let topElement = {};
+      while (attentionResultCopy.length > 0) {
+        let topElement = attentionResultCopy.shift();
+        if (topElement && topElement.name) {
+          mergeResult.push(topElement);
+          let group=attentionResultCopy.filter(function(element) {
+            return (element.name == topElement.name)
+          })
+          mergeResult=mergeResult.concat(group)
+          attentionResultCopy=attentionResultCopy.filter(function(value){
+            return (value.name !== topElement.name)
+          })
+        }
+        else break
+      }
+      this.attentionResult=mergeResult
+    },
+    revertMerge(){
+      this.merged=false
+      this.attentionResult=Object.assign([], this.attentionResultSave)
     }
   }
 };
 </script>
 
 <style lang="less">
+.extract-result {
+  overflow-y: scroll;
+  height: 500px;
+  border: 1px solid #bfcbd9;
+  border-radius: 4px;
+  padding: 10px;
+}
+.top-bar {
+  display: inline-block;
+  button {
+    margin-left: 20px;
+    display: inline-block;
+  }
+  p {
+    display: inline-block;
+  }
+}
 .submit-box {
   text-align: right;
   margin-bottom: 50px;

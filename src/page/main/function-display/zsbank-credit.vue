@@ -1,6 +1,6 @@
 <template>
   <div >
-    <el-input class="mgt10 mgb10" type="textarea" :autosize="{ minRows: 8, maxRows: 8}" :maxlength="1000" placeholder="请输入要进行信息抽取的内容" v-model="data.value">
+    <el-input class="mgt10 mgb10" type="textarea" :autosize="{ minRows: 6, maxRows: 6}" :maxlength="1000" placeholder="请输入要进行信息抽取的内容" v-model="data.value">
     </el-input>
     <p v-if="data.value.length>=1000" style="color:red;">超出最大长度限制1000</p>
     <div class="submit-box">
@@ -111,7 +111,7 @@ export default {
   },
   updated(){
     if(document.querySelector('.extract-result')){
-      let resultDivHeight=parseInt(document.documentElement.clientHeight)-483
+      let resultDivHeight=parseInt(document.documentElement.clientHeight)-423
       document.querySelector('.extract-result').style.height = resultDivHeight+'px'
     }
   },
@@ -194,7 +194,7 @@ export default {
 }
 .submit-box {
   text-align: right;
-  margin-bottom: 50px;
+  margin-bottom: 30px;
 }
 .mgt40 {
   margin-top: 40px;

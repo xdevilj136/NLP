@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div >
     <el-input class="mgt10 mgb10" type="textarea" :autosize="{ minRows: 8, maxRows: 8}" :maxlength="1000" placeholder="请输入要进行信息抽取的内容" v-model="data.value">
     </el-input>
     <p v-if="data.value.length>=1000" style="color:red;">超出最大长度限制1000</p>
@@ -106,7 +106,19 @@ export default {
     }
   },
   computed: mapState(["zsbankCreditResult"]),
-  created() {},
+  mounted() {
+    document.querySelector('.right-content-box').style.overflowY = 'hidden'
+  },
+  updated(){
+    if(document.querySelector('.extract-result')){
+      let resultDivHeight=parseInt(document.documentElement.clientHeight)-483
+      document.querySelector('.extract-result').style.height = resultDivHeight+'px'
+    }
+  },
+  beforeRouteLeave (to, from, next) {
+    document.querySelector('.right-content-box').style.overflowY = 'auto';
+    next()
+  },
   methods: {
     ...mapActions(["zsbankAnalysis"]),
     replaceTxt() {
@@ -162,12 +174,13 @@ export default {
 </script>
 
 <style lang="less">
+
 .extract-result {
   overflow-y: scroll;
-  height: 500px;
   border: 1px solid #bfcbd9;
   border-radius: 4px;
   padding: 10px;
+  height: 500px;
 }
 .top-bar {
   display: inline-block;

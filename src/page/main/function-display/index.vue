@@ -17,7 +17,7 @@ export default {
                 'machanism-ident': '机构名识别',
                 'analysis': '词法分析',
                 'data-extract': '信息抽取',
-                'zsbank-credit': '授信解析'
+                'zsbank-credit': '授信报告解析'
             },
             title: ''
         }

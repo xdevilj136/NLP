@@ -170,7 +170,7 @@ export default {
           result = "机构名识别"
           break;
         case 9:
-          result = "招行授信报告解析"
+          result = "授信报告解析"
           break;
 
         default:

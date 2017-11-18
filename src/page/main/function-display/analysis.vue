@@ -3,9 +3,9 @@
     <el-checkbox-group class="mgb10" v-model="text.type">
       <el-checkbox v-for="type in typeOption" :label="type.value" :key="type.value">{{type.name}}</el-checkbox>
     </el-checkbox-group>
-    <el-input class="mgt10 mgb10" type="textarea" :maxlength="1000" :autosize="{ minRows: 5, maxRows: 5}" placeholder="请输入要进行词法分析的内容" v-model="text.value">
+    <el-input class="mgt10 mgb10" type="textarea" :maxlength="2000" :autosize="{ minRows: 5, maxRows: 5}" placeholder="请输入要进行词法分析的内容" v-model="text.value">
     </el-input>
-    <p v-if="text.value.length>=1000" style="color:red;">超出最大长度限制1000</p>
+    <p v-if="text.value.length>=2000" style="color:red;">超出最大长度限制2000</p>
     <div class="submit-box">
       <el-button @click="submitTxt()" type="primary">提交文本</el-button>
     </div>
@@ -25,6 +25,7 @@
 </template>
 <script>
 import { mapActions, mapState } from 'vuex'
+import { Loading } from 'element-ui';
 import analysisResult from 'components/analysisResult';
 import utils from 'src/config/utils'
 import { ner_list } from 'src/config/colorConfig'
@@ -34,6 +35,7 @@ export default {
   name: 'analysis',
   data() {
     return {
+      loadingInstance:'',
       typeOption: [{
         name: '分词',
         value: 'WordSegment'
@@ -46,7 +48,13 @@ export default {
       }],
       text: {
         type: ['WordSegment','PosTag','NamedIdentityRecognize'],
-        value: '海致网络技术（北京）有限公司成立于2013年，注册资本：4,500.00万美元，是一个开发企业数据管理与分析平台服务的公司。'
+        value: `同意给予天津市宝华国际贸易有限公司授信额度人民币2亿元（可用额度1.5亿元），期限2年，由北京科尔森电子有限公司提供连带责任保证，追加自然人沈俊逸、刘桂芳连带责任保证担保。
+                下属企业南京中阳农业发展有限公司可用余额不超过6000万元；大连舒健商贸有限公司可用余额不超过RMB4000万元。两公司使用时，均由北京博瑞科技发展有限公司授权并提供连带责任保证担保。
+                以上额度可用于短期融资用途（含进口开证，开证的付款期限加押汇期限不超过120天）。
+                风险提示与说明：
+                1.集团并无合并报表，整体情况不清；2014年，以上3个授信企业约16亿元的平均存货，无任何跌价损失，罕见；这么多年从无分红，更少见。
+                2.主要资产全部对其他银行同业抵押（含存货）；流动比率低；5.4亿元货币资金中，保证金占到3.5亿元；内部存在大量关联交易。
+                3.涉及风险担保圈的情况不清；担保方与申请人是互保关系，申请人为其担保余额7亿元以上（接近申请人净资产的50%）。`
       },
       submit: false,
       processedData: {
@@ -63,6 +71,7 @@ export default {
   computed: mapState(['analysisData']),
   watch: {
     analysisData: function(analysisData) {
+      this.loadingInstance.close();
       if (analysisData.result) {
         //去重处理
         let result = analysisData.result;
@@ -146,6 +155,7 @@ export default {
         });
         return;
       }
+      this.loadingInstance = Loading.service({ fullscreen: true });
       this.analysisGet({
         functions: this.text.type,
         data: textContent

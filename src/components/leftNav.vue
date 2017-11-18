@@ -40,7 +40,7 @@ export default {
                 value: 'function-display/machanism-ident'
             },
             {
-                label: '招行授信解析',
+                label: '授信解析',
                 value: 'function-display/zsbank-credit'
             }]
           },

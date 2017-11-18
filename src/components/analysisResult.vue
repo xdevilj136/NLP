@@ -134,8 +134,10 @@ export default {
       }
     }
     .analysis-description {
-      width: 20%;
-      float: left;
+        position: sticky;
+        top: 0;
+        right: 0;
+        overflow-y: auto;
       .analysis-des-title {
         font-size: 12px;
         padding: 6px 0;

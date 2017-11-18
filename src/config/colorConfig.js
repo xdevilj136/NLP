@@ -1,3 +1,4 @@
+//词性标注
 const pos_list = {
     'A': {
         color: '#FF8E8E',
@@ -96,10 +97,39 @@ const pos_list = {
         name: '标点符号'
     }
 }
+//实体识别
 const ner_list = {
+    'EMAIL': {
+        color: '#9370AF',
+        name: '邮箱'
+    },
+    'PERCENT': {
+        color: '#FEB935',
+        name: '百分比'
+    },
+    'URL': {
+        color: '#FE9925',
+        name: '链接'
+    },
+    'MEASURE': {
+        color: '#82DF6F',
+        name: '度量'
+    },
+    'CURRENCY': {
+        color: '#6EE3E2',
+        name: '金额'
+    },
+    'CELLPHONE': {
+        color: '#FF8FC5',
+        name: '手机号'
+    },
+    'DIGIT': {
+        color: '#FE8F8F',
+        name: '数字'
+    },
     'PROFESSION': {
         color: '#59B5FE',
-        name: '职业'
+        name: '身份'
     },
     'ORGANIZATION': {
         color: '#96DDF2',
@@ -115,20 +145,18 @@ const ner_list = {
     },
     'LOCATION': {
         color: '#DAE279',
-        name: '地点'
+        name: '地名'
     },
     'O': {
         color: '#D8D8D8',
         name: '非实体'
     },
     'other': {
-        color:['#FE8F8F', '#FF8FC5', '#6EE3E2', '#82DF6F', '#FEB935', '#FE9925'],
-        // color:'#FE8F8F',
-        
+        color:['#AA651C','#B63390','#0234B1','#425A66','#E7D3A5'],
         name:'自定义实体'
     }
 }
-
+//机构名
 const seg_list = {
     'KEY': {
         color: '#FE8F8F',

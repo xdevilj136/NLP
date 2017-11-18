@@ -115,7 +115,7 @@ export default {
         label: '机构名识别'
       },{
         value: 9,
-        label: '招行授信报告解析'
+        label: '授信报告解析'
       }],
       taskStatusOptions: [{
         value: '',

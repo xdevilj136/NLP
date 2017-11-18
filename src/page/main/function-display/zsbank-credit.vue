@@ -1,8 +1,8 @@
 <template>
   <div >
-    <el-input class="mgt10 mgb10" type="textarea" :autosize="{ minRows: 6, maxRows: 6}" :maxlength="1000" placeholder="请输入要进行信息抽取的内容" v-model="data.value">
+    <el-input class="mgt10 mgb10" type="textarea" :autosize="{ minRows: 6, maxRows: 6}" :maxlength="2000" placeholder="请输入要进行信息抽取的内容" v-model="data.value">
     </el-input>
-    <p v-if="data.value.length>=1000" style="color:red;">超出最大长度限制1000</p>
+    <p v-if="data.value.length>=2000" style="color:red;">超出最大长度限制2000</p>
     <div class="submit-box">
       <el-button @click="replaceTxt" type="normal">更换文本</el-button>
       <el-button @click="submitTxt" type="primary">解析文本</el-button>
@@ -33,7 +33,7 @@
 </template>
 <script>
 import { mapActions, mapState } from "vuex";
-import {zsbankCreditSamples} from "src/config/zsbankCreditSamples";
+import {zsbankCreditSamples} from "src/config/samples";
 export default {
   name: "data-extract",
   data() {

@@ -76,9 +76,9 @@ export default {
             let parsedData = JSON.parse(
               zsbankCreditResult.result.ZhaohangCredit
             );
-            for (let key in parsedData.ZhaohangCredit) {
-              if (parsedData.ZhaohangCredit.hasOwnProperty(key)) {
-                let keyEle = parsedData.ZhaohangCredit[key];
+            for (let key in parsedData.Credit) {
+              if (parsedData.Credit.hasOwnProperty(key)) {
+                let keyEle = parsedData.Credit[key];
                 let list = [];
                 for (var index = 0; index < keyEle.length; index++) {
                   var element = keyEle[index];
@@ -129,6 +129,7 @@ export default {
       }
     },
     submitTxt() {
+      this.merged=false
       if (this.data.value.trim() == "") {
         this.$alert("输入内容不能为空", "提示", {
           confirmButtonText: "确定",

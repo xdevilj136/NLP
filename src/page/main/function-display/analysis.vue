@@ -19,7 +19,7 @@
         </div>
       </div>
     </div>
-    <analysisResult v-if="submit && processedData.PosTag" type="pos_list" :data="processedData.PosTag.PosList" />
+    <analysisResult v-if="submit && processedData.PosTag" type="pos_list" :posList="posList" :data="processedData.PosTag.PosList" />
     <analysisResult v-if="submit && processedData.NamedIdentityRecognize" type="ner_list" :nerList="nerList" :data="processedData.NamedIdentityRecognize.NerList" />
   </div>
 </template>
@@ -28,7 +28,7 @@ import { mapActions, mapState } from 'vuex'
 import { Loading } from 'element-ui';
 import analysisResult from 'components/analysisResult';
 import utils from 'src/config/utils'
-import { ner_list } from 'src/config/colorConfig'
+import { pos_list,ner_list } from 'src/config/colorConfig'
 
 
 export default {
@@ -62,7 +62,8 @@ export default {
         NamedIdentityRecognize: '',
         PosTag: ''
       },
-      nerList:ner_list
+      nerList:ner_list,
+      posList:pos_list
     }
   },
   components: {
@@ -98,25 +99,12 @@ export default {
         let self=this
         //找出没有匹配的自定义实体tag
         let NamedIdentityRecognize=this.processedData.NamedIdentityRecognize
+        let posTag=this.processedData.PosTag
         if(NamedIdentityRecognize.NerList&&NamedIdentityRecognize.NerList.newTags){
-
-        let noMatchTags=this.processedData.NamedIdentityRecognize.NerList.newTags.filter(function(value){
-          return !self.nerList[value]
-        });
-        for (var index = 0,colorNum=0; index < noMatchTags.length; index++,colorNum++) {
-          var element = noMatchTags[index];
-          //超出备选颜色个数，重复顺序取值
-          if(colorNum==ner_list.other.color.length){
-            colorNum=0
-          }
-          let newTag={
-            [element]:{
-              color:this.nerList.other.color[colorNum],
-              name:element
-            }
-          }
-          this.nerList = Object.assign({}, this.nerList, newTag)
+          this.nerList=this.addNomatchTag(NamedIdentityRecognize.NerList.newTags,this.nerList)
         }
+        if(posTag.PosList&&posTag.PosList.newTags){
+          this.posList=this.addNomatchTag(posTag.PosList.newTags,this.posList)
         }
       }
       else {
@@ -128,8 +116,6 @@ export default {
         });
       }
     }
-
-
   },
   created() {
       this.submitTxt()
@@ -138,6 +124,27 @@ export default {
     ...mapActions([
       'analysisGet'
     ]),
+    //匹配未定义标签
+    addNomatchTag(tags,configList){
+      let noMatchTags=tags.filter(function(value){
+          return !configList[value]
+        });
+        for (var index = 0,colorNum=0; index < noMatchTags.length; index++,colorNum++) {
+          var element = noMatchTags[index];
+          //超出备选颜色个数，重复顺序取值
+          if(colorNum==configList.other.color.length){
+            colorNum=0
+          }
+          let newTag={
+            [element]:{
+              color:configList.other.color[colorNum],
+              name:element
+            }
+          }
+           configList = Object.assign({}, configList, newTag)
+        }
+        return configList
+    },
     submitTxt() {
       this.submit = true;
       let textContent = this.text.value.replace(/\s/g, '');

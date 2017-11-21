@@ -29,7 +29,7 @@ export default {
           pos_list: pos_list
       }
   },
-  props:[ 'data', 'nerList','type'],
+  props:[ 'data', 'nerList','posList','type'],
   created(){
   },
   watch:{
@@ -71,6 +71,9 @@ export default {
       if(this.type=='ner_list'){
         matchColor=this.nerList[tags[index]].color
       }
+      else if(this.type=='pos_list'){
+        matchColor=this.posList[tags[index]].color
+      }
       else{
         matchColor=colorType[tags[index]].color
       }
@@ -82,6 +85,9 @@ export default {
       if(this.type=='ner_list'){
         matchColor=this.nerList[tag].color
       }
+      else if(this.type=='pos_list'){
+        matchColor=this.posList[tag].color
+      }
       else{
         matchColor=colorType[tag].color
       }
@@ -92,6 +98,9 @@ export default {
       let matchName=''
       if(this.type=='ner_list'){
         matchName=this.nerList[tag].name
+      }
+      else if(this.type=='pos_list'){
+        matchName=this.posList[tag].name
       }
       else{
         matchName=colorType[tag].name

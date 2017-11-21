@@ -44,6 +44,10 @@ const pos_list = {
         color: '#83F5A6',
         name: '语气词'
     },
+    'NL': {
+        color: '#AA651C',
+        name: '惯用语'
+    },
     'NS': {
         color: '#DAE279',
         name: '地名'
@@ -95,6 +99,10 @@ const pos_list = {
     'W': {
         color: '#D8D8D8',
         name: '标点符号'
+    },
+    'other': {
+        color:['#B63390','#0234B1','#425A66','#E7D3A5'],
+        name:'自定义词性'
     }
 }
 //实体识别

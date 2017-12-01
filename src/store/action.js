@@ -76,6 +76,10 @@ export default {
 	getTaskLog({ }, id) {
 		service.taskLog(id)
 	},
+	//获取任务输出结果
+	getTaskResult({},params){
+		service.getTaskResult(params)
+	},
 	/*
 	*/
 	//获取用户列表数据
@@ -130,7 +134,7 @@ export default {
 	processCompanyStd({ }, json) {
 		service.processCompanyStd(json);
 	},
-	//提交机构名识别
+	//提交机构名分析
 	processCompanySegment({ }, json) {
 		service.processCompanySegment(json);
 	}

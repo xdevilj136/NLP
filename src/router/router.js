@@ -30,7 +30,10 @@ export default [{
             component : r => require.ensure([], () => r(require('../page/main/task-manage/detail')), 'task-manage-detail')
         },{
             path: 'task-manage/log/:id',
-            component : r => require.ensure([], () => r(require('../page/main/task-manage/log')), 'log')
+            component : r => require.ensure([], () => r(require('../page/main/task-manage/log')), 'task-manage-log')
+        },{
+            path: 'task-manage/result/:id',
+            component : r => require.ensure([], () => r(require('../page/main/task-manage/result')), 'task-manage-result')
         },{
             path: 'data-source-config',
             component : r => require.ensure([], () => r(require('../page/main/data-source-config/index')), 'data-source-config')

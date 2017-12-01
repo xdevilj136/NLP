@@ -19,7 +19,7 @@
 <script>
 import { mapActions, mapState } from 'vuex'
 export default {
-  name: 'log',
+  name: 'task-manage-log',
   data() {
     return {
       log: {

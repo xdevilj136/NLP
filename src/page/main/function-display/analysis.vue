@@ -162,7 +162,11 @@ export default {
         });
         return;
       }
-      this.loadingInstance = Loading.service({ fullscreen: true });
+      this.loadingInstance = Loading.service({
+          lock: true,
+          text: 'Loading',
+          spinner: 'el-icon-loading'
+        });
       this.analysisGet({
         functions: this.text.type,
         data: textContent

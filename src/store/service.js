@@ -58,7 +58,7 @@ export default {
 	processCompanyStd(json) {
 		ajax('POST', '/api/functions/companyStd', json, 'PROCESS_COMPANY_STD');
 	},
-	//机构名识别
+	//机构名分析
 	processCompanySegment(json) {
 		ajax('POST', '/api/functions/companySegment', json, 'PROCESS_COMPANY_SEGMENT');
 	},
@@ -98,6 +98,10 @@ export default {
 	//获取任务日志
 	taskLog(id) {
 		ajax('GET', '/api/task/log', {id:id}, 'TASK_LOG');
+	},
+	//获取任务输出结果
+	getTaskResult(params){
+		ajax('GET', '/api/task/viewOutput', params, 'TASK_RESULT');
 	},
 	/*
 	

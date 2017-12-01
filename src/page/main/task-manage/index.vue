@@ -112,7 +112,7 @@ export default {
         label: '机构名标准化'
       },{
         value: 6,
-        label: '机构名识别'
+        label: '机构名分析'
       },{
         value: 9,
         label: '授信报告解析'
@@ -223,7 +223,7 @@ export default {
           result = "机构名标准化"
           break;
         case 6:
-          result = "机构名识别"
+          result = "机构名分析"
           break;
         case 9:
           result = "招行授信报告解析"

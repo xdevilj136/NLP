@@ -29,9 +29,12 @@
         <span class="detail-right-label">{{detail.outputCount}}</span>
       </el-form-item>
       <el-form-item >
+        <el-button v-if="indexMethods.hasCompleted(detail.status)" type="text" class="common_a" @click="showTaskResult(detail.id)">查看任务输出结果</el-button>
+      </el-form-item>
+      <el-form-item >
         <el-button v-if="indexMethods.hasCompleted(detail.status)" type="text" class="common_a" @click="download">下载输出文件</el-button>
       </el-form-item>
-          <div class="toolbar">
+    <div class="toolbar">
       <el-button v-if="indexMethods.canStart(detail.status)" :disabled="indexMethods.startDisabled(detail.status)" type="text" @click="startTask(detail.id)">开始</el-button>
       <el-button v-if="indexMethods.canStop(detail.status)" type="text" @click="stopTask(detail.id)">终止</el-button>
       <el-button type="text" :disabled="indexMethods.editDisabled(detail.status)" @click="editTask(detail.id)">编辑</el-button>
@@ -139,6 +142,9 @@ export default {
     showTaskLog(id) {
       this.$router.push('/main/task-manage/log/' + id)
     },
+    showTaskResult(id){
+      this.$router.push('/main/task-manage/result/' + id)
+    },
     deleteDialogConfirm() {
       this.deleteTaskRequest(this.toDeleteTaskId);
     },
@@ -167,7 +173,7 @@ export default {
           result = "机构名标准化"
           break;
         case 6:
-          result = "机构名识别"
+          result = "机构名分析"
           break;
         case 9:
           result = "授信报告解析"

@@ -87,7 +87,7 @@ export default {
         label: '机构名标准化'
       },{
         value: 6,
-        label: '机构名识别'
+        label: '机构名分析'
       },{
         value: 9,
         label: '授信报告解析'

@@ -161,7 +161,7 @@ export default {
       posList: pos_list,
       taskResultData: {},
       taskResultList: [],
-      currentPage: 0,
+      currentPage: 1,
       pageSize: 5,
       totalCount: 0
     }
@@ -220,7 +220,7 @@ export default {
     ...mapActions(['getTaskResult']),
     refreshTable() {
       let params = {}
-      params.p = this.currentPage
+      params.p = this.currentPage - 1
       params.ps = this.pageSize
       params.id = this.$route.params.id
       this.getTaskResult(params)

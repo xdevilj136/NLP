@@ -22,7 +22,13 @@
     <el-table v-for="(item, index) in taskResultList" :key="index" :data="taskResultData.type==9?taskResultList[index].resovledCreditResult:[taskResultList[index]]" :span-method="inputSpanMethod" class="data-table" border>
       <!-- 中文分词 -->
       <template v-if="taskResultData.type==0">
-        <el-table-column prop="input" label="输入内容" min-width="130px"></el-table-column>
+        <el-table-column prop="input" label="输入内容" min-width="130px">
+          <template scope="scope">
+            <div class="limit-height">
+              {{scope.row.input}}
+            </div>
+          </template>
+        </el-table-column>
         <el-table-column prop="output" label="输出内容" min-width="130px">
           <template scope="scope">
             <div class="analysis-content">
@@ -37,7 +43,13 @@
       </template>
       <!-- 词性标注 -->
       <template v-if="taskResultData.type==1">
-        <el-table-column prop="input" label="输入内容" min-width="130px"></el-table-column>
+        <el-table-column prop="input" label="输入内容" min-width="130px">
+          <template scope="scope">
+            <div class="limit-height">
+              {{scope.row.input}}
+            </div>
+          </template>
+        </el-table-column>
         <el-table-column prop="output" label="输出内容" min-width="130px">
           <template scope="scope">
             <div class="analysis-content">
@@ -63,7 +75,13 @@
       </template>
       <!-- 实体识别 -->
       <template v-if="taskResultData.type==2">
-        <el-table-column prop="input" label="输入内容" min-width="130px"></el-table-column>
+        <el-table-column prop="input" label="输入内容" min-width="130px">
+          <template scope="scope">
+            <div class="limit-height">
+              {{scope.row.input}}
+            </div>
+          </template>
+        </el-table-column>
         <el-table-column prop="NerTag" label="输出内容" min-width="130px">
           <template scope="scope">
             <div class="analysis-content">
@@ -99,7 +117,13 @@
       </template>
       <!-- 机构名分析 -->
       <template v-if="taskResultData.type==6">
-        <el-table-column prop="input" label="输入内容" min-width="130px"></el-table-column>
+        <el-table-column prop="input" label="输入内容" min-width="130px">
+          <template scope="scope">
+            <div class="limit-height">
+              {{scope.row.input}}
+            </div>
+          </template>
+        </el-table-column>
         <el-table-column prop="output" label="输出内容" min-width="130px">
           <template scope="scope">
             <div class="analysis-content">
@@ -499,9 +523,10 @@ export default {
       width: 250px;
     }
   }
+
   .analysis-content {
     padding: 10px 0;
-    max-height: 250px;
+    max-height: 500px;
     min-height: 50px;
     overflow: auto;
     .analysis-content-all span {
@@ -539,6 +564,12 @@ export default {
         float: left;
       }
     }
+  }
+  .limit-height{
+    padding: 10px 0;
+    max-height: 500px;
+    min-height: 50px;
+    overflow: auto;
   }
 }
 </style>

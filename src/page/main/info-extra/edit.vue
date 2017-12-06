@@ -140,7 +140,6 @@ export default {
       'updateRuleRequest'
     ]),
 matchOneChange(){
-  console.log('matchOneChange')
 },
     //增加规则属性表单域
     addPropertyDomain() {

@@ -13,10 +13,10 @@
       <el-form-item label="类型：">
         <span class="detail-right-label">{{detail.type | taskTypeFilter}}</span>
       </el-form-item>
-            <el-form-item label="数据名称：">
+      <el-form-item label="数据名称：">
         <span class="detail-right-label">{{detail.dataSourceName }}</span>
       </el-form-item>
-            <el-form-item label="目标列：">
+      <el-form-item v-if="targetColumnShow" label="目标列：">
         <span class="detail-right-label">{{detail.targetColumn }}</span>
       </el-form-item>
       <el-form-item label="完成状态：">
@@ -28,26 +28,26 @@
       <el-form-item label="总记录数：">
         <span class="detail-right-label">{{detail.outputCount}}</span>
       </el-form-item>
-      <el-form-item >
+      <el-form-item>
         <el-button v-if="indexMethods.hasCompleted(detail.status)" type="text" class="common_a" @click="showTaskResult(detail.id)">查看任务输出结果</el-button>
       </el-form-item>
-      <el-form-item >
+      <el-form-item>
         <el-button v-if="indexMethods.hasCompleted(detail.status)" type="text" class="common_a" @click="download">下载输出文件</el-button>
       </el-form-item>
-    <div class="toolbar">
-      <el-button v-if="indexMethods.canStart(detail.status)" :disabled="indexMethods.startDisabled(detail.status)" type="text" @click="startTask(detail.id)">开始</el-button>
-      <el-button v-if="indexMethods.canStop(detail.status)" type="text" @click="stopTask(detail.id)">终止</el-button>
-      <el-button type="text" :disabled="indexMethods.editDisabled(detail.status)" @click="editTask(detail.id)">编辑</el-button>
-      <el-button type="text" @click="deleteTask(detail.name,detail.id)">删除</el-button>
-      <el-button type="text" :disabled="indexMethods.showLogDisabled(detail.status)" @click="showTaskLog(detail.id)">查看日志</el-button>
-    </div>
-    
+      <div class="toolbar">
+        <el-button v-if="indexMethods.canStart(detail.status)" :disabled="indexMethods.startDisabled(detail.status)" type="text" @click="startTask(detail.id)">开始</el-button>
+        <el-button v-if="indexMethods.canStop(detail.status)" type="text" @click="stopTask(detail.id)">终止</el-button>
+        <el-button type="text" :disabled="indexMethods.editDisabled(detail.status)" @click="editTask(detail.id)">编辑</el-button>
+        <el-button type="text" @click="deleteTask(detail.name,detail.id)">删除</el-button>
+        <el-button type="text" :disabled="indexMethods.showLogDisabled(detail.status)" @click="showTaskLog(detail.id)">查看日志</el-button>
+      </div>
+
     </el-form>
   </div>
 </template>
 <script>
 import { mapActions, mapState } from 'vuex'
-import index from './index';
+import index from './index'
 import utils from 'src/config/utils'
 
 export default {
@@ -63,20 +63,23 @@ export default {
         outputPath: ''
       },
       indexMethods: index.methods,
-      toDeleteTaskId: ''
-    };
+      toDeleteTaskId: '',
+      DataSourceOptions: []
+    }
   },
   watch: {
     singleTask: function(singleTask) {
       if (singleTask.result) {
-        this.detail = Object.assign({}, singleTask.result);
+        this.detail = Object.assign({}, singleTask.result)
         this.DataSourceOptions.forEach(function(element, index) {
           if (element.id == this.detail.inputSourceId) {
             this.detail.dataSourceName = element.name
+            this.detail.dataSourceIndex = index
           }
-        }, this);
+        }, this)
         if (this.detail.inputConfig) {
-          this.detail.targetColumn = JSON.parse(this.detail.inputConfig).column + 1
+          this.detail.targetColumn =
+            JSON.parse(this.detail.inputConfig).column + 1
         }
       }
     },
@@ -87,23 +90,41 @@ export default {
       this.queryTaskById(this.$route.params.id)
     },
     deleteTaskResponse: function(response) {
-      utils.notifyResponse(response, () => { this.$router.go(-1) })
+      utils.notifyResponse(response, () => {
+        this.$router.go(-1)
+      })
     },
     stopTaskResponse: function(response) {
-      utils.notifyResponse(response, () => { this.$router.go(-1) })
+      utils.notifyResponse(response, () => {
+        this.$router.go(-1)
+      })
     },
     startTaskResponse: function(response) {
-      utils.notifyResponse(response, () => { this.$router.go(-1) })
+      utils.notifyResponse(response, () => {
+        this.$router.go(-1)
+      })
     }
-
   },
-  computed: mapState([
-    'singleTask',
-    'stopTaskResponse',
-    'startTaskResponse',
-    'deleteTaskResponse',
-    'dataSource'
-  ]),
+  computed: {
+    ...mapState([
+      'singleTask',
+      'stopTaskResponse',
+      'startTaskResponse',
+      'deleteTaskResponse',
+      'dataSource'
+    ]),
+    targetColumnShow: function() {
+      let selectedDataSource = this.DataSourceOptions[
+        this.detail.dataSourceIndex
+      ]
+      if (selectedDataSource && selectedDataSource.config) {
+        if (JSON.parse(selectedDataSource.config).inputType !== 'txt') {
+          return true
+        }
+      }
+      return false
+    }
+  },
 
   created() {
     this.getDataSource()
@@ -114,43 +135,42 @@ export default {
       'deleteTaskRequest',
       'startTaskRequest',
       'stopTaskRequest',
-    'getDataSource'
-      
+      'getDataSource'
     ]),
     //操作菜单
     startTask(id) {
-      this.startTaskRequest(id);
+      this.startTaskRequest(id)
     },
     stopTask(id) {
-      this.stopTaskRequest(id);
+      this.stopTaskRequest(id)
     },
     editTask(id) {
       this.$router.push('/main/task-manage/edit/' + id)
     },
     deleteTask(name, id) {
-      this.toDeleteTaskId = id;
+      this.toDeleteTaskId = id
       this.$confirm('删除后，该任务将无法正常执行。', '确认删除 ' + name + ' ?', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
         type: 'warning'
-      }).then(() => {
-        this.deleteDialogConfirm()
-      }).catch(() => {
-
-      });
+      })
+        .then(() => {
+          this.deleteDialogConfirm()
+        })
+        .catch(() => {})
     },
     showTaskLog(id) {
       this.$router.push('/main/task-manage/log/' + id)
     },
-    showTaskResult(id){
+    showTaskResult(id) {
       this.$router.push('/main/task-manage/result/' + id)
     },
     deleteDialogConfirm() {
-      this.deleteTaskRequest(this.toDeleteTaskId);
+      this.deleteTaskRequest(this.toDeleteTaskId)
     },
     //下载文件
-    download(){
-      window.open('api/task/output?id='+this.$route.params.id)
+    download() {
+      window.open('api/task/output?id=' + this.$route.params.id)
     }
   },
   filters: {
@@ -158,82 +178,83 @@ export default {
       let result = ''
       switch (value) {
         case 0:
-          result = "中文分词"
-          break;
+          result = '中文分词'
+          break
         case 1:
-          result = "词性标注"
-          break;
+          result = '词性标注'
+          break
         case 2:
-          result = "实体识别"
-          break;
+          result = '实体识别'
+          break
         case 3:
-          result = "信息抽取"
-          break;
+          result = '信息抽取'
+          break
         case 5:
-          result = "机构名标准化"
-          break;
+          result = '机构名标准化'
+          break
         case 6:
-          result = "机构名分析"
-          break;
+          result = '机构名分析'
+          break
         case 9:
-          result = "授信报告解析"
-          break;
+          result = '授信报告解析'
+          break
 
         default:
-          break;
+          break
       }
       return result
     },
     taskStatusFilter: function(value) {
-      let result = '';
+      let result = ''
       switch (value) {
         case 0:
-          result = "未开始"
-          break;
+          result = '未开始'
+          break
         case 1:
-          result = "正在执行"
-          break;
+          result = '正在执行'
+          break
         case 2:
-          result = "等待开始"
-          break;
+          result = '等待开始'
+          break
         case 2:
-          result = "停止中"
-          break;
+          result = '停止中'
+          break
         case 4:
-          result = "已经结束"
-          break;
+          result = '已经结束'
+          break
         case 5:
-          result = "非正常结束"
-          break;
+          result = '非正常结束'
+          break
         default:
-          break;
+          break
       }
-      return result;
+      return result
     },
     taskDurationFilter: function(value_ms) {
       if (typeof value_ms == 'number') {
-        if(value_ms<=0){
+        if (value_ms <= 0) {
           return '未开始'
         }
         let days = Math.round(value_ms / (1000 * 60 * 60 * 24))
-        let hours = Math.round((value_ms % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60))
+        let hours = Math.round(
+          (value_ms % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)
+        )
         let minutes = Math.round((value_ms % (1000 * 60 * 60)) / (1000 * 60))
-        let seconds = ((value_ms % (1000 * 60)) / 1000)
-        let daysStr = (days == 0) ? '' : days + '天'
-        let hoursStr = (hours == 0) ? '' : hours + '小时'
-        let minutesStr = (minutes == 0) ? '' : minutes + '分'
+        let seconds = (value_ms % (1000 * 60)) / 1000
+        let daysStr = days == 0 ? '' : days + '天'
+        let hoursStr = hours == 0 ? '' : hours + '小时'
+        let minutesStr = minutes == 0 ? '' : minutes + '分'
         let secondsStr = seconds + '秒'
-        return (daysStr + hoursStr + minutesStr + secondsStr) || 0
+        return daysStr + hoursStr + minutesStr + secondsStr || 0
       }
-
     }
   }
 }
 </script>
 
 <style lang="less" scoped>
-.common_a{
-  &:hover{
+.common_a {
+  &:hover {
     text-decoration: underline;
   }
 }
@@ -256,13 +277,13 @@ export default {
     color: grey;
   }
   .toolbar {
-      position: absolute;
-      right: 40px;
-      top: 5px;
+    position: absolute;
+    right: 40px;
+    top: 5px;
     button {
       margin: 0;
       &:after {
-        content: " |";
+        content: ' |';
         display: inline;
       }
       &:last-child:after {

@@ -20,36 +20,27 @@
     </el-form>
 
     <el-table v-for="(item, index) in taskResultList" :key="index" :data="taskResultData.type==9?taskResultList[index].resovledCreditResult:[taskResultList[index]]" :span-method="inputSpanMethod" class="data-table" border>
-      <!-- 中文分词 -->
-      <template v-if="taskResultData.type==0">
-        <el-table-column prop="input" label="输入内容" min-width="130px"></el-table-column>
-        <el-table-column prop="output" label="输出内容" min-width="130px">
+      <!-- 中文分词 & 词性标注 & 实体识别 & 机构名分析 -->
+      <template v-if="taskResultData.type==0||taskResultData.type==1||taskResultData.type==2||taskResultData.type==6">
+        <el-table-column prop="input" label="输入内容" min-width="130px">
           <template scope="scope">
-            <div class="analysis-content">
-              <div class="analysis-content-all">
-                <span v-for="(word, index) in JSON.parse(scope.row.output).SegList" :key="index" :style="{background: '#D8D8D8'}">
-                  {{word}}
-                </span>
-              </div>
+            <div class="limit-height">
+              {{scope.row.input}}
             </div>
           </template>
         </el-table-column>
-      </template>
-      <!-- 词性标注 -->
-      <template v-if="taskResultData.type==1">
-        <el-table-column prop="input" label="输入内容" min-width="130px"></el-table-column>
         <el-table-column prop="output" label="输出内容" min-width="130px">
           <template scope="scope">
             <div class="analysis-content">
               <div class="analysis-content-less">
-                <span v-for="(word, index) in JSON.parse(scope.row.output).PosList.Words" :key="index" :style="{ background: matchWordColor(index,JSON.parse(scope.row.output).PosList.Tags)}">
+                <span v-for="(word, index) in matchWords(scope.row.output)" :key="index" :style="{ background:matchWordColor(index,scope.row.output)}">
                   {{word}}
                 </span>
               </div>
             </div>
           </template>
         </el-table-column>
-        <el-table-column prop="newTags" label="词性类别图示" min-width="130px">
+        <el-table-column v-if="taskResultData.type!==0" prop="newTags" :label="matchLabel" min-width="130px">
           <template scope="scope">
             <div class="analysis-content">
               <div class="analysis-description">
@@ -61,68 +52,17 @@
           </template>
         </el-table-column>
       </template>
-      <!-- 实体识别 -->
-      <template v-if="taskResultData.type==2">
-        <el-table-column prop="input" label="输入内容" min-width="130px"></el-table-column>
-        <el-table-column prop="NerTag" label="输出内容" min-width="130px">
-          <template scope="scope">
-            <div class="analysis-content">
-              <div class="analysis-content-less">
-                <span v-for="(word, index) in JSON.parse(scope.row.output).NerList.Words" :key="index" :style="{ background: matchWordColor(index,JSON.parse(scope.row.output).NerList.Tags)}">
-                  {{word}}
-                </span>
-              </div>
-            </div>
-          </template>
-        </el-table-column>
-        <el-table-column prop="newTags" label="实体识别图示" min-width="130px">
-          <template scope="scope">
-            <div class="analysis-content">
-              <div class="analysis-description">
-                <span v-for="(tag, index) in scope.row.newTags" :key="index" :style="{ background: matchTagColor(tag)}">
-                  {{matchTagName(tag)}}
-                </span>
-              </div>
-            </div>
-          </template>
-        </el-table-column>
-      </template>
+
       <!-- 机构名标准化 -->
       <template v-if="taskResultData.type==5">
         <el-table-column prop="input" label="输入内容" min-width="130px"></el-table-column>
         <el-table-column prop="output" label="输出内容" min-width="130px">
           <template scope="scope">
-            <!-- {{JSON.parse(scope.row.output).CompanyStd[scope.row.input].StdName}} -->
             {{parseStdName(scope.row.output)}}
           </template>
         </el-table-column>
       </template>
-      <!-- 机构名分析 -->
-      <template v-if="taskResultData.type==6">
-        <el-table-column prop="input" label="输入内容" min-width="130px"></el-table-column>
-        <el-table-column prop="output" label="输出内容" min-width="130px">
-          <template scope="scope">
-            <div class="analysis-content">
-              <div class="analysis-content-less">
-                <span v-for="(word, index) in JSON.parse(scope.row.output).CompanySeg.Words" :key="index" :style="{ background: matchWordColor(index,JSON.parse(scope.row.output).CompanySeg.Tags)}">
-                  {{word}}
-                </span>
-              </div>
-            </div>
-          </template>
-        </el-table-column>
-        <el-table-column prop="newTags" label="分析结果图示" min-width="130px">
-          <template scope="scope">
-            <div class="analysis-content">
-              <div class="analysis-description">
-                <span v-for="(tag, index) in scope.row.newTags" :key="index" :style="{ background: matchTagColor(tag)}">
-                  {{matchTagName(tag)}}
-                </span>
-              </div>
-            </div>
-          </template>
-        </el-table-column>
-      </template>
+
       <!-- 授信报告解析 -->
       <template v-if="taskResultData.type==9">
         <el-table-column label="输入内容" min-width="250px">
@@ -137,7 +77,7 @@
       </template>
     </el-table>
     <div class="block">
-      <el-pagination @size-change="pageSizeChange" @current-change="currentPageChange" :current-page="currentPage" :page-sizes="[5, 10,50, 100]" :page-size="pageSize" :total="totalCount" layout=" prev, pager, next, sizes, jumper">
+      <el-pagination @size-change="pageSizeChange" @current-change="currentPageChange" :current-page="currentPage" :page-sizes="[5, 10, 20]" :page-size="pageSize" :total="totalCount" layout=" prev, pager, next, sizes, jumper">
       </el-pagination>
     </div>
   </div>
@@ -210,7 +150,25 @@ export default {
     }
   },
   computed: {
-    ...mapState(['taskResult'])
+    ...mapState(['taskResult']),
+    //根据任务类型匹配图示label
+    matchLabel: function() {
+      let label = ''
+      switch (this.taskResultData.type) {
+        case 1:
+          label = '词性类别图示'
+          break
+        case 2:
+          label = '实体识别图示'
+          break
+        case 6:
+          label = '分析结果图示'
+          break
+        default:
+          break
+      }
+      return label
+    }
   },
 
   created() {
@@ -253,6 +211,62 @@ export default {
           }
         }
       }
+    },
+    matchWords(output) {
+      //根据任务类型选取对应分词数据
+      let words = []
+      switch (this.taskResultData.type) {
+        case 0:
+          words = JSON.parse(output).SegList
+          break
+        case 1:
+          words = JSON.parse(output).PosList.Words
+          break
+        case 2:
+          words = JSON.parse(output).NerList.Words
+          break
+        case 6:
+          words = JSON.parse(output).CompanySeg.Words
+          break
+        default:
+          break
+      }
+      return words
+    },
+    matchWordColor(index, output) {
+      //匹配分词块的颜色
+      let Tags = []
+      switch (this.taskResultData.type) {
+        case 0:
+          return '#D8D8D8'
+          break
+        case 1:
+          Tags = JSON.parse(output).PosList.Tags
+          break
+        case 2:
+          Tags = JSON.parse(output).NerList.Tags
+          break
+        case 6:
+          Tags = JSON.parse(output).CompanySeg.Tags
+          break
+        default:
+          break
+      }
+      let matchColor = ''
+      switch (this.tagType) {
+        case 'ner_list':
+          matchColor = this.nerList[Tags[index]].color
+          break
+        case 'pos_list':
+          matchColor = this.posList[Tags[index]].color
+          break
+        case 'seg_list':
+          matchColor = this.segList[Tags[index]].color
+          break
+        default:
+          break
+      }
+      return matchColor
     },
     updateTagColorConfig() {
       //添加没有匹配的自定义实体tag
@@ -320,17 +334,7 @@ export default {
       }
       return configList
     },
-    matchWordColor(index, Tags) {
-      let matchColor = ''
-      if (this.tagType == 'ner_list') {
-        matchColor = this.nerList[Tags[index]].color
-      } else if (this.tagType == 'pos_list') {
-        matchColor = this.posList[Tags[index]].color
-      } else if (this.tagType == 'seg_list') {
-        matchColor = this.segList[Tags[index]].color
-      }
-      return matchColor
-    },
+
     matchTagColor(tag) {
       let matchColor = ''
       if (this.tagType == 'ner_list') {
@@ -499,9 +503,10 @@ export default {
       width: 250px;
     }
   }
+
   .analysis-content {
     padding: 10px 0;
-    max-height: 250px;
+    max-height: 500px;
     min-height: 50px;
     overflow: auto;
     .analysis-content-all span {
@@ -539,6 +544,12 @@ export default {
         float: left;
       }
     }
+  }
+  .limit-height {
+    padding: 10px 0;
+    max-height: 500px;
+    min-height: 50px;
+    overflow: auto;
   }
 }
 </style>

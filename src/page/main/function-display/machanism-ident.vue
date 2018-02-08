@@ -8,8 +8,12 @@
           <el-button class="content-submit" @click="submitTxt('companyStd')" type="primary">提交</el-button>
         </div>
         <div class="content-ident-box">
-          <p class="content-title">全称</p>
-          <el-input class="content-input" :readonly="true" v-model="data.fullName" placeholder="请输入机构名"></el-input>
+          <el-table :data="data.fullNameArray" border style="width: 100%" class="data-table mgt40">
+            <el-table-column min-width="500" prop="fullName" label="全称">
+            </el-table-column>
+            <el-table-column min-width="100" prop="score" label="相识度">
+            </el-table-column>
+          </el-table>
         </div>
       </el-tab-pane>
       <el-tab-pane label="机构名分析" name="companySegment">
@@ -26,7 +30,7 @@
 </template>
 <script>
 import { mapActions, mapState } from 'vuex'
-import analysisResult from 'components/analysisResult';
+import analysisResult from 'components/analysisResult'
 import utils from 'src/config/utils'
 
 export default {
@@ -36,29 +40,39 @@ export default {
       data: {
         toStdName: '海致网络',
         toAnalysisName: '海致网络技术(北京)有限公司',
-        fullName: ''
+        fullNameArray:[]
       },
-      processedCompanySeg:{}
+      processedCompanySeg: {}
     }
   },
   watch: {
     companyStd: function(companyStd) {
       if (companyStd.result && companyStd.result.CompanyStd) {
-				companyStd.result.CompanyStd = JSON.parse(companyStd.result.CompanyStd);
-        this.data.fullName = companyStd.result.CompanyStd.CompanyStd[this.data.toStdName].StdName;
+        companyStd.result.CompanyStd = JSON.parse(companyStd.result.CompanyStd)
+        let stdObj = companyStd.result.CompanyStd.CompanyStd
+        let fullName = stdObj[this.data.toStdName]
+        let splitArr = fullName.split(/\s/);
+        let resultArr = [];
+        splitArr.forEach(element => {
+          resultArr.push({
+            fullName: element.split('/')[0],
+            score: element.split('/')[1]
+          })
+        });
+        this.data.fullNameArray = resultArr
       }
     },
-    companySegment:function(data){
+    companySegment: function(data) {
       //去重处理
       if (data.result && data.result.CompanySegment) {
-				let parsedSeg = JSON.parse(data.result.CompanySegment);
-				let companySeg = parsedSeg.CompanySeg;
-				if (companySeg.Tags) {
-					companySeg['newTags'] = utils.unique(companySeg.Tags)
-				}
-				data.result.CompanySegment = parsedSeg;
+        let parsedSeg = JSON.parse(data.result.CompanySegment)
+        let companySeg = parsedSeg.CompanySeg
+        if (companySeg.Tags) {
+          companySeg['newTags'] = utils.unique(companySeg.Tags)
+        }
+        data.result.CompanySegment = parsedSeg
       }
-      this.processedCompanySeg=data;
+      this.processedCompanySeg = data
     }
   },
   components: {
@@ -70,33 +84,30 @@ export default {
     this.submitTxt('companySegment')
   },
   methods: {
-    ...mapActions([
-      'processCompanyStd', 'processCompanySegment'
-    ]),
+    ...mapActions(['processCompanyStd', 'processCompanySegment']),
     submitTxt(type) {
       if (type === 'companyStd') {
-        this.data.toStdName = this.data.toStdName.replace(/\s/g, '');
+        this.data.toStdName = this.data.toStdName.replace(/\s/g, '')
         if (this.data.toStdName == '') {
           this.$alert('输入内容不能为空', '提示', {
             confirmButtonText: '确定',
             type: 'warning'
-          });
-          return;
+          })
+          return
         }
         this.processCompanyStd({
           functions: ['CompanyStd'],
           data: this.data.toStdName
         })
-      }
-      else if (type === 'companySegment') {
-        this.data.toAnalysisName = this.data.toAnalysisName.replace(/\s/g, '');
+      } else if (type === 'companySegment') {
+        this.data.toAnalysisName = this.data.toAnalysisName.replace(/\s/g, '')
 
         if (this.data.toAnalysisName == '') {
           this.$alert('输入内容不能为空', '提示', {
             confirmButtonText: '确定',
             type: 'warning'
-          });
-          return;
+          })
+          return
         }
         this.processCompanySegment({
           functions: ['CompanySegment'],
@@ -117,7 +128,10 @@ export default {
   }
   .content-input {
     width: 400px;
-    margin-right: 20px
+    margin-right: 20px;
+  }
+  .mgt40{
+    margin-top: 40px;
   }
 }
 </style>

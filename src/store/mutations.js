@@ -12,6 +12,9 @@ const AUTHORITY_MANAGE = 'AUTHORITY_MANAGE'
 const DATA_EXTRACT = 'DATA_EXTRACT'
 const ZSBANK_CREDIT = 'ZSBANK_CREDIT'
 const ANALYSIS_GET = 'ANALYSIS_GET'
+const ARTICLE_ANALYSIS_GET = 'ARTICLE_ANALYSIS_GET'
+const SENTENCE_SIMILARITY = 'SENTENCE_SIMILARITY'
+const INDUSTRY_CATEGORY = 'INDUSTRY_CATEGORY'
 const LOGIN_CHECK = 'LOGIN_CHECK'
 const LOGIN = 'LOGIN'
 const LOGOUT = 'LOGOUT'
@@ -118,6 +121,18 @@ export default {
   //词法分析
   [ANALYSIS_GET](state, data) {
     state.analysisData = data
+  },
+  //篇章分析
+  [ARTICLE_ANALYSIS_GET](state, data) {
+    state.articleAnalysisData = data
+  },
+  //篇章分析
+  [SENTENCE_SIMILARITY](state, data) {
+    state.sentenceSimilarityResult = data
+  },
+  //行业分类分析
+  [INDUSTRY_CATEGORY](state, data) {
+    state.industryCategoryResult = data
   },
   //机构名标准化
   [PROCESS_COMPANY_STD](state, data) {

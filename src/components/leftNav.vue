@@ -36,8 +36,18 @@ export default {
                 label: '词法分析',
                 value: 'function-display/analysis'
             }, {
+                label: '篇章分析',
+                value: 'function-display/article-analysis'
+            },{
+                label: '语义相识度',
+                value: 'function-display/sentence-similarity'
+            },
+            {
                 label: '机构名识别',
                 value: 'function-display/machanism-ident'
+            },{
+                label: '行业分类',
+                value: 'function-display/industry-category'
             },
             {
                 label: '授信报告解析',

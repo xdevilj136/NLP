@@ -80,9 +80,19 @@ export default [{
             }, {
                 path: 'analysis',
                 component : r => require.ensure([], () => r(require('../page/main/function-display/analysis')), 'analysis'),
+            },{
+                path: 'article-analysis',
+                component : r => require.ensure([], () => r(require('../page/main/function-display/article-analysis')), 'article-analysis'),
             }, {
+                path: 'sentence-similarity',
+                component : r => require.ensure([], () => r(require('../page/main/function-display/sentence-similarity')), 'sentence-similarity'),
+            },{
                 path: 'data-extract',
                 component : r => require.ensure([], () => r(require('../page/main/function-display/data-extract')), 'data-extract'),
+            },
+            {
+                path: 'industry-category',
+                component : r => require.ensure([], () => r(require('../page/main/function-display/industry-category')), 'industry-category'),
             },{
                 path: 'zsbank-credit',
                 component : r => require.ensure([], () => r(require('../page/main/function-display/zsbank-credit')), 'zsbank-credit'),

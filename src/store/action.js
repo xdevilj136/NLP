@@ -130,6 +130,18 @@ export default {
 	analysisGet({ }, json) {
 		service.analysisGet(json);
 	},
+	//提交篇章分析
+	articleAnalysisGet({ }, json) {
+		service.articleAnalysisGet(json);
+	},
+	//语义相识度分析
+	sentenceSimilarity({ }, json) {
+		service.sentenceSimilarity(json);
+	},
+	//行业分类分析
+	industryCategory({ }, json) {
+		service.industryCategory(json);
+	},
 	//提交机构名标准化
 	processCompanyStd({ }, json) {
 		service.processCompanyStd(json);

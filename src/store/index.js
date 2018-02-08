@@ -34,6 +34,9 @@ const state = {
 	companyStd:{},//机构名标准化
 	companySegment:{},//机构名分析
 	analysisData: {}, // 词法分析数据
+	articleAnalysisData:{},//篇章分析结果
+	sentenceSimilarityResult:{},//语义相识度分析结果
+	industryCategoryResult:{},//行业分类
 	createRuleResponse:{},//创建规则响应
 	createDataSourceResponse:{},//创建数据源响应
 	updateDataSourceResponse:{},

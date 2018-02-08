@@ -54,6 +54,18 @@ export default {
 	analysisGet(json) {
 		ajax('POST', '/api/functions/grammarParse', json, 'ANALYSIS_GET');
 	},
+	//篇章分析
+	articleAnalysisGet(json) {
+		ajax('POST', '/api/functions/articleAnalysis', json, 'ARTICLE_ANALYSIS_GET');
+	},
+	//语义相识度分析
+	sentenceSimilarity(json) {
+		ajax('POST', '/api/functions/sentenceSimilarity', json, 'SENTENCE_SIMILARITY');
+	},
+	//行业分类分析
+	industryCategory(json) {
+		ajax('POST', '/api/functions/industryCategory', json, 'INDUSTRY_CATEGORY');
+	},
 	//机构名标准化
 	processCompanyStd(json) {
 		ajax('POST', '/api/functions/companyStd', json, 'PROCESS_COMPANY_STD');

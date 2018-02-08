@@ -227,16 +227,17 @@ export default {
 </script>
 
 <style lang="less">
-.echarts {
-  width: 300px;
-  height: 150px;
-}
+
 .submit-box {
   text-align: right;
 }
 .analysis-box {
   overflow: hidden;
   margin-top: 36px;
+  .echarts {
+  width: 300px;
+  height: 150px;
+}
   .result-container {
     .el-textarea__inner {
       background-color: #f7f7f7;
